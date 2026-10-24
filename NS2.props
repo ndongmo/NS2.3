@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  
+  <!-- Debug Configuration Target Setup -->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(C_INCLUDES);$(SolutionDir);$(ProjectDir);$(IncludePath)</IncludePath>
+    <LibraryPath>$(C_LIBS_X64)\DEBUG;$(SolutionDir)x64\Debug;$(ProjectDir)x64\Debug;$(LibraryPath)</LibraryPath>
+    <LocalDebuggerEnvironment>PATH=%PATH%;$(C_BIN_X64)\DEBUG;$(SolutionDir)x64\Debug;$(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
+  </PropertyGroup>
+
+  <!-- Release Configuration Target Setup -->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(C_INCLUDES);$(SolutionDir);$(ProjectDir);$(IncludePath)</IncludePath>
+    <LibraryPath>$(C_LIBS_X64)\RELEASE;$(SolutionDir)x64\Release;$(ProjectDir)x64\Release;$(LibraryPath)</LibraryPath>
+    <LocalDebuggerEnvironment>PATH=%PATH%;$(C_BIN_X64)\RELEASE;$(SolutionDir)x64\Release;$(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
+  </PropertyGroup>
+
+  <!-- Compiler Options Applied Across All Build Modes -->
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <!-- Debug | x64 Linker Execution Dependencies -->
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Link>
+      <AdditionalDependencies>NS2.3.lib;SDL3_mixer.lib;SDL3_ttf.lib;SDL3.lib;imgui.lib;assimp.lib;opengl32.lib;glew32d.lib;glfw3dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <!-- Release | x64 Linker Execution Dependencies -->
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Link>
+      <AdditionalDependencies>NS2.3.lib;SDL3_mixer.lib;SDL3_ttf.lib;SDL3.lib;imgui.lib;assimp.lib;opengl32.lib;glew32.lib;glfw3dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  
+  <ItemGroup />
+</Project>

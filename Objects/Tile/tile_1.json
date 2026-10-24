@@ -1,0 +1,6 @@
+﻿{
+	"path": "../Objects/Tile/tile_1.json",
+	"material": 1,
+	"color": [255, 255, 255, 255],
+	"texture": "../Assets/tiles/ti_floor2.png"
+}

@@ -1,0 +1,8 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="D:/CODE/C++/NS2.3/NS2.3.vcxproj" Id="914e51b5-0033-44a1-9cfb-c3582e778035" />
+  <Project Path="D:/CODE/C++/NS2.3/Sahel/Sahel.vcxproj" Id="a06fb70b-23d5-4e60-bea0-038fd43a6337" />
+</Solution>

@@ -1,0 +1,32 @@
+﻿{
+	"name": "Kidal",
+	"path": "../Objects/Level/level_1.json",
+	"ambientColor": [0.05, 0.05, 0.05],
+	"width": 10,
+	"height": 10,
+	"lights": [
+        {
+			"index": 0,
+            "path": "../Objects/Light/light_1.json",
+            "position": [600.0, 1000.0],
+			"radius": 200,
+			"active": true
+			
+        },
+		{
+			"index": 1,
+            "path": "../Objects/Light/light_2.json",
+            "position": [400.0, 400.0]
+        }
+    ],
+    "tiles": [
+        {
+            "path": "../Objects/Tile/tile_1.json",
+            "x": 0,
+            "y": 0,
+			"width": 10.0,
+			"height": 10.0
+        }
+    ],
+	"entities": []
+}

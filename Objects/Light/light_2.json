@@ -1,0 +1,11 @@
+﻿{
+	"path": "../Objects/Light/light_2.json",
+	"direction": [1.0, 0.0],
+	"color": [1.0, 0.95, 0.82],
+	"height": 500.00,
+	"intensity": 1.5,
+	"innerAngle": 0.260,
+	"outerAngle": 0.520,
+	"radius": 450.0,
+	"type": 2
+}
