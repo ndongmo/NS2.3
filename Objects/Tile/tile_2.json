@@ -1,0 +1,11 @@
+{
+    "color": [
+        255,
+        255,
+        255,
+        255
+    ],
+    "material": 9,
+    "path": "../Objects/TILE/tile_2.json",
+    "texture": "../Assets/tiles/ti_metal11.png"
+}

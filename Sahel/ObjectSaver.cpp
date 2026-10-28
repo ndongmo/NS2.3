@@ -28,11 +28,10 @@ json ObjectSaver::save(const Level& l)
 	}
 	for (const auto& light : l.m_lights) {
 		json lightJson;
-		lightJson["index"] = light->index;
-		lightJson["path"] = light->path;
-		lightJson["position"] = light->position;
-		lightJson["radius"] = light->radius;
-		lightJson["active"] = light->active;
+		lightJson["index"] = light->m_index;
+		lightJson["path"] = light->getPath();
+		lightJson["destRect"] = light->m_destRect;
+		lightJson["active"] = light->m_active;
 		j["lights"].push_back(lightJson);
 	}
     return j;
@@ -65,15 +64,10 @@ json ObjectSaver::save(const Tile& t)
 json ObjectSaver::save(const Light& l)
 {
     json j;
-    j["path"] = l.path;
-    j["type"] = l.type;
-    j["direction"] = l.direction;
-    j["height"] = l.height;
-    j["color"] = l.color;
-    j["intensity"] = l.intensity;
-    j["radius"] = l.radius;
-    j["innerAngle"] = l.innerAngle;
-    j["outerAngle"] = l.outerAngle;
+    j["path"] = l.getPath();
+    j["color"] = l.m_color;
+    j["destRect"] = l.m_destRect;
+    j["texture"] = l.m_texture->filePath;
     return j;
 }
 

@@ -163,6 +163,7 @@
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelEditor.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="LightEditor.h" />
     <ClInclude Include="LightRenderer.h" />
     <ClInclude Include="MathUtils.h" />
     <ClInclude Include="MenuGui.h" />
@@ -200,6 +201,8 @@
     <ClCompile Include="Joint2D.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="LevelEditor.cpp" />
+    <ClCompile Include="Light.cpp" />
+    <ClCompile Include="LightEditor.cpp" />
     <ClCompile Include="LightRenderer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MathUtils.cpp" />
@@ -220,6 +223,10 @@
     <ClCompile Include="Types.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Light.frag" />
+    <None Include="Light.vert" />
+    <None Include="Sprite.frag" />
+    <None Include="Sprite.vert" />
     <None Include="Texture.frag" />
     <None Include="Texture.vert" />
   </ItemGroup>

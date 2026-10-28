@@ -43,13 +43,13 @@ namespace NS2
 		* \brief Gets all directory entries in the directory specified by path and stores in rvEntries.
 		* \return false if path is not a directory
 		*/
-		static bool getDirectoryEntries(const char* path, std::vector<DirEntry>& rvEntries);
+		static bool getDirectoryEntries(const char* path, std::vector<DirEntry>& rvEntries, bool addDir = true);
 		/*!
 		* \brief Gets recursively all directory and sub-directory entries in the directory 
 		*	specified by path and stores in rvEntries.
 		* \return false if path is not a directory
 		*/
-		static bool getRecDirectoryEntries(const char* path, std::vector<DirEntry>& rvEntries);
+		static bool getRecDirectoryEntries(const char* path, std::vector<DirEntry>& rvEntries, bool addDir = true);
 		/*!
 		* \brief Create directory.
 		* \param path: path of directory to make

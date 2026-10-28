@@ -8,14 +8,17 @@
 
 #pragma once
 
+#include "EditorGui.h"
+
 #include <string>
 #include <glm/glm.hpp>
+#include <imgui/imgui.h>
+#include <CoreTypes.h>
 
 class IFileManager;
 class TileRenderer;
 class LightRenderer;
 class EntityRenderer;
-class EditorGui;
 
 class AbstractEditor
 {
@@ -26,11 +29,11 @@ public:
 	/*!
 	* \brief Proceeds the creation of a new object.
 	*/
-	virtual bool create(const std::string& path) = 0;
+	virtual void create(const std::string& path) = 0;
 	/*!
 	* \brief Updates the actual ui(s).
 	*/
-	virtual bool update() = 0;
+	virtual void update() = 0;
 	/*!
 	* \brief Draws the editor UI.
 	*/
@@ -77,6 +80,29 @@ public:
 		float& angle, float& scale) {}
 
 protected:
+	void drawColor(NS2::ColorRGBA8& color, const char* label = "Color");
+	void drawTexture(NS2::GLTexture*& texture, const char* label = "Texture");
+
+	template <typename T, typename Container>
+	void drawEnum(T& currentValue, const Container& enumMap, const char* label) {
+		std::string previewText = enumMap.at(currentValue);
+		if (ImGui::BeginCombo(label, previewText.c_str())) {
+			for (const auto& [typeKey, typeName] : enumMap) {
+				T enumKey = static_cast<T>(typeKey);
+				bool isSelected = (currentValue == enumKey);
+
+				if (ImGui::Selectable(typeName.c_str(), isSelected)) {
+					currentValue = enumKey;
+					m_parent.setNeedToSave(true);
+				}
+				if (isSelected) {
+					ImGui::SetItemDefaultFocus();
+				}
+			}
+			ImGui::EndCombo();
+		}
+	}
+
 	IFileManager& m_fileManager;
 	EditorGui& m_parent;
 };

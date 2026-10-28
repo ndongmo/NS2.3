@@ -31,7 +31,7 @@ bool ObjectLoader::load(const json& j, Level& l)
 
 		for (int i = 0; i < nbLights; ++i) {
 			l.m_lights[i] = std::make_unique<Light>();
-			l.m_lights[i]->index = i;
+			l.m_lights[i]->m_index = i;
 		}
 
 		int width = j.at("width").get<int>();
@@ -51,10 +51,9 @@ bool ObjectLoader::load(const json& j, Level& l)
 			int idx = light.at("index").get<int>();
 			Light* lgt = l.m_lights[idx].get();
 			m_objManager.loadUnique<Light>(light.at("path").get<std::string>(), lgt);
-			lgt->position = light.at("position").get<glm::vec2>();
-			lgt->radius = light.value("radius", lgt->radius);
-			lgt->active = light.value("active", lgt->active);
-			lgt->index = idx;
+			lgt->m_destRect = light.at("destRect").get<glm::vec4>();
+			lgt->m_active = light.value("active", lgt->m_active);
+			lgt->m_index = idx;
 		}
 
 		for (const auto& entity : j.at("entities")) {
@@ -94,15 +93,10 @@ bool ObjectLoader::load(const json& j, Entity& e)
 bool ObjectLoader::load(const json& j, Light& l)
 {
 	try {
-		l.path = j.at("path").get<std::string>();
-		l.type = j.at("type").get<LightType>();
-		l.direction = j.at("direction").get<glm::vec2>();
-		l.height = j.at("height").get<float>();
-		l.color = j.at("color").get<glm::vec3>();
-		l.intensity = j.at("intensity").get<float>();
-		l.radius = j.at("radius").get<float>();
-		l.innerAngle = j.at("innerAngle").get<float>();
-		l.outerAngle = j.at("outerAngle").get<float>();
+		l.setPath(j.at("path").get<std::string>());
+		l.m_color = j.at("color").get<NS2::ColorRGBA8>();
+		l.m_destRect = j.at("destRect").get<glm::vec4>();
+		l.m_texture = m_rsrcManager.getTexture(j.at("texture").get<std::string>());
 
 		return true;
 	}

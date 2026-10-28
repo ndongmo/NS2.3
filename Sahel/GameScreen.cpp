@@ -43,7 +43,6 @@ void GameScreen::onEntry()
 
 	m_renderer.init(screenWidth, screenHeight, false);
 	m_physicEng.init(MAX_PHYSICS_STEPS);
-	//m_level.init(&m_camera, &m_physicEng);
 
 	m_objManager.loadDirect("../Objects/Level/level_1.json", m_level);
 

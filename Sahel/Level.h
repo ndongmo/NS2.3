@@ -19,7 +19,7 @@
 class ObjectLoader;
 class ObjectSaver;
 class Entity;
-struct Light;
+class Light;
 
 class Level : public IFileManager
 {
@@ -76,6 +76,9 @@ public:
      */
     Entity* findEntity(int index) const;
 
+    /** SETTERS */
+    void setAmbientColor(const glm::vec3& color) { m_ambientColor = color; }
+
     /** ACCESSORS */
     const std::string& getName() const { return m_name; }
     const glm::vec3& getAmbientColor() const { return m_ambientColor; }
@@ -85,7 +88,7 @@ public:
 
 private:
     std::string m_name;                                      
-    glm::vec3 m_ambientColor{ 0.1f, 0.1f, 0.1f };
+    glm::vec3 m_ambientColor{ 1.0f, 1.0f, 1.0f };
     std::vector<std::unique_ptr<Entity>> m_entities;            /* Level's entities */
     std::vector<std::unique_ptr<Light>> m_lights;               /* Level's dynamic lights */
 	TileGrid m_tileGrid;                                        /* Level's tile grid */

@@ -99,6 +99,34 @@ public:
             if (!file.is_open()) return false;
 
             file << j.dump(4); // Indents nicely for human-readable save files
+
+            auto blueprint = std::make_shared<T>(data);
+            m_cache[filePath] = std::any(blueprint);
+
+            return true;
+        }
+        catch (const std::exception& e) {
+            logE << "[ObjectManager] Serialization exception: " << e.what() << std::endl;
+            return false;
+        }
+    }
+
+    /**
+     * @brief Serializes a game object or level configuration directly back to disk without cache.
+     *
+     * @param filePath The destination target path on the drive.
+     * @param data The reference data class to serialize.
+     * @return true if write pipeline succeeded, false otherwise.
+     */
+    template <typename T>
+    bool saveDirect(const std::string& filePath, const T& data) {
+        try {
+            nlohmann::json j = ObjectSaver::save(data);
+            std::ofstream file(filePath);
+            if (!file.is_open()) return false;
+
+            file << j.dump(4); // Indents nicely for human-readable save files
+
             return true;
         }
         catch (const std::exception& e) {

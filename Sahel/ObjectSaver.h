@@ -13,7 +13,7 @@
 class Shape2D;
 class BodyPart;
 class Body;
-struct Light;
+class Light;
 class Tile;
 class Entity;
 class Level;

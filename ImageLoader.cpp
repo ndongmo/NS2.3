@@ -51,6 +51,7 @@ namespace NS2
 
 		outTexture.width = width;
 		outTexture.height = height;
+		outTexture.filePath = filePath;
 
 		return true;
 	}

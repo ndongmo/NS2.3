@@ -13,19 +13,19 @@
 #include "IDraw.h"
 #include "IFileManager.h"
 
-#include <SpriteBatch.h>
-#include <DebugRenderer.h>
 #include <CoreTypes.h>
 
 class ObjectLoader;
 class ObjectSaver;
+class TileEditor;
 
-const float TILESIZE = 128.0f;
+const float TILESIZE = 64.0f;
 
 class Tile : public IDraw, public IFileManager
 {
 	friend ObjectLoader;
 	friend ObjectSaver;
+	friend TileEditor;
 
 public:
 	Tile();

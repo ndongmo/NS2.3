@@ -6,6 +6,7 @@
 #pragma once
 
 #include <IGuiWindow.h>
+#include <IOManager.h>
 #include <memory>
 #include <vector>
 #include <string>
@@ -24,7 +25,7 @@ namespace NS2 {
 }
 
 enum class ModalType {
-	CREATE, COPY, DELETE, RENAME, CHANGE_MODE, ERROR, EXIT, NONE
+	CREATE, COPY, DELETE, RENAME, CHANGE_MODE, CHANGE_TYPE, CHANGE_OBJECT, ERROR, EXIT, NONE
 };
 enum ToolType {
 	SELECT = 0, MOVE = 1, RESIZE = 2, ROTATE = 3, PLACE = 4, ATTACH = 5, COPY = 6
@@ -62,24 +63,29 @@ public:
 	glm::vec2 getScreenCenter() const;
 	AbstractEditor* getCurrentEditor();
 	bool debug(DebugType type) const;
+	const std::vector<NS2::DirEntry>& getAssets() const { return m_assets; }
 
 private:
-	void drawMenuBar();
 	void drawToolBar();
 	void drawLeftSidebar();
 	void drawRightSidebar();
 	void drawModals();
 	void changeMode();
+	void changeType(int index);
+	void changeObject(int index);
 
 	bool m_needSave = false;
 	bool m_animOn = false;
 	int m_onLevel = 0;
 	int m_selectedTypeIndex = -1;
 	int m_selectedObjectIndex = -1;
+	int m_pendingTypeIndex = -1;
+	int m_pendingObjectIndex = -1;
 	float m_animFactor = 1.0f;
 	float m_cameraScale = 1.0f;
 	glm::vec2 m_cameraPos = glm::vec2(0.0f);
 
+	std::vector<NS2::DirEntry> m_assets;
 	std::vector<std::vector<std::string>> m_objects;
 	std::vector<std::unique_ptr<AbstractEditor>> m_editors;
 	std::vector<std::pair<unsigned char, std::string>> m_objectTypes;

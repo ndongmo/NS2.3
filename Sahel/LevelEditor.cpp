@@ -9,14 +9,14 @@ LevelEditor::LevelEditor(EditorGui& parent) :
 	AbstractEditor(parent, parent.getLevel()), m_level(parent.getLevel())
 {}
 
-bool LevelEditor::create(const std::string& path)
+void LevelEditor::create(const std::string& path)
 {
-	return false;
+	
 }
 
-bool LevelEditor::update()
+void LevelEditor::update()
 {
-	return false;
+	
 }
 
 void LevelEditor::onDraw()
@@ -36,7 +36,7 @@ bool LevelEditor::load(const std::string& path)
 
 bool LevelEditor::save()
 {
-	return m_parent.getObjectManager().save(m_level.getPath(), m_level);
+	return m_parent.getObjectManager().saveDirect(m_level.getPath(), m_level);
 }
 
 void LevelEditor::draw(TileRenderer& tileRenderer, const glm::vec4& box)

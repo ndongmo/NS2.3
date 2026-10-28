@@ -8,27 +8,26 @@ TileEditor::TileEditor(EditorGui& parent) :
 	AbstractEditor(parent, m_tile)
 {}
 
-bool TileEditor::create(const std::string& path)
+void TileEditor::create(const std::string& path)
+{
+	m_tile.setTexture(m_parent.getResourceManager().getTexture(TILE_ASSET));
+	m_tile.setPath(path);
+}
+
+void TileEditor::update()
 {
 	const glm::vec2& center = m_parent.getScreenCenter();
 	int x = (int)((center.x - (TILESIZE / 2.0f)) / TILESIZE);
 	int y = (int)((center.y - (TILESIZE / 2.0f)) / TILESIZE);
-	m_tile.setTexture(m_parent.getResourceManager().getTexture(TILE_ASSET));
 	m_tile.setPosX(x);
 	m_tile.setPosY(y);
-	m_tile.setPath(path);
-
-	return true;
-}
-
-bool TileEditor::update()
-{
-	return false;
 }
 
 void TileEditor::onDraw()
 {
-	
+	drawColor(m_tile.m_color);
+	drawEnum(m_tile.m_material, TypeHelper::materialTypes, "Material");
+	drawTexture(m_tile.m_texture);
 }
 
 std::string TileEditor::getName() const

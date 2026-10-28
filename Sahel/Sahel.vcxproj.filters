@@ -216,6 +216,9 @@
     <ClInclude Include="LevelEditor.h">
       <Filter>Header Files\Gui\Editor</Filter>
     </ClInclude>
+    <ClInclude Include="LightEditor.h">
+      <Filter>Header Files\Gui\Editor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp">
@@ -314,12 +317,30 @@
     <ClCompile Include="LevelEditor.cpp">
       <Filter>Source Files\Gui\Editor</Filter>
     </ClCompile>
+    <ClCompile Include="LightEditor.cpp">
+      <Filter>Source Files\Gui\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Source Files\Game\Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Texture.vert">
       <Filter>Shaders</Filter>
     </None>
     <None Include="Texture.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Light.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Light.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Sprite.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Sprite.vert">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

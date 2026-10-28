@@ -62,41 +62,44 @@ namespace NS2
 		return true;
 	}
 
-	bool IOManager::getDirectoryEntries(const char* path, std::vector<DirEntry>& rvEntries) {
+	bool IOManager::getDirectoryEntries(const char* path, std::vector<DirEntry>& rvEntries, bool addDir) {
 		auto dpath = fs::path(path);
 		// Must be directory
 		if (!fs::is_directory(dpath)) return false;
 
 		for (auto it = fs::directory_iterator(dpath); it != fs::directory_iterator(); ++it) {
-			rvEntries.emplace_back();
-			rvEntries.back().path = it->path().string();
-			std::replace(rvEntries.back().path.begin(), rvEntries.back().path.end(), '\\', '/');
-			if (is_directory(it->path())) {
-				rvEntries.back().isDirectory = true;
-			}
-			else {
-				rvEntries.back().isDirectory = false;
+			bool isDir = is_directory(it->path());
+			if (!isDir || addDir) {
+				rvEntries.emplace_back();
+				rvEntries.back().path = it->path().string();
+				std::replace(rvEntries.back().path.begin(), rvEntries.back().path.end(), '\\', '/');
+				if (is_directory(it->path())) {
+					rvEntries.back().isDirectory = true;
+				}
+				else {
+					rvEntries.back().isDirectory = false;
+				}
 			}
 		}
 		return true;
 	}
 
-	bool IOManager::getRecDirectoryEntries(const char* path, std::vector<DirEntry>& rvEntries)
+	bool IOManager::getRecDirectoryEntries(const char* path, std::vector<DirEntry>& rvEntries, bool addDir)
 	{
 		auto dpath = fs::path(path);
 		// Must be directory
 		if (!fs::is_directory(dpath)) return false;
 
 		for (auto it = fs::directory_iterator(dpath); it != fs::directory_iterator(); ++it) {
-			rvEntries.emplace_back();
-			rvEntries.back().path = it->path().string();
-			std::replace(rvEntries.back().path.begin(), rvEntries.back().path.end(), '\\', '/');
-			if (is_directory(it->path())) {
-				rvEntries.back().isDirectory = true;
-				getDirectoryEntries(rvEntries.back().path.c_str(), rvEntries);
+			DirEntry entry;
+			entry.isDirectory = is_directory(it->path());
+			entry.path = it->path().string();
+			std::replace(entry.path.begin(), entry.path.end(), '\\', '/');
+			if (!entry.isDirectory || addDir) {
+				rvEntries.push_back(entry);
 			}
-			else {
-				rvEntries.back().isDirectory = false;
+			if (entry.isDirectory) {
+				getDirectoryEntries(entry.path.c_str(), rvEntries, addDir);
 			}
 		}
 		return true;

@@ -20,7 +20,7 @@ class Joint2D;
 class BodyPart;
 class Body;
 class Tile;
-struct Light;
+class Light;
 class Entity;
 class Level;
 

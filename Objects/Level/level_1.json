@@ -1,9 +1,9 @@
 ﻿{
 	"name": "Kidal",
-	"path": "../Objects/Level/level_1.json",
-	"ambientColor": [0.05, 0.05, 0.05],
-	"width": 10,
-	"height": 10,
+	"path": "../Objects/LEVEL/level_1.json",
+	"ambientColor": [0.15, 0.15, 0.15],
+	"width": 100,
+	"height": 100,
 	"lights": [
         {
 			"index": 0,
@@ -24,8 +24,8 @@
             "path": "../Objects/Tile/tile_1.json",
             "x": 0,
             "y": 0,
-			"width": 10.0,
-			"height": 10.0
+			"width": 100.0,
+			"height": 100.0
         }
     ],
 	"entities": []

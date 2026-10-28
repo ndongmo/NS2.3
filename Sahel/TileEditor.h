@@ -20,8 +20,8 @@ class TileEditor : public AbstractEditor
 public:
 	TileEditor(EditorGui& parent);
 
-	virtual bool create(const std::string& path) override;
-	virtual bool update() override;
+	virtual void create(const std::string& path) override;
+	virtual void update() override;
 	virtual void onDraw() override;
 	virtual std::string getName() const override;
 	virtual bool load(const std::string& path) override;

@@ -12,7 +12,7 @@
 #include "Renderer.h"
 
 class Level;
-struct Light;
+class Light;
 
 namespace NS2 {
 	class SpriteBatch;
@@ -23,17 +23,10 @@ namespace NS2 {
 class LightRenderer : public Renderer
 {
 public:
-	LightRenderer(NS2::SpriteBatch& spriteBatch, 
-		NS2::DebugRenderer& debugRenderer, 
-		NS2::GLSLProgram& textureProgram);
+	LightRenderer(NS2::SpriteBatch& spriteBatch, NS2::DebugRenderer& debugRenderer);
 	virtual void render(Level& level, const glm::vec4& box)override;
 	virtual void renderDebug(Level& level, const glm::vec4& box)override;
 
 	void render(const Light& light);
 	void renderDebug(const Light& light);
-
-private:
-	void render(const Light* light, int& activeCount);
-
-	NS2::GLSLProgram& m_textureProgram;
 };

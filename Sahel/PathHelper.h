@@ -32,6 +32,7 @@
 #define PARTICLES_SLASH_ASSET "../Assets/particles/pa_sword1.png"
 #define PARTICLES_GUNFIRE_ASSET "../Assets/particles/pa_gunfire1.png"
 #define TILE_ASSET "../Assets/tiles/ti_floor1.png"
+#define LIGHT_ASSET "../Assets/lights/li_point1.png"
 
 #define SAVES_FILE "../Saves/saves.xml"
 

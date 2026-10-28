@@ -31,7 +31,7 @@ Light& Level::createLight()
     auto newLight = std::make_unique<Light>();
     int assignedIndex = static_cast<int>(m_lights.size());
 
-    newLight->index = assignedIndex;
+    newLight->setIndex(assignedIndex);
 
     Light& ref = *newLight.get();
     m_lights.push_back(std::move(newLight));
@@ -74,7 +74,7 @@ bool Level::destroyLight(int index)
 
     if (index != lastIndex) {
         m_lights[index] = std::move(m_lights[lastIndex]);
-        m_lights[index]->index = index;
+        m_lights[index]->setIndex(index);
     }
     m_lights.pop_back();
 

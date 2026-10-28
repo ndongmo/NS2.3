@@ -1,11 +1,16 @@
-﻿{
-	"path": "../Objects/Light/light_1.json",
-	"direction": [0.0, -1.0],
-	"color": [1.0, 1.0, 1.0],
-	"height": 45.00,
-	"intensity": 1.0,
-	"innerAngle": 0.85,
-	"outerAngle": 0.70,
-	"radius": 500.0,
-	"type": 0
+{
+    "color": [
+        255,
+        41,
+        231,
+        255
+    ],
+    "destRect": [
+        423.5,
+        130.5,
+        474.0,
+        496.0
+    ],
+    "path": "../Objects/LIGHT/LIGHT_1.json",
+    "texture": "../Assets/lights/li_diff8.png"
 }
