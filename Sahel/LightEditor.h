@@ -23,7 +23,7 @@ class LightEditor : public AbstractEditor
 public:
 	LightEditor(EditorGui& parent);
 
-	virtual void create(const std::string& path) override;
+	virtual void create(const std::string& path, unsigned int type) override;
 	virtual void update() override;
 	virtual void onDraw() override;
 	virtual std::string getName() const override;
@@ -32,8 +32,7 @@ public:
 	virtual void draw(LightRenderer& lightRenderer, const glm::vec4& box) override;
 	virtual void draw(TileRenderer& tileRenderer, const glm::vec4& box) override;
 	virtual void drawDebug(LightRenderer& lightRenderer, const glm::vec4& box) override;
-	virtual void getInfo(std::string& name, glm::vec2& pos, glm::vec2& size,
-		float& angle, float& scale) override;
+	virtual void getInfo(std::string& name, glm::vec2& pos, glm::vec2& size, glm::vec2& scale, float& angle) override;
 
 private:
 	Light m_light;

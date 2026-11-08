@@ -8,15 +8,16 @@
         {
 			"index": 0,
             "path": "../Objects/Light/light_1.json",
-            "position": [600.0, 1000.0],
-			"radius": 200,
+            "pos": [800.0, 1000.0],
+			"scale": [4, 4],
 			"active": true
 			
         },
 		{
 			"index": 1,
-            "path": "../Objects/Light/light_2.json",
-            "position": [400.0, 400.0]
+            "path": "../Objects/LIGHT/LIGHT_1.json",
+            "pos": [400.0, 400.0],
+			"scale": [4, 4]
         }
     ],
     "tiles": [

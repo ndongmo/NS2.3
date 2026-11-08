@@ -7,6 +7,8 @@
 
 #include <IGuiWindow.h>
 #include <IOManager.h>
+#include <imgui/imgui.h>
+#include <CoreTypes.h>
 #include <memory>
 #include <vector>
 #include <string>
@@ -35,6 +37,8 @@ enum DebugType {
 	TREE = 5, NODE = 6, EDGE = 7, TILES = 8, LIGHTS = 9, SENSORS = 10, ENTITIES = 11, COUNT = 12
 };
 
+constexpr const char* STR_NONE = "NONE";
+
 class EditorGui : public NS2::IGuiWindow
 {
 public:
@@ -55,6 +59,7 @@ public:
 	void onDraw() override;
 
 	void setNeedToSave(bool needSave) { m_needSave = needSave; }
+	void setDebug(DebugType type, bool value) { m_debugging[type] = value; }
 
 	NS2::ResourceManager& getResourceManager() const;
 	ObjectManager& getObjectManager() const;
@@ -63,6 +68,8 @@ public:
 	glm::vec2 getScreenCenter() const;
 	AbstractEditor* getCurrentEditor();
 	bool debug(DebugType type) const;
+	std::string getNamePrefix(int typeIndex, int objectIndex) const;
+	const std::vector<std::string>& getObjects(int typeIndex);
 	const std::vector<NS2::DirEntry>& getAssets() const { return m_assets; }
 
 private:
@@ -73,6 +80,9 @@ private:
 	void changeMode();
 	void changeType(int index);
 	void changeObject(int index);
+	void loadObjectTypes(int typeIndex);
+	void handleInputEvent();
+	glm::vec2 getWorldCoord(ImVec2 coords);
 
 	bool m_needSave = false;
 	bool m_animOn = false;
@@ -81,9 +91,8 @@ private:
 	int m_selectedObjectIndex = -1;
 	int m_pendingTypeIndex = -1;
 	int m_pendingObjectIndex = -1;
+	unsigned int m_modalIndex = 0;
 	float m_animFactor = 1.0f;
-	float m_cameraScale = 1.0f;
-	glm::vec2 m_cameraPos = glm::vec2(0.0f);
 
 	std::vector<NS2::DirEntry> m_assets;
 	std::vector<std::vector<std::string>> m_objects;
@@ -93,7 +102,35 @@ private:
 	// --- Interactive Modal Dialogue Assets ---
 	char m_buffer[256] = "";  // Text storage for input prompts
 	ModalType m_activeModal = ModalType::NONE;
+	ModalType m_previousModal = ModalType::NONE;
 	ToolType m_activeTool = ToolType::SELECT;
 	bool m_debugging[DebugType::COUNT] = {};
 	std::unique_ptr<LevelEditor> m_levelEditor = nullptr;
+
+public:
+	bool drawColor(NS2::ColorRGBA8& color, const char* label = "Color");
+	bool drawTexture(NS2::GLTexture*& texture, const char* label = "Texture");
+
+	template <typename T, typename Container>
+	bool drawEnum(T& currentValue, const Container& enumMap, const char* label) {
+		bool result = false;
+		std::string previewText = enumMap.at(currentValue);
+		if (ImGui::BeginCombo(label, previewText.c_str())) {
+			for (const auto& [typeKey, typeName] : enumMap) {
+				T enumKey = static_cast<T>(typeKey);
+				bool isSelected = (currentValue == enumKey);
+
+				if (ImGui::Selectable(typeName.c_str(), isSelected) && !isSelected) {
+					currentValue = enumKey;
+					m_needSave = true;
+					result = true;
+				}
+				if (isSelected) {
+					ImGui::SetItemDefaultFocus();
+				}
+			}
+			ImGui::EndCombo();
+		}
+		return result;
+	}
 };

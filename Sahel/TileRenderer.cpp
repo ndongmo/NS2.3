@@ -8,7 +8,7 @@
 TileRenderer::TileRenderer(NS2::SpriteBatch& spriteBatch, NS2::DebugRenderer& debugRenderer)
 	: Renderer(spriteBatch, debugRenderer)
 {
-	m_debugColor.setColor(255, 0, 0, 128);
+	m_debugColor.setColor(255, 0, 0, 255);
 }
 
 void TileRenderer::render(Level& level, const glm::vec4& box)

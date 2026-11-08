@@ -30,6 +30,7 @@ std::unordered_map<unsigned char, std::string> TypeHelper::bodyTypes;
 std::unordered_map<unsigned char, std::string> TypeHelper::human_partTypes;
 std::unordered_map<unsigned char, std::string> TypeHelper::human_jointTypes;
 std::unordered_map<unsigned char, std::pair<unsigned char, std::string>> TypeHelper::partTypes;
+std::unordered_map<unsigned char, std::vector<BodyPart>> TypeHelper::bodyParts;
 
 GameData TypeHelper::gameData;
 SaveData TypeHelper::saveData;
@@ -72,6 +73,7 @@ void TypeHelper::init()
 		createEntityTypes(entityTypes);
 		createHumanPartTypes(human_partTypes);
 		createHumanJointTypes(human_jointTypes);
+		createBodyParts();
 
 		//ObjectManager<GameData>::load<GameDataHandler>(gameData, PathHelper::getUtilsPath("LEVELS"));
 		//ObjectManager<SaveData>::load<SaveDataHandler>(saveData, SAVES_FILE);
@@ -110,6 +112,7 @@ void TypeHelper::clear()
 	entityTypes.clear();
 	human_jointTypes.clear();
 	human_partTypes.clear();
+	bodyParts.clear();
 }
 
 void TypeHelper::initFolders()
@@ -138,6 +141,15 @@ PartType TypeHelper::getPartOf(BodyType type, int part)
 			return (PartType)p.first;
 	}
 	return PartType::PART_TILE;
+}
+const BodyPart& TypeHelper::getBodyPart(BodyType type, int partType)
+{
+	for (const auto& p : bodyParts[type]) {
+		if (p.partType == partType) {
+			return p;
+		}
+	}
+	throw std::out_of_range("Part not found");
 }
 int TypeHelper::getOppositePart(BodyType type, int partType)
 {
@@ -697,7 +709,7 @@ void TypeHelper::createEntityTypes(std::unordered_map<int, std::string> &m)
 
 void TypeHelper::createGameTypes(std::unordered_map<unsigned char, std::string> &m)
 {
-	m[GameType::TYPE_BODYPART] = "BODY_PART";
+	m[GameType::TYPE_PART] = "PART";
 	m[GameType::TYPE_BODY] = "BODY";
 	m[GameType::TYPE_PART_ANIM] = "ANIM_PART";
 	m[GameType::TYPE_BODY_ANIM] = "ANIM_BODY";
@@ -816,7 +828,7 @@ void TypeHelper::createBodyTypes(std::unordered_map<unsigned char, std::string> 
 void TypeHelper::createPartTypes(std::unordered_map<unsigned char, std::pair<unsigned char, std::string>> &m)
 {
 	m[PartType::PART_HIP] = { 0, "HIP" };
-	m[PartType::PART_BODY] = {1, "BODY"};
+	m[PartType::PART_TORSO] = {1, "TORSO"};
 	m[PartType::PART_HEAD] = { 2, "HEAD" }; 
 	m[PartType::PART_LEFT_ARM] = { 3, "LEFT_ARM" };
 	m[PartType::PART_RIGHT_ARM] = { 4, "RIGHT_ARM" };
@@ -978,4 +990,79 @@ void TypeHelper::createShopSkills(std::unordered_map<unsigned char, std::string>
 	m[ShopType::SHOP_BUY] = "BUY";
 	m[ShopType::SHOP_SELL] = "SELL";
 	m[ShopType::SHOP_FORGE] = "FORGE";
+}
+
+void TypeHelper::createBodyParts()
+{
+	bodyParts[BodyType::BODY_HUMAN] = std::vector<BodyPart>{
+			{ BodyType::BODY_HUMAN, PartType::PART_HIP, "HIP", 0, -1 },
+			{ BodyType::BODY_HUMAN, PartType::PART_HEAD, "HEAD", 1, -1 },
+			{ BodyType::BODY_HUMAN, PartType::PART_TORSO, "TORSO", 2, -1 },
+			{ BodyType::BODY_HUMAN, PartType::PART_RIGHT_ARM, "RIGHT_ARM", 3, 6 },
+			{ BodyType::BODY_HUMAN, PartType::PART_RIGHT_FOREARM, "RIGHT_FOREARM", 4, 7 },
+			{ BodyType::BODY_HUMAN, PartType::PART_RIGHT_HAND, "RIGHT_HAND", 5, 8 },
+			{ BodyType::BODY_HUMAN, PartType::PART_LEFT_ARM, "LEFT_ARM", 6, 3 },
+			{ BodyType::BODY_HUMAN, PartType::PART_LEFT_FOREARM, "LEFT_FOREARM", 7, 4 },
+			{ BodyType::BODY_HUMAN, PartType::PART_LEFT_HAND, "LEFT_HAND", 8, 5 },
+			{ BodyType::BODY_HUMAN, PartType::PART_RIGHT_LEG, "RIGHT_LEG", 9, 11 },
+			{ BodyType::BODY_HUMAN, PartType::PART_RIGHT_FOOT, "RIGHT_FOOT", 10,12 },
+			{ BodyType::BODY_HUMAN, PartType::PART_LEFT_LEG, "LEFT_LEG", 11, 9 },
+			{ BodyType::BODY_HUMAN, PartType::PART_LEFT_FOOT, "LEFT_FOOT", 12, 10 }
+	};
+	bodyParts[BodyType::BODY_COFFER] = std::vector<BodyPart>{
+		{ BodyType::BODY_COFFER, PartType::PART_COFFER_BASE, "COFFER_BASE", 0, -1 },
+		{ BodyType::BODY_COFFER, PartType::PART_COFFER_TOP, "COFFER_TOP", 1, -1 }
+	};
+	bodyParts[BodyType::BODY_ACTIVATOR] = std::vector<BodyPart>{
+		{ BodyType::BODY_ACTIVATOR, PartType::PART_ACTIVATOR_BASE, "ACTIVATOR_BASE", 0, -1 },
+		{ BodyType::BODY_ACTIVATOR, PartType::PART_ACTIVATOR_TOP, "ACTIVATOR_TOP", 1, -1 }
+	};
+	bodyParts[BodyType::BODY_LIFT] = std::vector<BodyPart>{
+		{ BodyType::BODY_LIFT, PartType::PART_LIFT, "LIFT", 0, -1 }
+	};
+	bodyParts[BodyType::BODY_DOOR] = std::vector<BodyPart>{
+		{ BodyType::BODY_DOOR, PartType::PART_DOOR, "DOOR", 0, -1 }
+	};
+	bodyParts[BodyType::BODY_TILE] = std::vector<BodyPart>{
+		{ BodyType::BODY_TILE, PartType::PART_TILE, "TILE", 0, -1 }
+	};
+	bodyParts[BodyType::BODY_WALL] = std::vector<BodyPart>{
+		{ BodyType::BODY_WALL, PartType::PART_WALL, "WALL", 0, -1 }
+	};
+	bodyParts[BodyType::BODY_GUN] = std::vector<BodyPart>{
+		{ BodyType::BODY_GUN, PartType::PART_GUN, "GUN", 0, -1 }
+	};
+	bodyParts[BodyType::BODY_AMMO] = std::vector<BodyPart>{
+		{ BodyType::BODY_AMMO, PartType::PART_AMMO, "AMMO", 0, -1 }
+	};
+	bodyParts[BodyType::BODY_FLASHLIGHT] = std::vector<BodyPart>{
+		{ BodyType::BODY_FLASHLIGHT, PartType::PART_FLASHLIGHT, "FLASHLIGHT", 0, -1 }
+	};
+	bodyParts[BodyType::BODY_SWORD] = std::vector<BodyPart>{
+		{ BodyType::BODY_SWORD, PartType::PART_SWORD, "SWORD", 0, -1 }
+	};
+	bodyParts[BodyType::BODY_FIST] = std::vector<BodyPart>{
+		{ BodyType::BODY_FIST, PartType::PART_FIST, "FIST", 0, -1 }
+	};
+	bodyParts[BodyType::BODY_DECOR] = std::vector<BodyPart>{
+		{ BodyType::BODY_DECOR, PartType::PART_DECOR, "DECOR", 0, -1 }
+	};
+	bodyParts[BodyType::BODY_EMPTY] = std::vector<BodyPart>{
+		{ BodyType::BODY_EMPTY, PartType::PART_EMPTY, "EMPTY", 0, -1 }
+	};
+	bodyParts[BodyType::BODY_TRAP] = std::vector<BodyPart>{
+		{ BodyType::BODY_TRAP, PartType::PART_TRAP, "TRAP", 0, -1 }
+	};
+	bodyParts[BodyType::BODY_SENSOR] = std::vector<BodyPart>{
+		{ BodyType::BODY_SENSOR, PartType::PART_SENSOR, "SENSOR", 0, -1 }
+	};
+	bodyParts[BodyType::BODY_LAMP] = std::vector<BodyPart>{
+		{ BodyType::BODY_LAMP, PartType::PART_LAMP, "LAMP", 0, -1 }
+	};
+	bodyParts[BodyType::BODY_PROJECTILE] = std::vector<BodyPart>{
+		{ BodyType::BODY_PROJECTILE, PartType::PART_PROJECTILE, "PROJECTILE", 0, -1 }
+	};
+	bodyParts[BodyType::BODY_SHIELD] = std::vector<BodyPart>{
+		{ BodyType::BODY_SHIELD, PartType::PART_SHIELD, "SHIELD", 0, -1 }
+	};
 }

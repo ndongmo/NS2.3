@@ -11,7 +11,7 @@
 #include <nlohmann/json.hpp>
 
 class Shape2D;
-class BodyPart;
+class Part;
 class Body;
 class Light;
 class Tile;
@@ -31,7 +31,7 @@ public:
 	static json save(const Tile& t);
 	static json save(const Light& l);
     static json save(const Body& b);
-    static json save(const BodyPart& bp);
+    static json save(const Part& bp);
 
 private:
     /** Helper save methods **/

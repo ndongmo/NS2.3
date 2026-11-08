@@ -111,6 +111,7 @@ namespace NS2
 		{
 			dims.x = x;
 			dims.y = y;
+			index = 0;
 			uvRect.z = uvRect.w = 1;
 			updateUV();
 		}
@@ -139,7 +140,8 @@ namespace NS2
 		bool getInvY() const { return (this->invY == 1.0f && this->invW == -1.0f); }
 		int getDimsX() const { return dims.x; }
 		int getDimsY() const { return dims.y; }
-		int getDims() const { return dims.x * dims.y; }
+		int getDim() const { return dims.x * dims.y; }
+		glm::ivec2 getDims() const { return dims; }
 		unsigned int getIndex() const { return index; }
 		const glm::vec4& getUvRect() const { return uvRect; }
 

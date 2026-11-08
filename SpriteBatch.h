@@ -11,21 +11,59 @@
 #include <glm/glm.hpp>
 #include <vector>
 #include "CoreTypes.h"
-# include "TileSheet.h"
+#include "TileSheet.h"
+#include "GLSLProgram.h"
 
 namespace NS2
 {
-	enum class GlyphSortType { NONE, TEXTURE };
+	enum class GlyphSortType { NONE, FRONT_TO_BACK, BACK_TO_FRONT, TEXTURE };
 
-	/**
-	 * @struct SpriteInstanceData
-	 * @brief Highly compressed per-instance array payload streamed directly to the GPU.
-	 * Total size: Exactly 36 bytes (perfectly aligned to 4-byte boundaries).
+	/*!
+	* \brief Glypg : Single quad.
+	*/
+	class Glyph
+	{
+	public:
+		Glyph(const glm::vec4& destRect, const glm::vec4& uvRect,
+			GLuint textureID, GLubyte depth, const ColorRGBA8& color);
+
+		Glyph(const std::vector<glm::vec2>& points, const glm::vec4& uvRect,
+			GLuint textureID, GLubyte depth, const ColorRGBA8& color);
+
+		GLuint textureID;	/* Glyph texture ID */
+		GLubyte depth;		/* Glyph deth */
+		Vertex topLeft;		/* Glyph top left corner */
+		Vertex bottomLeft;	/* Glyph bottom left corner */
+		Vertex bottomRight;	/* Glyph bottom right corner */
+		Vertex topRight;	/* Glyph top right corner */
+	};
+
+	/*!
+	* \brief Used to draw a texture. Each render batch is uded for a single draw call.
+	*/
+	class RenderBatch
+	{
+	public:
+		RenderBatch(GLuint offset, GLuint numVertices, GLuint textureID) :
+			offset(offset),
+			numVertices(numVertices),
+			textureID(textureID)
+		{};
+		GLuint offset;			/* offset value */
+		GLuint numVertices;		/* nomber of vertices */
+		GLuint textureID;		/* texture ID */
+	};
+
+	/*!
+	 * \brief LightMap : Used to store light map data.
 	 */
-	struct SpriteInstanceData {
-		glm::vec4 destRect = glm::vec4(0.0f);			// 16 bytes (x, y, width, height)
-		glm::vec4 uvRect = glm::vec4(0.0f);				// 16 bytes (u, v, uWidth, vHeight)
-		ColorRGBA8 color = ColorRGBA8();				// 4 bytes  (r, g, b, a)
+	struct LightMap
+	{
+		glm::vec4 uvRect{ 0.0f, 0.0f, 1.0f, -1.0f };	/* UV coordinates */
+		ColorRGBA8 color{ 255, 255, 255, 255 };			/* color value */
+		GLuint depth = 0;								/* depth value */
+		GLuint fbo;										/* frame buffer object */
+		GLuint textureID;								/* texture ID */
 	};
 
 	class SpriteBatch
@@ -34,55 +72,87 @@ namespace NS2
 		SpriteBatch() = default;
 		~SpriteBatch() { dispose(); }
 
-		// Enforce unique system resource handling rules by banning copy operations
 		SpriteBatch(const SpriteBatch&) = delete;
 		SpriteBatch& operator=(const SpriteBatch&) = delete;
 
-		/** @brief Allocates the hardware drawing buffers and static quad templates. */
-		void init();
+		/** 
+		 * @brief Allocates the hardware drawing buffers and static quad templates. 
+		 */
+		void init(int screenWidth, int screenHeight);
 
-		/** @brief Cleans up internal GPU handles and tracking vector pools. */
+		/** 
+		 * @brief Cleans up internal GPU handles and tracking vector pools. 
+		 */
 		void dispose();
 
-		/** @brief Prepares structural tracking contexts for a fresh recording sweep. */
-		void begin(GlyphSortType sortType = GlyphSortType::TEXTURE);
+		/** 
+		 * @brief Begins rendering a light scene.
+		 */
+		void beginLightScene(const glm::vec3& ambient, const glm::mat4& cameraMatrix, 
+			GlyphSortType sortType = GlyphSortType::TEXTURE);
+
+		/**
+		 * @brief Begins rendering a normal scene.
+		 */
+		void beginNormalScene(const glm::vec3& backColor, const glm::mat4& cameraMatrix, 
+			GlyphSortType sortType = GlyphSortType::TEXTURE);
+
+		/**
+		 * @brief Merges light scene with normal scene into a single rendering pass.
+		 */
+		void mergeScenes(const glm::mat4& cameraMatrix, const glm::vec4 screenBox);
+
+		/**
+		 * @brief Ends the current scene and flushes all draw calls to the GPU.
+		 */
+		void endScene();
 
 		/**
 		 * @brief Pushes a sprite instance into the submission sorting queue.
 		 */
 		void draw(const std::vector<glm::vec2>& points, const NS2::TileSheet& tileSheet);
 		void draw(glm::vec4 destRect, glm::vec4 uvRect, GLubyte depth, GLuint textureID, ColorRGBA8 color);
-
-		/** @brief Processes multi-tier sorting algorithms and transfers instanced streams to VRAM. */
-		void end();
-
-		/** @brief Iterates over draw calls to execute fast instanced multi-pass drawing sweeps. */
-		void render();
+		void draw(const std::vector<glm::vec2>& points, glm::vec4 uvRect, GLubyte depth, GLuint textureID, ColorRGBA8 color);
 
 	private:
-		struct RenderElement {
-			GLuint textureID;
-			GLubyte depth; // Preserved purely on CPU for Painter's Algorithm sorting layers
-			SpriteInstanceData instanceData;
-		};
+		/** 
+		 * @brief Prepares structural tracking contexts for a fresh recording sweep. 
+		 */
+		void begin(const glm::mat4& cameraMatrix, GlyphSortType sortType);
 
-		struct InstancedDrawCall {
-			GLuint textureID;
-			GLuint baseInstanceIndex;
-			GLuint instanceCount;
-		};
+		/** 
+		 * @brief Processes multi-tier sorting algorithms and transfers instanced streams to VRAM. 
+		 */
+		void end();
 
-		void createStaticQuadVAO();
+		/** 
+		 * @brief Iterates over draw calls to execute fast instanced multi-pass drawing sweeps. 
+		 */
+		void render();
 
-		GLuint m_quadVAO = 0;
-		GLuint m_quadVBO = 0;
-		GLuint m_quadIBO = 0;
-		GLuint m_instanceVBO = 0;
+		/*!
+		* \brief Create all needed render batches.
+		*/
+		void createRenderBatches();
 
-		GlyphSortType m_sortType = GlyphSortType::TEXTURE;
+		/*!
+		* \brief Sort Glyph array.
+		*/
+		void sortGlyph();
 
-		std::vector<RenderElement> m_submissionQueue;
-		std::vector<SpriteInstanceData> m_instancedData;
-		std::vector<InstancedDrawCall> m_drawCalls;
+		/* COMPARATOR */
+		static bool compareBackToFront(Glyph* a, Glyph* b);
+		static bool compareFrontToBack(Glyph* a, Glyph* b);
+		static bool compareTexture(Glyph* a, Glyph* b);
+
+		GLuint m_vbo = 0;								/* vertex buffer object */
+		GLuint m_vao = 0;								/* vertex array object */
+		GlyphSortType m_sortType = GlyphSortType::NONE;	/* Current sort mode */
+		std::vector<Glyph*> m_glyphsPointers;			/* Pointers of glyphs for sorting */
+		std::vector<Glyph> m_glyphs;					/* Array of glyphs */
+		std::vector<RenderBatch> m_renderBatches;		/* Array of render batches */
+
+		LightMap m_lightMap;							/* Light map */
+		GLSLProgram m_textureProgram;					/* The texture shader program */
 	};
 }

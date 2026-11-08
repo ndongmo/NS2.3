@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <glm/glm.hpp>
+
 /*!
 * \brief 2D move structure.
 */
@@ -16,25 +18,24 @@ struct Move2D
 	/*!
 	* \brief Move2D constructor.
 	*/
-	Move2D() : x(0.0f), y(0.0f), a(0.0f){}
+	Move2D() : pos(0.0f, 0.0f), a(0.0f){}
 	/*!
 	* \brief Move2D constructor.
 	* \param x :  x axis coordinate
 	* \param y :  y axis coordinate
 	* \param a :  angle
 	*/
-	Move2D(float x, float y, float a) : x(x), y(y), a(a) {}
+	Move2D(float x, float y, float a) : pos(x, y), a(a) {}
 	/*!
 	* \brief Resets move values.
 	*/
-	void reset(){ x = y = a = 0.0f; }
+	void reset(){ pos = glm::vec2(0.0f, 0.0f); a = 0.0f; }
 	/*!
 	* \brief Sets move values.
 	*/
 	void setValues(float x, float y, float a)
 	{
-		this->x = x;
-		this->y = y;
+		this->pos = glm::vec2(x, y);
 		this->a = a;
 	}
 	/*!
@@ -42,120 +43,118 @@ struct Move2D
 	*/
 	void inverseYaxis() 
 	{
-		y *= -1;
+		pos.y *= -1;
 		a *= -1;
 	}
 	void negate()
 	{
-		x = -x;
-		y = -y;
+		pos = -pos;
 		a = -a;
 	}
 
 	bool isNull()
 	{
-		return x == 0.0f && y == 0.0f && a == 0.0f;
+		return pos == glm::vec2(0.0f, 0.0f) && a == 0.0f;
 	}
 
 	void operator /= (float i)
 	{
-		x /= i; y /= i; a /= i;
+		pos /= i; a /= i;
 	}
 	void operator *= (float i)
 	{
-		x *= i; y *= i; a *= i;
+		pos *= i; a *= i;
 	}
 
 	void operator -= (float i)
 	{
-		x -= i; y -= i; a -= i;
+		pos -= i; a -= i;
 	}
 
 	void operator += (float i)
 	{
-		x += i; y += i; a += i;
+		pos += i; a += i;
 	}
 
 	void operator /= (const Move2D& m)
 	{
-		x /= m.x; y /= m.y; a /= m.a;
+		pos /= m.pos; a /= m.a;
 	}
 	void operator *= (const Move2D& m)
 	{
-		x *= m.x; y *= m.y; a *= m.a;
+		pos *= m.pos; a *= m.a;
 	}
 	void operator -= (const Move2D& m)
 	{
-		x -= m.x; y -= m.y; a -= m.a;
+		pos -= m.pos; a -= m.a;
 	}
 	void operator += (const Move2D& m)
 	{
-		x += m.x; y += m.y; a += m.a;
+		pos += m.pos; a += m.a;
 	}
 
 	Move2D operator + (float i) const
 	{
-		return Move2D(x + i, y + i, a + i);
+		return Move2D(pos.x + i, pos.y + i, a + i);
 	}
 	Move2D operator - (float i) const
 	{
-		return Move2D(x - i, y - i, a - i);
+		return Move2D(pos.x - i, pos.y - i, a - i);
 	}
 	Move2D operator * (float i) const
 	{
-		return Move2D(x * i, y * i, a * i);
+		return Move2D(pos.x * i, pos.y * i, a * i);
 	}
 	Move2D operator / (float i) const
 	{
-		return Move2D(x / i, y / i, a / i);
+		return Move2D(pos.x / i, pos.y / i, a / i);
 	}
 	Move2D operator + (const Move2D& m) const
 	{
-		return Move2D(x + m.x, y + m.y, a + m.a);
+		return Move2D(pos.x + m.pos.x, pos.y + m.pos.y, a + m.a);
 	}
 	Move2D operator - (const Move2D& m) const
 	{
-		return Move2D(x - m.x, y - m.y, a - m.a);
+		return Move2D(pos.x - m.pos.x, pos.y - m.pos.y, a - m.a);
 	}
 	Move2D operator - () const // unary minus
 	{
-		return Move2D(-x, -y, -a);
+		return Move2D(-pos.x, -pos.y, -a);
 	}
 	Move2D operator * (const Move2D& m) const
 	{
-		return Move2D(x * m.x, y * m.y, a * m.a);
+		return Move2D(pos.x * m.pos.x, pos.y * m.pos.y, a * m.a);
 	}
 	Move2D operator / (const Move2D& m) const
 	{
-		return Move2D(x / m.x, y / m.y, a / m.a);
+		return Move2D(pos.x / m.pos.x, pos.y / m.pos.y, a / m.a);
 	}
 
 	bool operator == (const Move2D& m) const
 	{
-		return x == m.x && y == m.y && a == m.a;
+		return pos == m.pos && a == m.a;
 	}
 	bool operator < (const Move2D& m) const
 	{
-		return x < m.x || y < m.y || a < m.a;
+		return pos.x < m.pos.x || pos.y < m.pos.y || a < m.a;
 	}
 	bool operator >(const Move2D& m) const
 	{
-		return x > m.x || y > m.y || a > m.a;
+		return pos.x > m.pos.x || pos.y > m.pos.y || a > m.a;
 	}
 	bool operator <= (const Move2D& m) const
 	{
-		return x <= m.x && y <= m.y && a <= m.a;
+		return pos.x <= m.pos.x && pos.y <= m.pos.y && a <= m.a;
 	}
 	bool operator >= (const Move2D& m) const
 	{
-		return x >= m.x && y >= m.y && a >= m.a;
+		return pos.x >= m.pos.x && pos.y >= m.pos.y && a >= m.a;
 	}
 	bool operator != (const Move2D& m) const
 	{
-		return x != m.x || y != m.y || a != m.a;
+		return pos != m.pos || a != m.a;
 	}
 
-	float x;	// x axis coordinate
-	float y;	// y axis coordinate
-	float a;	// angle
+	glm::vec2 pos;	// position
+	float a;		// angle
 };

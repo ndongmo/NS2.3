@@ -56,16 +56,15 @@ public:
 
 	/* SETTERS */
 	void setDebug(bool debug) { m_debug = debug; }
-	void clearAmbientColor(const glm::vec3& color);
 	void setLineWidth(float lineWidth) { m_lineWidth = lineWidth; }
 
 private:
 	bool m_debug = false;						/* In debug mode */
 	float m_lineWidth = 0.0f;					/* Width of the line in debug mode */
-	glm::vec4 m_screenBox = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
 
-	NS2::GLSLProgram m_textureShader;			/* The texture shader program */
-	NS2::GLSLProgram m_lightShader;				/* The light shader program */
+	glm::vec3 m_backColor = glm::vec3(1.0f);
+	glm::vec4 m_screenBox = glm::vec4(0.0f);
+
 	NS2::SpriteBatch m_spriteBatch;				/* Draws game stuff */
 	NS2::DebugRenderer m_debugRenderer;			/* Draws debugging shapes */
 

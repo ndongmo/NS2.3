@@ -2,10 +2,9 @@
 
 void Joint2D::update(const Move2D& m, const glm::vec2& pos)
 {
-	if (m.x != 0.0f) point.x += m.x;
-	if (m.y != 0.0f) point.y += m.y;
+	point += m.pos;
+	angle += m.a;
 	if (m.a != 0.0f) {
-		angle += m.a;
 		MathUtils::rotatePoint(point, pos, m.a);
 	}
 }
@@ -20,10 +19,10 @@ void Joint2D::correctValue(Move2D& m)
 {
 	if (value.a + m.a > upper.a) m.a = upper.a - value.a;
 	if (value.a + m.a < lower.a) m.a = lower.a - value.a;
-	if (value.x + m.x > upper.x) m.x = upper.x - value.x;
-	if (value.x + m.x < lower.x) m.x = lower.x - value.x;
-	if (value.y + m.y > upper.y) m.y = upper.y - value.y;
-	if (value.y + m.y < lower.y) m.y = lower.y - value.y;
+	if (value.pos.x + m.pos.x > upper.pos.x) m.pos.x = upper.pos.x - value.pos.x;
+	if (value.pos.x + m.pos.x < lower.pos.x) m.pos.x = lower.pos.x - value.pos.x;
+	if (value.pos.y + m.pos.y > upper.pos.y) m.pos.y = upper.pos.y - value.pos.y;
+	if (value.pos.y + m.pos.y < lower.pos.y) m.pos.y = lower.pos.y - value.pos.y;
 
 	value += m;
 }

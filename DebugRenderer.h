@@ -26,10 +26,6 @@ namespace NS2
 		* \brief Initialize renderer stuff.
 		*/
 		void init();
-		/*!
-		* \brief Bind data with GL buffers.
-		*/
-		void end();
 
 		/*!
 		* \brief Draw line.

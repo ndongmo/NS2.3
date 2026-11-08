@@ -2,7 +2,7 @@
 #include "ObjectManager.h"
 #include "JsonSerialization.h"
 #include "Shape2D.h"
-#include "BodyPart.h"
+#include "Part.h"
 #include "Body.h"
 #include "Tile.h"
 #include "Light.h"
@@ -51,7 +51,9 @@ bool ObjectLoader::load(const json& j, Level& l)
 			int idx = light.at("index").get<int>();
 			Light* lgt = l.m_lights[idx].get();
 			m_objManager.loadUnique<Light>(light.at("path").get<std::string>(), lgt);
-			lgt->m_destRect = light.at("destRect").get<glm::vec4>();
+			
+			lgt->m_shape.setPos(light.at("pos").get<glm::vec2>());
+			lgt->m_shape.scale(light.at("scale").get<glm::vec2>());
 			lgt->m_active = light.value("active", lgt->m_active);
 			lgt->m_index = idx;
 		}
@@ -95,8 +97,11 @@ bool ObjectLoader::load(const json& j, Light& l)
 	try {
 		l.setPath(j.at("path").get<std::string>());
 		l.m_color = j.at("color").get<NS2::ColorRGBA8>();
-		l.m_destRect = j.at("destRect").get<glm::vec4>();
 		l.m_texture = m_rsrcManager.getTexture(j.at("texture").get<std::string>());
+
+		Shape2DType type = j.at("shape").get<Shape2DType>();
+		glm::vec2 dims = j.at("dims").get<glm::vec2>();
+		l.m_shape.init(type, 0.0f, 0.0f, dims.x, dims.y);
 
 		return true;
 	}
@@ -125,23 +130,22 @@ bool ObjectLoader::load(const json& j, Tile& t)
 bool ObjectLoader::load(const json& j, Body& b)
 {
 	try {
+		b.m_type = j.at("type").get<BodyType>();
 		b.m_path = j.at("path").get<std::string>();
 		b.m_material = j.at("material").get<MaterialType>();
-		b.m_density = j.at("density").get<float>();
-		b.m_friction = j.at("friction").get<float>();
-		b.m_restitution = j.at("restitution").get<float>();
 		b.m_mass = j.at("mass").get<float>();
 		b.m_angularSpeed = j.at("aspeed").get<float>();
 		b.m_joints = j.at("joints").get<std::vector<Joint2D>>();
-
-		load(j.at("shape"), b.m_shape);
+		b.m_shape.init(j.at("shape").get<Shape2DType>());
 
 		// load all body parts
 		b.m_parts.clear();
 		for (const std::string& partPath : 
 			j.at("parts_path").get<std::vector<std::string>>()) {
 			b.m_parts.emplace_back();
-			m_objManager.loadUnique(partPath, b.m_parts.back());
+			if (!partPath.empty()) {
+				m_objManager.loadUnique(partPath, b.m_parts.back());
+			}
 		}
 
 		// update the part joints
@@ -158,14 +162,10 @@ bool ObjectLoader::load(const json& j, Body& b)
 		// finally, update the part transformation
 		unsigned int index = 0;
 		for (const auto& part : j.at("parts_transform")) {
-			float angle = part.at("angle").get<float>();
-			glm::vec2 scale = part.at("scale").get<glm::vec2>();
-			glm::vec2 pos = part.at("pos").get<glm::vec2>();
-
 			// order is important!!!
-			b.initScale(index, scale.x, scale.y);
-			b.initAngle(index, angle);
-			b.initPos(index, pos.x, pos.y);
+			b.initScale(index, part.at("scale").get<glm::vec2>());
+			b.initAngle(index, part.at("angle").get<float>());
+			b.initPos(index, part.at("pos").get<glm::vec2>());
 			index++;
 		}
 
@@ -179,9 +179,10 @@ bool ObjectLoader::load(const json& j, Body& b)
 	return false;
 }
 
-bool ObjectLoader::load(const json& j, BodyPart& bp)
+bool ObjectLoader::load(const json& j, Part& bp)
 {
 	try {
+		bp.m_type = j.at("type").get<PartType>();
 		bp.m_collide = j.at("collide").get<bool>();
 		bp.m_scalable = j.at("scalable").get<bool>();
 		bp.m_hidden = j.at("hidden").get<bool>();
@@ -240,8 +241,13 @@ bool ObjectLoader::load(const json& j, Shape2D& s)
 bool ObjectLoader::load(const json& j, NS2::TileSheet& ts)
 {
 	try {
+		std::string path = j.at("texture").get<std::string>();
+		NS2::GLTexture* texture = nullptr;
+		if (!path.empty()) {
+			texture = m_rsrcManager.getTexture(path);
+		}
 		ts.init(
-			m_rsrcManager.getTexture(j.at("texture").get<std::string>()),
+			texture,
 			j.at("color").get<NS2::ColorRGBA8>(),
 			j.at("dims").get<glm::ivec2>(),
 			j.at("invs").at(0).get<bool>(),

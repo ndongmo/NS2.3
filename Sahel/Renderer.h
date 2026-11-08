@@ -40,6 +40,7 @@ public:
 
 	NS2::SpriteBatch& getSpriteBatch() { return m_spriteBatch; }
 	NS2::DebugRenderer& getDebugRenderer() { return m_debugRenderer; }
+	const NS2::ColorRGBA8& getDebugColor() const { return m_debugColor; }
 
 protected:
 	NS2::ColorRGBA8 m_debugColor;				/* Color to draw in debug mode */

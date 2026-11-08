@@ -17,7 +17,7 @@ LightRenderer::LightRenderer(NS2::SpriteBatch& spriteBatch, NS2::DebugRenderer& 
 void LightRenderer::render(Level& level, const glm::vec4& box)
 {
 	for (auto& light : level.getLights()) {
-		if (MathUtils::isBoxInView(light->getDestRect(), box)) {
+		if (MathUtils::isBoxInView(light->getShape(), box)) {
 			light->draw(m_spriteBatch);
 		}
 	}
@@ -26,8 +26,8 @@ void LightRenderer::render(Level& level, const glm::vec4& box)
 void LightRenderer::renderDebug(Level& level, const glm::vec4& box)
 {
 	for (auto& light : level.getLights()) {
-		if (MathUtils::isBoxInView(light->getDestRect(), box)) {
-			m_debugRenderer.drawBox(light->getDestRect(), m_debugColor);
+		if (MathUtils::isBoxInView(light->getShape(), box)) {
+			m_debugRenderer.drawPolygon(light->getShape().getPoints(), m_debugColor);
 		}
 	}
 }
@@ -39,5 +39,5 @@ void LightRenderer::render(const Light& light)
 
 void LightRenderer::renderDebug(const Light& light)
 {
-	m_debugRenderer.drawBox(light.getDestRect(), m_debugColor);
+	m_debugRenderer.drawPolygon(light.getShape().getPoints(), m_debugColor);
 }

@@ -1,7 +1,7 @@
 #include "ObjectSaver.h"
 #include "JsonSerialization.h"
 #include "Shape2D.h"
-#include "BodyPart.h"
+#include "Part.h"
 #include "Body.h"
 #include "Light.h"
 #include "Tile.h"
@@ -30,7 +30,8 @@ json ObjectSaver::save(const Level& l)
 		json lightJson;
 		lightJson["index"] = light->m_index;
 		lightJson["path"] = light->getPath();
-		lightJson["destRect"] = light->m_destRect;
+		lightJson["pos"] = light->m_shape.getPos();
+        lightJson["dims"] = light->m_shape.getDims();
 		lightJson["active"] = light->m_active;
 		j["lights"].push_back(lightJson);
 	}
@@ -66,7 +67,8 @@ json ObjectSaver::save(const Light& l)
     json j;
     j["path"] = l.getPath();
     j["color"] = l.m_color;
-    j["destRect"] = l.m_destRect;
+    j["dims"] = l.m_shape.getDims();
+    j["shape"] = l.m_shape.getType();
     j["texture"] = l.m_texture->filePath;
     return j;
 }
@@ -74,14 +76,12 @@ json ObjectSaver::save(const Light& l)
 json ObjectSaver::save(const Body& b)
 {
     json j;
+	j["type"] = b.m_type; 
     j["path"] = b.m_path;
     j["material"] = b.m_material;
-    j["density"] = b.m_density;
-    j["friction"] = b.m_friction;
-    j["restitution"] = b.m_restitution;
     j["mass"] = b.m_mass;
     j["aspeed"] = b.m_angularSpeed;
-    j["shape"] = save(b.m_shape);
+    j["shape"] = b.m_shape.getType();
     j["joints"] = b.m_joints;
 
     for (const auto& p : b.m_parts) {
@@ -91,8 +91,8 @@ json ObjectSaver::save(const Body& b)
     for (const auto& p : b.m_parts) {
         json jj;
         jj["angle"] = p.getAngle();
-        jj["scale"] = glm::vec2(p.getScaleX(), p.getScaleY());
-        jj["pos"] = glm::vec2(p.getPosX(), p.getPosY());
+        jj["scale"] = p.getScale();
+        jj["pos"] = p.getPos();
 
         j["parts_transform"].push_back(jj);
     }
@@ -100,9 +100,10 @@ json ObjectSaver::save(const Body& b)
     return j;
 }
 
-json ObjectSaver::save(const BodyPart& bp)
+json ObjectSaver::save(const Part& bp)
 {
     json j;
+	j["type"] = bp.m_type; 
     j["collide"] = bp.m_collide;
 	j["scalable"] = bp.m_scalable;
 	j["hidden"] = bp.m_hidden;
@@ -130,7 +131,7 @@ json ObjectSaver::save(const Shape2D& s)
 json ObjectSaver::save(const NS2::TileSheet& ts)
 {
     json j;
-    j["texture"] = ts.texture->filePath;
+    j["texture"] = (ts.texture != nullptr) ? ts.texture->filePath : "";
     j["color"] = ts.color;
     j["dims"] = ts.getDims();
     j["invs"] = { ts.getInvX(), ts.getInvY() };

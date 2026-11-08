@@ -80,16 +80,17 @@ namespace NS2 {
 // Custom Game Type Mappings
 // ==========================================
 inline void from_json(const json& j, Move2D& m) {
-    m.x = j.at(0).get<float>();
-    m.y = j.at(1).get<float>();
+    m.pos.x = j.at(0).get<float>();
+    m.pos.y = j.at(1).get<float>();
     m.a = j.at(2).get<float>();
 }
 
 inline void to_json(json& j, const Move2D& m) {
-    j = json{ m.x, m.y, m.a };
+    j = json{ m.pos.x, m.pos.y, m.a };
 }
 
 inline void from_json(const json& j, Joint2D& j2d) {
+    j2d.name = j.at("name").get<std::string>();
     j2d.index = j.at("index").get<unsigned int>();
     j2d.parent = j.at("parent").get<unsigned int>();
     j2d.son = j.at("son").get<unsigned int>();
@@ -99,6 +100,7 @@ inline void from_json(const json& j, Joint2D& j2d) {
 }
 
 inline void to_json(json& j, const Joint2D& j2d) {
+    j["name"] = j2d.name;
     j["index"] = j2d.index;
     j["parent"] = j2d.parent;
     j["son"] = j2d.son;

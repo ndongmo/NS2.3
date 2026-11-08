@@ -58,25 +58,6 @@ namespace NS2
 		glBindVertexArray(0);
 	}
 
-	void DebugRenderer::end()
-	{
-		if (m_vertices.empty()) return;
-
-		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-		glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(DebugVertex), nullptr, GL_DYNAMIC_DRAW);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, m_vertices.size() * sizeof(DebugVertex), m_vertices.data());
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(GLuint), nullptr, GL_DYNAMIC_DRAW);
-		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, m_indices.size() * sizeof(GLuint), m_indices.data());
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-		m_numElements = static_cast<int>(m_indices.size());
-		m_indices.clear();
-		m_vertices.clear();
-	}
-
 	glm::vec2 rotatePoint(glm::vec2 position, float angle)
 	{
 		float cosA = std::cos(angle);
@@ -191,6 +172,22 @@ namespace NS2
 
 	void DebugRenderer::render(const glm::mat4& projectionMatrix, float lineWidth)
 	{
+		if (m_vertices.empty()) return;
+
+		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+		glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(DebugVertex), nullptr, GL_DYNAMIC_DRAW);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, m_vertices.size() * sizeof(DebugVertex), m_vertices.data());
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(GLuint), nullptr, GL_DYNAMIC_DRAW);
+		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, m_indices.size() * sizeof(GLuint), m_indices.data());
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+		m_numElements = static_cast<int>(m_indices.size());
+		m_indices.clear();
+		m_vertices.clear();
+
 		if (m_numElements == 0) return;
 
 		m_program.use();
@@ -203,6 +200,7 @@ namespace NS2
 		glDrawElements(GL_LINES, m_numElements, GL_UNSIGNED_INT, nullptr);
 		glBindVertexArray(0);
 
+		m_numElements = 0;
 		m_program.unuse();
 	}
 

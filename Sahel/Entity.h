@@ -98,7 +98,7 @@ public:
 	/*!
 	* \brief Force the body to move with the given impulse.
 	*/
-	virtual void addImpulse(float x, float y);
+	virtual void addImpulse(glm::vec2 impulse);
 	/*!
 	* \brief Force the body to rotate with the given angular impulse.
 	* \param angle :
@@ -160,9 +160,8 @@ public:
 	long getFilter() const { return m_filter; }
 	EntityState getState() const { return m_state; }
 
-	Body& getBody() { return m_body; }
-	const Body& getConstBody() const { return m_body; }
-	const Shape2D& getConstShape() const { return m_body.getConstShape(); }
+	const Body& getBody() const { return m_body; }
+	const Shape2D& getShape() const { return m_body.getShape(); }
 
 protected:
 	bool m_active = true;		/* active or not */

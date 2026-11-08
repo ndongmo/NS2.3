@@ -13,7 +13,7 @@
 
 bool MathUtils::avoidObstacle(const Shape2D& src, const Shape2D& obstacle, const glm::vec2& target, glm::vec2& step)
 {
-	const glm::vec2& srcCenter = src.getConstCenter(), obsCenter = obstacle.getConstCenter();
+	const glm::vec2& srcCenter = src.getCenter(), obsCenter = obstacle.getCenter();
 	const float srcMinX = src.getMinX(), srcMax = src.getMaxX(), srcMinY = src.getMinY(), srcMaxY = src.getMaxY(), 
 		obsMinX = obstacle.getMinX(), obsMaxX = obstacle.getMaxX(), obsMinY = obstacle.getMinY(), obsMaxY = obstacle.getMaxY();
 
@@ -170,7 +170,7 @@ glm::vec2 MathUtils::rotatePoint(const glm::vec2& point, float angle)
 	return newPoint;
 }
 
-float MathUtils::scale(float toScale, float center, float value)
+glm::vec2 MathUtils::scale(const glm::vec2& toScale, const glm::vec2& center, const glm::vec2& value)
 {
 	return center + (toScale - center) * value;
 }
@@ -187,7 +187,7 @@ bool MathUtils::isFacingFront(const Body& target, const Body& body)
 	Orientation or1 = MathUtils::findOrientation(target.getAngle());
 	Orientation or2 = MathUtils::findOrientation(body.getAngle());
 	Orientation result = MathUtils::computeOrientation(or1, or2);
-	glm::vec2 norm = glm::normalize(body.getConstCenter() - target.getConstCenter());
+	glm::vec2 norm = glm::normalize(body.getCenter() - target.getCenter());
 
 	return result == Orientation::LEFT &&
 		((or1 == Orientation::DOWN && norm.y < -FACING_FACTOR) || (or1 == Orientation::UP && norm.y > FACING_FACTOR) ||
@@ -199,7 +199,7 @@ bool MathUtils::isFacingFrontBack(const Body& target, const Body& body)
 	Orientation or1 = MathUtils::findOrientation(target.getAngle());
 	Orientation or2 = MathUtils::findOrientation(body.getAngle());
 	Orientation result = MathUtils::computeOrientation(or1, or2);
-	glm::vec2 norm = glm::normalize(body.getConstCenter() - target.getConstCenter());
+	glm::vec2 norm = glm::normalize(body.getCenter() - target.getCenter());
 
 	return 
 		(result == Orientation::LEFT &&
@@ -248,7 +248,7 @@ Orientation MathUtils::findOrientation(float angle)
 
 float MathUtils::findOrientation(const Body& body, const glm::vec2& target)
 {
-	const glm::vec2& norm = glm::normalize(target - body.getConstShape().getConstCenter());
+	const glm::vec2& norm = glm::normalize(target - body.getShape().getCenter());
 	return calculateAngle(norm, body.getOrientation());
 }
 
@@ -347,7 +347,7 @@ glm::vec2 MathUtils::nearestInnerPoint(glm::vec2 edgeStart,
 	const std::vector<glm::vec2>& hull,
 	bool* found)
 {
-	glm::vec2 result;
+	glm::vec2 result{ 0.0f, 0.0f };
 	float dist = 0;
 	*found = false;
 
@@ -518,7 +518,7 @@ bool MathUtils::isShapeCollide(const Shape2D& shape1, const Shape2D& shape2, flo
 	else
 		flag = isBoxCollide(shape1, shape2, depth);
 	if (flag) {
-		const glm::vec2& dims = shape2.getConstDims();
+		const glm::vec2 dims = shape2.getDims();
 		flag = abs(depth.x) >= (dims.x * depthFactor) && abs(depth.y) >= (dims.y * depthFactor);
 	}
 	return flag;
@@ -609,7 +609,7 @@ bool MathUtils::isPointInsideShape(const glm::vec2& p, const Shape2D& shape)
 }
 bool MathUtils::isPointInsideCircle(const glm::vec2& p, const Shape2D& shape)
 {
-	return ((shape.getHalfWidth() - glm::length(p - shape.getConstCenter())) > 0.0f);
+	return ((shape.getHalfWidth() - glm::length(p - shape.getCenter())) > 0.0f);
 }
 bool MathUtils::isPointInsideCircle(const glm::vec2& p, const glm::vec2& center, float radius)
 {
@@ -647,7 +647,7 @@ bool MathUtils::isPointInsideBox(const glm::vec2& p, const glm::vec4& destRect)
 bool MathUtils::isPointInsidePolygon(const glm::vec2& p, const Shape2D& shape)
 {
 	bool result = false;
-	const std::vector<glm::vec2>& polygon = shape.getConstPoints();
+	const std::vector<glm::vec2>& polygon = shape.getPoints();
 	size_t j = polygon.size() - 1;
 
 	for (size_t i = 0; i < polygon.size(); i++)

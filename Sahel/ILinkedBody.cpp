@@ -24,7 +24,7 @@ void ILinkedBody::ldetachAll()
 	m_links.clear();
 }
 
-void ILinkedBody::lrotate(float angle, const glm::vec2& pos)
+void ILinkedBody::lrotate(float angle, glm::vec2 pos)
 {
 	for (ITransform* link : m_links) {
 		if (link != nullptr) {
@@ -36,42 +36,28 @@ void ILinkedBody::lrotate(float angle, const glm::vec2& pos)
 		else ldetach(link);
 	}
 }
-void ILinkedBody::lincrPosX(float x)
+void ILinkedBody::lincrPos(glm::vec2 pos)
 {
 	for (ITransform* link : m_links) {
-		if (link != nullptr) link->incrPosX(x);
+		if (link != nullptr) link->incrPos(pos);
 		else ldetach(link);
 	}
 }
-void ILinkedBody::lincrPosY(float y)
+void ILinkedBody::lsetPos(glm::vec2 pos)
 {
 	for (ITransform* link : m_links) {
-		if (link != nullptr) link->incrPosY(y);
+		if (link != nullptr) link->setPos(pos);
 		else ldetach(link);
 	}
 }
-void ILinkedBody::lincrPos(float x, float y)
+void ILinkedBody::lsetCenter(glm::vec2 center)
 {
 	for (ITransform* link : m_links) {
-		if (link != nullptr) link->incrPos(x, y);
+		if (link != nullptr) link->setCenter(center);
 		else ldetach(link);
 	}
 }
-void ILinkedBody::lsetPos(float x, float y)
-{
-	for (ITransform* link : m_links) {
-		if (link != nullptr) link->setPos(x, y);
-		else ldetach(link);
-	}
-}
-void ILinkedBody::lsetCenter(float x, float y)
-{
-	for (ITransform* link : m_links) {
-		if (link != nullptr) link->setCenter(x, y);
-		else ldetach(link);
-	}
-}
-void ILinkedBody::lsetAngle(float angle, const glm::vec2& pos)
+void ILinkedBody::lsetAngle(float angle, glm::vec2 pos)
 {
 	for (ITransform* link : m_links) {
 		if (link != nullptr) link->setAngle(angle, pos);

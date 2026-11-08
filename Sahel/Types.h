@@ -240,7 +240,7 @@ enum AIState
  */
 enum MaterialType
 {
-	NONE = 0,
+	GRAVEL = 0,
 	ORGANIC = 1,
 	WOOD = 2,
 	GLASS = 3,
@@ -252,8 +252,7 @@ enum MaterialType
 	METALS = 9,
 	PLASTIC = 10,
 	GROUND = 11,
-	SAND = 12,
-	GRAVEL = 13,
+	SAND = 12
 };
 
 /*!
@@ -399,8 +398,7 @@ enum Shape2DType
 	BOX = 1, 
 	ROTATED_BOX = 2, 
 	POLYGON = 3, 
-	TRIANGLE = 4,  
-	SHAPE_COUNT = 5
+	TRIANGLE = 4
 };
 
 enum DepthType
@@ -483,8 +481,8 @@ enum HumanJoint
 
 enum PartType 
 {
-	PART_BODY = 0,
-	PART_HEAD = 1,
+	PART_HEAD = 0,
+	PART_TORSO = 1,
 	PART_LEFT_ARM = 2,
 	PART_RIGHT_ARM = 3,
 	PART_LEFT_FOREARM = 4,
@@ -522,7 +520,7 @@ enum PartType
 enum GameType
 {
 	TYPE_TRANSITION = 0,
-	TYPE_BODYPART = 1,
+	TYPE_PART = 1,
 	TYPE_BODY = 2,
 	TYPE_PART_ANIM = 3,
 	TYPE_BODY_ANIM = 4,
@@ -875,6 +873,30 @@ struct GameData
 	}
 };
 
+struct BodyPart
+{
+	BodyType bodyType = BodyType::BODY_HUMAN;
+	PartType partType = PartType::PART_HEAD;
+	std::string name;
+	int partIndex = -1;
+	int oppositeIndex = -1;
+	BodyPart() {}
+	BodyPart(BodyType bType, PartType pType, const std::string& pName, int pIndex, int oIndex) :
+		bodyType(bType), partType(pType), name(pName), partIndex(pIndex), oppositeIndex(oIndex) {}
+};
+
+struct BodyJoint
+{
+	std::string name;
+	BodyType bodyType = BodyType::BODY_HUMAN;
+	int jointIndex = -1;
+	int parentIndex = -1;
+	int childIndex = -1;
+	BodyJoint() {}
+	BodyJoint(BodyType bType, int jIndex) :
+		bodyType(bType), jointIndex(jIndex) {}
+};
+
 class TypeHelper
 {
 public:
@@ -897,6 +919,7 @@ public:
 	static unsigned int getJointCount(BodyType type);
 
 	static PartType getPartOf(BodyType type, int part);
+	static const BodyPart& getBodyPart(BodyType type, int partType);
 
 	static std::string getEntity(EntityID id);
 	static std::string getKey(KeyType type);
@@ -944,6 +967,7 @@ public:
 	static void createFontAlignment(std::unordered_map<unsigned char, std::string> &m);
 	static void createAgentClasses(std::unordered_map<unsigned char, std::string>& m);
 	static void createShopSkills(std::unordered_map<unsigned char, std::string>& m);
+	static void createBodyParts();
 
 	static std::unordered_map<unsigned char, std::string> shopSkills;
 	static std::unordered_map<unsigned char, std::string> agentClasses;
@@ -972,6 +996,7 @@ public:
 	static std::unordered_map<unsigned char, std::string> human_partTypes;
 	static std::unordered_map<unsigned char, std::string> human_jointTypes;
 	static std::unordered_map<unsigned char, std::pair<unsigned char, std::string>> partTypes;
+	static std::unordered_map<unsigned char, std::vector<BodyPart>> bodyParts;
 
 	static GameData gameData;
 	static SaveData saveData;

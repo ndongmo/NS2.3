@@ -10,8 +10,8 @@ EntityRenderer::EntityRenderer(NS2::SpriteBatch& spriteBatch,
 	PhysicsEngine& physicsEngine)
 	: Renderer(spriteBatch, debugRenderer), m_physicEngine(physicsEngine)
 {
-	m_debugColor.setColor(255, 255, 0, 255);
-	m_debugColorEntity.setColor(0, 0, 255, 255);
+	m_debugColor.setColor(0, 0, 255, 255);
+	m_debugColorEntity.setColor(255, 0, 255, 255);
 	m_debugColorPhysic.setColor(0, 255, 0, 255);
 	m_debugPhysic = true;
 	m_debugEntity = true;

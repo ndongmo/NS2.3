@@ -41,9 +41,9 @@ void Entity::applyForces(float deltaTime)
 void Entity::addChange(const MoveChange& mc)
 {
 	if (mc.pos.x != 0.0f || mc.pos.y != 0.0f)
-		addImpulse(mc.pos.x, mc.pos.y);
-	if (mc.scaleX != 0.0f || mc.scaleY != 0.0f)
-		m_body.incrScale(mc.scaleX, mc.scaleY);
+		addImpulse(mc.pos);
+	if (mc.scale.x != 0.0f || mc.scale.y != 0.0f)
+		m_body.incrScale(mc.scale);
 	if (mc.r != 0 || mc.g != 0 && mc.b != 0 || mc.alpha != 0)
 		m_body.incrColor((int16_t)mc.r, (int16_t)mc.g, (int16_t)mc.b, (int16_t)mc.alpha);
 }
@@ -57,7 +57,7 @@ bool Entity::checkCollision(Level& level, Entity* e)
 	e->nodeCollision(level, this);
 
 	// now static body can also be called for collision checking
-	if (MathUtils::isShapeCollide(m_body.getConstShape(), e->getConstShape(), depth1)) {
+	if (MathUtils::isShapeCollide(m_body.getShape(), e->getShape(), depth1)) {
 		if (e->getState() != EntityState::DYNAMIC) {
 			handleCollision(level, e, depth1);
 			e->handleCollision(level, this, depth2);
@@ -77,13 +77,13 @@ bool Entity::checkCollision(Level& level, Entity* e)
 void Entity::handleCollision(Level& level, Entity* e, const glm::vec2& collisionDepth)
 {
 	if (m_state == EntityState::DYNAMIC) {
-		m_body.addImpulse(collisionDepth.x, collisionDepth.y);
+		m_body.addImpulse(collisionDepth);
 	}
 }
 
-void Entity::addImpulse(float x, float y)
+void Entity::addImpulse(glm::vec2 impulse)
 {
-	m_body.addImpulse(x, y);
+	m_body.addImpulse(impulse);
 }
 
 void Entity::addAngularImpulse(float angle)

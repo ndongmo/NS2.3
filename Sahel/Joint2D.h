@@ -34,6 +34,7 @@ public:
 	unsigned int son = 0;					/* Son body part */
 	float angle = 0.0f;						/* Current angle. Stores the previous rotation undergone by the joint */
 	glm::vec2 point{ 0.0f, 0.0f };			/* Rotation point in earth coordinates */
+	std::string name;						/* Joint's name */
 	Move2D lower;							/* Could be lower angle for Angle joint or lower x/y for Axis joint */
 	Move2D upper;							/* Could be upper angle for Angle joint or upper x/y for Axis joint */
 	Move2D value;							/* Current joint value */

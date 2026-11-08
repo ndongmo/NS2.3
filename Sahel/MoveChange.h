@@ -21,7 +21,7 @@ struct MoveChange
 	*/
 	MoveChange(float x, float y, float angle, float scaleX, float scaleY, 
 		float r, float g, float b, float alpha) :
-		pos(x, y), angle(angle), scaleX(scaleX), scaleY(scaleY),
+		pos(x, y), angle(angle), scale(scaleX, scaleY),
 		r(r), g(g), b(b), alpha(alpha)
 	{}
 
@@ -29,7 +29,7 @@ struct MoveChange
 	 * \brief Resets move values.
 	 */
 	void reset() { 
-		pos.x = pos.y = angle = scaleX = scaleY = 0.0f;
+		pos.x = pos.y = angle = scale.x = scale.y = 0.0f;
 		r = g = b = 0;
 		alpha = 0;
 	}
@@ -39,7 +39,7 @@ struct MoveChange
 	bool isNull() const
 	{
 		return pos.x == 0.0f && pos.y == 0.0f && angle == 0.0f &&
-			scaleX == 0.0f && scaleY == 0.0f &&
+			scale.x == 0.0f && scale.y == 0.0f &&
 			r == 0 && g == 0 && b == 0 && alpha == 0;
 	}
 	/*!
@@ -47,11 +47,9 @@ struct MoveChange
 	 */
 	void negate()
 	{
-		pos.x = -pos.x;
-		pos.y = -pos.y;
+		pos = -pos;
 		angle = -angle;
-		scaleX = -scaleX;
-		scaleY = -scaleY;
+		scale = -scale;
 		r = -r;
 		g = -g;
 		b = -b;
@@ -61,90 +59,89 @@ struct MoveChange
 	bool operator == (const MoveChange& m)
 	{
 		return pos.x == m.pos.x && pos.y == m.pos.y && angle == m.angle && 
-			scaleX == m.scaleX && scaleY == m.scaleY && r == m.r && 
+			scale.x == m.scale.x && scale.y == m.scale.y && r == m.r && 
 			g == m.g && b == m.b && alpha == m.alpha;
 	}
 	bool operator != (const MoveChange& m)
 	{
 		return pos.x != m.pos.x || pos.y != m.pos.y || angle != m.angle ||
-			scaleX != m.scaleX || scaleY != m.scaleY || r != m.r ||
+			scale.x != m.scale.x || scale.y != m.scale.y || r != m.r ||
 			g != m.g || b != m.b || alpha != m.alpha;
 	}
 
 	void operator /= (const MoveChange& m)
 	{
 		pos.x /= m.pos.x; pos.y /= m.pos.y; angle /= m.angle;
-		scaleX /= m.scaleX; scaleY /= m.scaleY;
+		scale.x /= m.scale.x; scale.y /= m.scale.y;
 		r /= m.r; g /= m.g; b /= m.b; alpha /= m.alpha;
 	}
 	void operator *= (const MoveChange& m)
 	{
 		pos.x *= m.pos.x; pos.y *= m.pos.y; angle *= m.angle;
-		scaleX *= m.scaleX; scaleY *= m.scaleY;
+		scale.x *= m.scale.x; scale.y *= m.scale.y;
 		r *= m.r; g *= m.g; b *= m.b; alpha *= m.alpha;
 	}
 	void operator -= (const MoveChange& m)
 	{
 		pos.x -= m.pos.x; pos.y -= m.pos.y; angle -= m.angle;
-		scaleX -= m.scaleX; scaleY -= m.scaleY;
+		scale.x -= m.scale.x; scale.y -= m.scale.y;
 		r -= m.r; g -= m.g; b -= m.b; alpha -= m.alpha;
 	}
 	void operator += (const MoveChange& m)
 	{
 		pos.x += m.pos.x; pos.y += m.pos.y; angle += m.angle;
-		scaleX += m.scaleX; scaleY += m.scaleY;
+		scale.x += m.scale.x; scale.y += m.scale.y;
 		r += m.r; g += m.g; b += m.b; alpha += m.alpha;
 	}
 
 	MoveChange operator + (float i) const
 	{
 		return MoveChange(pos.x + i, pos.y + i, angle + i,
-			scaleX + i, scaleY + i, r + i, g + i, b + i, alpha + i);
+			scale.x + i, scale.y + i, r + i, g + i, b + i, alpha + i);
 	}
 	MoveChange operator - (float i) const
 	{
 		return MoveChange(pos.x - i, pos.y - i, angle - i,
-			scaleX - i, scaleY - i, r - i, g - i, b - i, alpha - i);
+			scale.x - i, scale.y - i, r - i, g - i, b - i, alpha - i);
 	}
 	MoveChange operator * (float i) const
 	{
 		return MoveChange(pos.x * i, pos.y * i, angle * i,
-			scaleX * i, scaleY * i, r * i, g * i, b * i, alpha * i);
+			scale.x * i, scale.y * i, r * i, g * i, b * i, alpha * i);
 	}
 	MoveChange operator / (float i) const
 	{
 		return MoveChange(pos.x / i, pos.y / i, angle / i,
-			scaleX / i, scaleY / i, r / i, g / i, b / i, alpha / i);
+			scale.x / i, scale.y / i, r / i, g / i, b / i, alpha / i);
 	}
 	MoveChange operator + (const MoveChange& m) const
 	{
-		return MoveChange(pos.x + m.pos.x, pos.y + m.pos.y, angle + m.angle, scaleX + m.scaleX,
-			scaleY + m.scaleY, r + m.r, g + m.g, b + m.b, alpha + m.alpha);
+		return MoveChange(pos.x + m.pos.x, pos.y + m.pos.y, angle + m.angle, scale.x + m.scale.x,
+			scale.y + m.scale.y, r + m.r, g + m.g, b + m.b, alpha + m.alpha);
 	}
 	MoveChange operator - (const MoveChange& m) const
 	{
-		return MoveChange(pos.x - m.pos.x, pos.y - m.pos.y, angle - m.angle, scaleX - m.scaleX,
-			scaleY - m.scaleY, r - m.r, g - m.g, b - m.b, alpha - m.alpha);
+		return MoveChange(pos.x - m.pos.x, pos.y - m.pos.y, angle - m.angle, scale.x - m.scale.x,
+			scale.y - m.scale.y, r - m.r, g - m.g, b - m.b, alpha - m.alpha);
 	}
 	MoveChange operator - () const // unary minus
 	{
-		return MoveChange(-pos.x, -pos.y, -angle, -scaleX, -scaleY, -r, -g, -b, -alpha);
+		return MoveChange(-pos.x, -pos.y, -angle, -scale.x, -scale.y, -r, -g, -b, -alpha);
 	}
 	MoveChange operator * (const MoveChange& m) const
 	{
-		return MoveChange(pos.x * m.pos.x, pos.y * m.pos.y, angle * m.angle, scaleX * m.scaleX,
-			scaleY * m.scaleY, r * m.r, g * m.g, b * m.b, alpha * m.alpha);
+		return MoveChange(pos.x * m.pos.x, pos.y * m.pos.y, angle * m.angle, scale.x * m.scale.x,
+			scale.y * m.scale.y, r * m.r, g * m.g, b * m.b, alpha * m.alpha);
 	}
 	MoveChange operator / (const MoveChange& m) const
 	{
-		return MoveChange(pos.x / m.pos.x, pos.y / m.pos.y, angle / m.angle, scaleX / m.scaleX,
-			scaleY / m.scaleY, r / m.r, g / m.g, b / m.b, alpha / m.alpha);
+		return MoveChange(pos.x / m.pos.x, pos.y / m.pos.y, angle / m.angle, scale.x / m.scale.x,
+			scale.y / m.scale.y, r / m.r, g / m.g, b / m.b, alpha / m.alpha);
 	}
 
 	glm::vec2 pos { 0.0f, 0.0f };	/* Coordinate x and y */
+	glm::vec2 scale{ 0.0f, 0.0f };	/* Scale x and y */
 	float angle = 0.0f;				/* Angle */
-	float scaleX = 0.0f;			/* Scale x */
-	float scaleY = 0.0f;			/* Scale y */
 	float r = 0;					/* red color value */
 	float g = 0;					/* green color value */
 	float b = 0;					/* blue color value */

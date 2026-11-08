@@ -25,7 +25,7 @@ void Projectile::init(Agent* agent, const Body& body, const glm::vec2& pos, cons
 {
     m_body = body;
     m_direction = dir;
-    m_body.setPos(pos.x, pos.y);
+    m_body.setPos(pos);
     m_body.setAngle(MathUtils::calculateAngle(dir) * RADTODEG);
     m_currentAgent = agent;
     m_throwingType = type;

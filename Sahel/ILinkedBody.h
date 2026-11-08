@@ -31,13 +31,11 @@ public:
 	*/
 	void ldetachAll();
 
-	void lrotate(float angle, const glm::vec2& pos);
-	void lincrPosX(float x);
-	void lincrPosY(float y);
-	void lincrPos(float x, float y);
-	void lsetPos(float x, float y);
-	void lsetCenter(float x, float y);
-	void lsetAngle(float angle, const glm::vec2& pos);
+	void lrotate(float angle, glm::vec2 pos);
+	void lincrPos(glm::vec2 pos);
+	void lsetPos(glm::vec2 pos);
+	void lsetCenter(glm::vec2 center);
+	void lsetAngle(float angle, glm::vec2 pos);
 
 protected:
 	std::vector<ITransform*> m_links;

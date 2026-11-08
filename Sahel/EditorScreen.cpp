@@ -54,6 +54,7 @@ void EditorScreen::onExit()
 
 void EditorScreen::update()
 {
+	handleInputEvent(m_game.getElapsedTime());
 	m_camera.update();
 }
 
@@ -75,5 +76,20 @@ int EditorScreen::getPreviousSCreenIndex() const
 
 void EditorScreen::handleInputEvent(float deltaTime)
 {
-	
+	float stepVelocity = 200.0f * deltaTime;
+	glm::vec2 currentPos = m_camera.getPosition();
+	auto& evh = getEventHandler();
+
+	// Translate position parameters relative to your orientation angles
+	if (evh.isKeyDown(SDLK_W)) currentPos.y += stepVelocity; // Move Forward
+	if (evh.isKeyDown(SDLK_S)) currentPos.y -= stepVelocity; // Move Backward
+	if (evh.isKeyDown(SDLK_A)) currentPos.x -= stepVelocity;   // Strafe Left
+	if (evh.isKeyDown(SDLK_D)) currentPos.x += stepVelocity;   // Strafe Right
+
+	m_camera.setPosition(currentPos);
+	m_camera.update();
+
+	if (evh.isKeyPressed(SDLK_ESCAPE)) {
+		m_editorGui.onExit();
+	}
 }

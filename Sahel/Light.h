@@ -7,6 +7,7 @@
 #pragma once
 
 #include "IFileManager.h"
+#include "Shape2D.h"
 #include "IDraw.h"
 #include "Types.h"
 
@@ -44,7 +45,7 @@ public:
 	bool isActive() const { return m_active; }
 	const NS2::ColorRGBA8& getColor() const { return m_color; }
 	const NS2::GLTexture* getTexture() const { return m_texture; }
-	const glm::vec4& getDestRect() const { return m_destRect; }
+	const Shape2D& getShape() const { return m_shape; }
 
 private:
 	bool m_active = true;
@@ -52,7 +53,7 @@ private:
 	int m_brokenPercent = 0;
 	NS2::ColorRGBA8 m_color = NS2::ColorRGBA8(255, 255, 255, 255);
 	NS2::GLTexture* m_texture = nullptr;
-	glm::vec4 m_destRect = glm::vec4(0.0f);
+	Shape2D m_shape;
 
 	static std::mt19937 m_rand;
 	static std::uniform_int_distribution<int> m_randPercent;

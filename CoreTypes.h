@@ -44,7 +44,7 @@ namespace NS2
 	* \brief Color structure.
 	*/
 	struct  ColorRGBA8 {
-		ColorRGBA8() : r(0), g(0), b(0), a(0) {}
+		ColorRGBA8() : r(255), g(255), b(255), a(255) {}
 		ColorRGBA8(GLubyte r, GLubyte g, GLubyte b, GLubyte a) : r(r), g(g), b(b), a(a) {}
 		void setColor(GLubyte rr, GLubyte gg, GLubyte bb, GLubyte aa) {
 			r = rr;
@@ -64,5 +64,32 @@ namespace NS2
 		GLubyte g = 0;
 		GLubyte b = 0;
 		GLubyte a = 0;
+	};
+
+	/*!
+	* \brief Simple 2D Vertex structure.
+	*/
+	struct Vertex
+	{
+		glm::vec2 position;	// Vertex position
+		glm::vec2 uv;		// UV texture coordinates
+		ColorRGBA8 color;	// Vertex color
+
+		void setColor(GLubyte r, GLubyte g, GLubyte b, GLubyte a) {
+			color.r = r;
+			color.g = g;
+			color.b = b;
+			color.a = a;
+		}
+
+		void setPosition(float x, float y) {
+			position.x = x;
+			position.y = y;
+		}
+
+		void setUV(float u, float v) {
+			uv.x = u;
+			uv.y = v;
+		}
 	};
 }

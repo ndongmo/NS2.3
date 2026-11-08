@@ -8,7 +8,7 @@ TileEditor::TileEditor(EditorGui& parent) :
 	AbstractEditor(parent, m_tile)
 {}
 
-void TileEditor::create(const std::string& path)
+void TileEditor::create(const std::string& path, unsigned int type)
 {
 	m_tile.setTexture(m_parent.getResourceManager().getTexture(TILE_ASSET));
 	m_tile.setPath(path);
@@ -25,9 +25,9 @@ void TileEditor::update()
 
 void TileEditor::onDraw()
 {
-	drawColor(m_tile.m_color);
-	drawEnum(m_tile.m_material, TypeHelper::materialTypes, "Material");
-	drawTexture(m_tile.m_texture);
+	m_parent.drawColor(m_tile.m_color);
+	m_parent.drawEnum(m_tile.m_material, TypeHelper::materialTypes, "Material");
+	m_parent.drawTexture(m_tile.m_texture);
 }
 
 std::string TileEditor::getName() const
@@ -55,13 +55,10 @@ void TileEditor::drawDebug(TileRenderer& tileRenderer, const glm::vec4& box)
 	tileRenderer.renderDebug(m_tile);
 }
 
-void TileEditor::getInfo(std::string& name, glm::vec2& pos, glm::vec2& size,
-	float& angle, float& scale)
+void TileEditor::getInfo(std::string& name, glm::vec2& pos, glm::vec2& size, glm::vec2& scale, float& angle)
 {
 	name = std::format("TILE [{}, {}]", m_tile.getPosX(), m_tile.getPosY());
 	pos.x = m_tile.getX();
 	pos.y = m_tile.getY();
 	size.x = size.y = TILESIZE;
-	angle = 0.0f;
-	scale = 1.0f;
 }

@@ -38,11 +38,10 @@ public:
 private:
 	void handleInputEvent(float deltaTime);
 
-	bool m_mouseButtons[2] = { false, false };
-	bool m_isDragging = false;
-	bool m_isOnUi = false;
-	glm::vec3 m_selectOffset = glm::vec3(0.0f);
-	glm::vec3 m_dragInit = glm::vec3(0.0f);
+	bool m_dragging = false;
+	bool m_onUi = false;
+	glm::vec2 m_selectOffset = glm::vec3(0.0f);
+	glm::vec2 m_dragInit = glm::vec3(0.0f);
 
 	EditorGui m_editorGui; /**< Editor GUI instance */
 

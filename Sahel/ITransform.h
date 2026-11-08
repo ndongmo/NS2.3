@@ -18,27 +18,18 @@ class ITransform
 public:
 
 	/*!
-	* \brief get x position.
-	*/
-	virtual float getPosX() const = 0;
-	/*!
-	* \brief get y position.
-	*/
-	virtual float getPosY() const = 0;
-	/*!
 	* \brief get angle.
 	*/
 	virtual float getAngle() const = 0;
 	/*!
-	 * \brief get scale on x axis.
-	 * \return scale on x axis
-	 */
-	virtual float getScaleX() const = 0;
+	* \brief get position.
+	*/
+	virtual glm::vec2 getPos() const = 0;
 	/*!
-	 * \brief get scale on y axis.
-	 * \return scale on y axis
+	 * \brief get scale.
+	 * \return scale
 	 */
-	virtual float getScaleY() const = 0;
+	virtual glm::vec2 getScale() const = 0;
 	/*!
 	* \brief Apply a the given move.
 	* \param m : move to create
@@ -48,7 +39,7 @@ public:
 	* \brief Apply a 2D move.
 	* \param m : move to create
 	*/
-	virtual void move(const Move2D& m, const glm::vec2& pos) {}
+	virtual void move(const Move2D& m, glm::vec2 pos) {}
 	/*!
 	* \brief Rotate around his rotation point.
 	* \param angle : rotation angle in radian
@@ -59,35 +50,13 @@ public:
 	* \param angle : rotation angle in radian
 	* \param pos : rotation point
 	*/
-	virtual void rotate(float angle, const glm::vec2& pos) {}
-	/*!
-	* \brief Scale along the x axis.
-	* \param x : x factor
-	*/
-	virtual void scaleX(float x) = 0;
-	/*!
-	* \brief Scale along the y axis.
-	* \param y : y factor
-	*/
-	virtual void scaleY(float y) = 0;
+	virtual void rotate(float angle, glm::vec2 pos) {}
 	/*!
 	* \brief Scale along the x and y axes.
 	* \param x : x factor
 	* \param y : y factor
 	*/
-	virtual void scale(float x, float y) = 0;
-	/*!
-	* \brief Scale along the x axis.
-	* \param x : x factor
-	* \param posX : x coordinate of scale axis
-	*/
-	virtual void scaleX(float x, float posX) {};
-	/*!
-	* \brief Scale along the y axis.
-	* \param y : y factor
-	* \param posY : y coordinate of scale axis
-	*/
-	virtual void scaleY(float y, float posY) {};
+	virtual void scale(glm::vec2 scale) = 0;
 	/*!
 	* \brief Scale along the x and y axes.
 	* \param x : x factor
@@ -95,51 +64,27 @@ public:
 	* \param posX : x coordinate of scale axis
 	* \param posY : y coordinate of scale axis
 	*/
-	virtual void scale(float x, float y, float posX, float posY) {};
-	/*!
-	* \brief Increment or decrement the x coordinate.
-	* \param x : x value
-	*/
-	virtual void incrPosX(float x) = 0;
-	/*!
-	* \brief Increment or decrement the y coordinate.
-	* \param y : y value
-	*/
-	virtual void incrPosY(float y) = 0;
+	virtual void scale(glm::vec2 scale, glm::vec2 pos) {};
 	/*!
 	* \brief Increment or decrement the x and y coordinates.
 	* \param x : x value
 	* \param y : y value
 	*/
-	virtual void incrPos(float x, float y) = 0;
-	/*!
-	* \brief Increment or decrement the scale on x.
-	* \param x : x value
-	*/
-	virtual void incrScaleX(float x) {}
-	/*!
-	* \brief Increment or decrement the scale on y.
-	* \param y : y value
-	*/
-	virtual void incrScaleY(float y) {}
+	virtual void incrPos(glm::vec2 pos) = 0;
 	/*!
 	* \brief Increment or decrement the scale on 2D dimensions.
 	* \param x : x value
 	* \param y : y value
 	*/
-	virtual void incrScale(float x, float y) {}
+	virtual void incrScale(glm::vec2 scale) {}
 	/*!
 	* \brief Set the x and y coordinates.
-	* \param x : x value
-	* \param y : y value
 	*/
-	virtual void setPos(float x, float y) = 0;
+	virtual void setPos(glm::vec2 pos) = 0;
 	/*!
 	* \brief Move the center position to the given position.
-	* \param x : x value
-	* \param y : y value
 	*/
-	virtual void setCenter(float x, float y) = 0;
+	virtual void setCenter(glm::vec2 center) = 0;
 	/*!
 	* \brief Set angle.
 	* \param angle :
@@ -150,6 +95,6 @@ public:
 	* \param angle : rotation angle
 	* \param pos : rotation point
 	*/
-	virtual void setAngle(float angle, const glm::vec2& pos) {}
+	virtual void setAngle(float angle, glm::vec2 pos) {}
 };
 

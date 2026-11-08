@@ -11,11 +11,11 @@ Light::Light() = default;
 void Light::draw(NS2::SpriteBatch& spriteBatch) const
 {
 	if (m_texture != nullptr) {
-		spriteBatch.draw(m_destRect, m_uvRect, 0, m_texture->id, m_color);
+		spriteBatch.draw(m_shape.getPoints(), m_uvRect, 0, m_texture->id, m_color);
 	}
 }
 
 void Light::drawDebug(NS2::DebugRenderer& debugRender, const NS2::ColorRGBA8& color) const
 {
-	debugRender.drawBox(m_destRect, color);
+	debugRender.drawPolygon(m_shape.getPoints(), color);
 }

@@ -82,9 +82,6 @@
     <Filter Include="Source Files\Serialization">
       <UniqueIdentifier>{1fdb001d-0a6d-4115-8d57-cd9da000a245}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaders">
-      <UniqueIdentifier>{854ffc84-4702-4d40-a530-281125df6bbf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Struct">
       <UniqueIdentifier>{9c98ebcc-60dd-4e31-a676-d58c761bd38b}</UniqueIdentifier>
     </Filter>
@@ -165,7 +162,7 @@
     <ClInclude Include="Joint2D.h">
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="BodyPart.h">
+    <ClInclude Include="Part.h">
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
     <ClInclude Include="ObjectLoader.h">
@@ -217,6 +214,12 @@
       <Filter>Header Files\Gui\Editor</Filter>
     </ClInclude>
     <ClInclude Include="LightEditor.h">
+      <Filter>Header Files\Gui\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="PartEditor.h">
+      <Filter>Header Files\Gui\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="BodyEditor.h">
       <Filter>Header Files\Gui\Editor</Filter>
     </ClInclude>
   </ItemGroup>
@@ -272,7 +275,7 @@
     <ClCompile Include="Joint2D.cpp">
       <Filter>Source Files\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="BodyPart.cpp">
+    <ClCompile Include="Part.cpp">
       <Filter>Source Files\Physics</Filter>
     </ClCompile>
     <ClCompile Include="ObjectManager.cpp">
@@ -323,25 +326,11 @@
     <ClCompile Include="Light.cpp">
       <Filter>Source Files\Game\Model</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Texture.vert">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Texture.frag">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Light.frag">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Light.vert">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Sprite.frag">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Sprite.vert">
-      <Filter>Shaders</Filter>
-    </None>
+    <ClCompile Include="PartEditor.cpp">
+      <Filter>Source Files\Gui\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="BodyEditor.cpp">
+      <Filter>Source Files\Gui\Editor</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,16 +1,15 @@
 {
     "color": [
+        180,
         255,
-        41,
-        231,
+        255,
         255
     ],
-    "destRect": [
-        423.5,
-        130.5,
-        474.0,
-        496.0
+    "dims": [
+        510.0,
+        438.0
     ],
     "path": "../Objects/LIGHT/LIGHT_1.json",
-    "texture": "../Assets/lights/li_diff8.png"
+    "shape": 2,
+    "texture": "../Assets/lights/li_diff6.png"
 }

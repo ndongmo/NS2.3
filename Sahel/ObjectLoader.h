@@ -17,7 +17,7 @@
 class ObjectManager;
 class Shape2D;
 class Joint2D;
-class BodyPart;
+class Part;
 class Body;
 class Tile;
 class Light;
@@ -50,7 +50,7 @@ public:
     bool load(const json& j, Light& l);
     bool load(const json& j, Tile& t);
     bool load(const json& j, Body& b);
-    bool load(const json& j, BodyPart& bp);
+    bool load(const json& j, Part& bp);
     bool load(const json& j, Joint2D& j2d);
     bool load(const json& j, Shape2D& s);
     bool load(const json& j, NS2::TileSheet& ts);

@@ -13,10 +13,18 @@
 
 #include "Types.h"
 
-#define DEGTORAD 0.0174532925199432957f		// Constant for converting degree to radian (degValue * DEGTORAD) = radValue
-#define RADTODEG 57.295779513082320876f		// Constant for converting radian to degree (radValue * DEGTORAD) = degValue
-#define PI 3.14159265f
-#define E_NUMBER 1.718281828459f
+constexpr float PI = 3.14159265f;
+constexpr float E_NUMBER = 1.718281828459f;
+constexpr float DEGTORAD = 0.0174532925199432957f;		// Constant for converting degree to radian (degValue * DEGTORAD) = radValue
+constexpr float RADTODEG = 57.295779513082320876f;		// Constant for converting radian to degree (radValue * DEGTORAD) = degValue
+
+[[nodiscard]] constexpr float RadToDeg(float radians) noexcept {
+	return radians * RADTODEG;
+}
+
+[[nodiscard]] constexpr float DegToRad(float degrees) noexcept {
+	return degrees * DEGTORAD;
+}
 
 struct AABB;
 class Shape2D;
@@ -81,7 +89,13 @@ public:
 	* \brief Checks for overlapping of two AABB.
 	*/
 	static bool isOverlapping(const AABB& a, const AABB& b);
-	static float scale(float toScale, float center, float value);
+	/*!
+	 * \brief Scale the given point from the given center with the given value.
+	 * \param toScale : point to scale
+	 * \param center : scale center
+	 * \param value : scale value
+	 */
+	static glm::vec2 scale(const glm::vec2& toScale, const glm::vec2& center, const glm::vec2& value);
 	/*!
 	 * \brief Normalize the given angle.
 	 * \param angle : in radian

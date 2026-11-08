@@ -1,25 +1,16 @@
 #version 130
+// The fragment shader operates on each pixel in a given polygon.
+// out for output and in for input
 
-// =========================================================================
-// 📥 INTERPOLATED INPUT INTERFACES
-// =========================================================================
 in vec4 fragmentColor;
+in vec2 fragmentPosition;
 in vec2 fragmentUV;
 
-// =========================================================================
-// 📤 FRAGMENT OUTPUT BUFFER TARGETS
-// =========================================================================
-out vec4 color;
+out vec4 color; 						// output color vector
+uniform sampler2D ns2TextureSampler;	// shader texture 
 
-// =========================================================================
-// 🗺️ MATERIAL SAMPLER CHANNELS
-// =========================================================================
-uniform sampler2D ns2TextureSampler;
-
-void main() {
-    // 1. Extract raw texture colors using interpolated coordinates
-    vec4 textureColor = texture2D(ns2TextureSampler, fragmentUV);
-    
-    // 2. Blend the texture channels with your vertex tint multiplier color
-    color = textureColor * fragmentColor;
+void main() 
+{
+	vec4 textureColor = texture(ns2TextureSampler, fragmentUV);
+	color = fragmentColor * textureColor;
 }

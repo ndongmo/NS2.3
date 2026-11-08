@@ -12,6 +12,8 @@
 #include "EntityRenderer.h"
 #include "TileEditor.h"
 #include "LightEditor.h"
+#include "PartEditor.h"
+#include "BodyEditor.h"
 #include "LevelEditor.h"
 
 #include <IMainGame.h>
@@ -41,12 +43,11 @@ void EditorGui::initGui()
 	setSize(getScreenSize());
 	setPosition(glm::vec2(0.0f, 0.0f));
 
-	m_cameraScale = static_cast<EditorScreen&>(m_parent).getCamera().getScale();
-	m_cameraPos = static_cast<EditorScreen&>(m_parent).getCamera().getPosition();
-
 	m_editors.resize(GameType::TYPE_COUNT);
 	m_editors[GameType::TYPE_TILE] = std::make_unique<TileEditor>(*this);
 	m_editors[GameType::TYPE_LIGHT] = std::make_unique<LightEditor>(*this);
+	m_editors[GameType::TYPE_PART] = std::make_unique<PartEditor>(*this);
+	m_editors[GameType::TYPE_BODY] = std::make_unique<BodyEditor>(*this);
 
 	m_objects.resize(GameType::TYPE_COUNT, std::vector<std::string>());
 
@@ -56,7 +57,9 @@ void EditorGui::initGui()
 	std::sort(m_objectTypes.begin(), m_objectTypes.end(), [](const auto& a, const auto& b) {
 		return a.second < b.second;
 	});
+	m_assets.emplace_back(STR_NONE, false); // add empty path
 	NS2::IOManager::getRecDirectoryEntries(TEXTUREPATH, m_assets, false);
+	m_debugging[DebugType::DEBUG] = true;
 }
 
 void EditorGui::clear()
@@ -67,6 +70,7 @@ void EditorGui::clear()
 	m_pendingTypeIndex = -1;
 	m_pendingObjectIndex = -1;
 	m_activeModal = ModalType::NONE;
+	m_previousModal = ModalType::NONE;
 	m_activeTool = ToolType::SELECT;
 	m_levelEditor = nullptr;
 
@@ -143,7 +147,7 @@ void EditorGui::onDraw()
 	ImVec2 baseWindowPos = ImGui::GetWindowPos();
 	ImVec2 baseWindowSize = ImGui::GetWindowSize();
 	float contentTopOffset = TOOLBAR_HEIGHT + 10.0f;
-	float sidebarWidth = baseWindowSize.x * 0.24f;
+	float sidebarWidth = baseWindowSize.x * 0.20f;
 	float sidebarHeight = baseWindowSize.y - contentTopOffset - 15.0f;
 
 	// Shared configuration flags for clean floating window panel layouts
@@ -188,12 +192,17 @@ void EditorGui::onDraw()
 	// ---------------------------------------------------------------------
 	// OVERLAY 2: FLOATING RIGHT PROPERTIES INSPECTOR
 	// ---------------------------------------------------------------------
+	sidebarWidth = baseWindowSize.x * 0.30f; // slightly wider than left panel
 	float rightPanelX = baseWindowPos.x + baseWindowSize.x - sidebarWidth - 10.0f;
 	ImGui::SetNextWindowPos(ImVec2(rightPanelX, baseWindowPos.y + contentTopOffset), ImGuiCond_Always);
 	ImGui::SetNextWindowSize(ImVec2(sidebarWidth, sidebarHeight), ImGuiCond_Always);
 	ImGui::SetNextWindowBgAlpha(1.0f);
 
-	if (ImGui::Begin("Property Panel##RightOverlay", nullptr, overlayFlags))
+	std::string title = "Property Panel##RightOverlay";
+	if (getCurrentEditor() != nullptr) {
+		title = "Property Panel : " + getCurrentEditor()->getName() + "##RightOverlay";
+	}
+	if (ImGui::Begin(title.c_str(), nullptr, overlayFlags))
 	{
 		if (m_onLevel && m_levelEditor != nullptr) {
 			m_levelEditor->drawRightSidebar();
@@ -208,6 +217,9 @@ void EditorGui::onDraw()
 	// DYNAMIC MODALS LAYER: Intercepts popup updates on root layer safely
 	// ---------------------------------------------------------------------
 	drawModals();
+
+	// handle input event on non ui space
+	handleInputEvent();
 }
 
 NS2::ResourceManager& EditorGui::getResourceManager() const
@@ -256,6 +268,12 @@ bool EditorGui::debug(DebugType type) const
 	return m_debugging[type];
 }
 
+const std::vector<std::string>& EditorGui::getObjects(int typeIndex)
+{
+	loadObjectTypes(typeIndex);
+	return m_objects[typeIndex];
+}
+
 void EditorGui::drawToolBar()
 {
 	float groupHeight = TOOLBAR_HEIGHT - (ImGui::GetStyle().WindowPadding.y * 2);
@@ -280,8 +298,8 @@ void EditorGui::drawToolBar()
 				changeMode();
 			}
 		}
-		ImGui::EndChild();
 	}
+	ImGui::EndChild();
 	ImGui::SameLine();
 	/* Toolbox Group */
 	if (ImGui::BeginChild("Toolbox", ImVec2(300.0f, groupHeight), ImGuiChildFlags_Borders)) {
@@ -303,8 +321,8 @@ void EditorGui::drawToolBar()
 			ImGui::SameLine();
 			ImGui::RadioButton("Place", reinterpret_cast<int*>(&m_activeTool), static_cast<int>(ToolType::PLACE));
 		}
-		ImGui::EndChild();
 	}
+	ImGui::EndChild();
 	ImGui::SameLine();
 	/* Debugging Group */
 	if (ImGui::BeginChild("Debugging", ImVec2(220.0f, groupHeight), ImGuiChildFlags_Borders)) {
@@ -361,8 +379,8 @@ void EditorGui::drawToolBar()
 				m_debugging[DebugType::COLL_PART] = !m_debugging[DebugType::COLL_PART];
 			}
 		}
-		ImGui::EndChild();
 	}
+	ImGui::EndChild();
 	auto editor = getCurrentEditor();
 	if (editor != nullptr && editor->hasAnim()) {
 		ImGui::SameLine();
@@ -389,8 +407,8 @@ void EditorGui::drawToolBar()
 			ImGui::PushItemWidth((dims.x * 2) + ImGui::GetStyle().ItemSpacing.x);
 			ImGui::SliderFloat("##Factor", &m_animFactor, 0.1f, 10.0f, "%.2f");
 			ImGui::PopItemWidth();
-			ImGui::EndChild();
 		}
+		ImGui::EndChild();
 	}
 	ImGui::SameLine();
 	/* Camera Group */
@@ -399,23 +417,17 @@ void EditorGui::drawToolBar()
 		ImGui::Text("Camera");
 		ImGui::Separator();
 		ImGui::PushItemWidth(100.0f);
-		if (ImGui::SliderFloat("Scale", &m_cameraScale, CAMERA_SCALE_MIN, CAMERA_SCALE_MAX, "%.2f")) {
-			static_cast<EditorScreen&>(m_parent).getCamera().setScale(m_cameraScale);
+		float cameraScale = static_cast<EditorScreen&>(m_parent).getCamera().getScale();
+		if (ImGui::SliderFloat("Scale", &cameraScale, CAMERA_SCALE_MIN, CAMERA_SCALE_MAX, "%.2f")) {
+			static_cast<EditorScreen&>(m_parent).getCamera().setScale(cameraScale);
 		}
-		if (ImGui::IsItemHovered()) {
-			float wheel = ImGui::GetIO().MouseWheel;
-			if ((wheel > 0.0f && m_cameraScale + CAMERA_SCALE_STEP < CAMERA_SCALE_MAX) ||
-				(wheel < 0.0f && m_cameraScale - CAMERA_SCALE_STEP > CAMERA_SCALE_MIN)) {
-				m_cameraScale += wheel * 0.1f;
-				static_cast<EditorScreen&>(m_parent).getCamera().setScale(m_cameraScale);
-			}
-		}
-		if (ImGui::DragFloat2("[X Y]", &m_cameraPos.x, 10.0f, 0.0f, 0.0f, "%.2f")) {
-			static_cast<EditorScreen&>(m_parent).getCamera().setPosition(m_cameraPos);
+		glm::vec2 cameraPos = static_cast<EditorScreen&>(m_parent).getCamera().getPosition();
+		if (ImGui::DragFloat2("[X Y]", &cameraPos.x, 10.0f, 0.0f, 0.0f, "%.2f")) {
+			static_cast<EditorScreen&>(m_parent).getCamera().setPosition(cameraPos);
 		}
 		ImGui::PopItemWidth();
-		ImGui::EndChild();
 	}
+	ImGui::EndChild();
 	if (editor != nullptr) {
 		ImGui::SameLine();
 		/* Information Group */
@@ -423,18 +435,18 @@ void EditorGui::drawToolBar()
 			ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetStyle().FramePadding.x);
 			ImGui::Text("Information");
 			ImGui::Separator();
+			float angle = 0.0f;
 			std::string name;
-			glm::vec2 pos = glm::vec2(0.0f), size = glm::vec2(0.0f);
-			float scale = 1.0f, angle = 0.0f;
-			editor->getInfo(name, pos, size, angle, scale);
+			glm::vec2 pos = glm::vec2(0.0f), size = glm::vec2(0.0f), scale = glm::vec2(1.0f);
+			editor->getInfo(name, pos, size, scale, angle);
 			name = "Name: " + name;
-			std::string strPos = std::format("X, Y, A: [{:.1f}, {:.1f}, {:.1f}]", pos.x, pos.y, angle);
-			std::string strSize = std::format("W, H, S: [{:.1f}, {:.1f}, {:.1f}]", size.x, size.y, scale);
+			std::string str1 = std::format("X, Y, W, H: [{:.1f}, {:.1f}, {:.1f}, {:.1f}]", pos.x, pos.y, size.x, size.y);
+			std::string str2 = std::format("Sx, Sy, A: [{:.1f}, {:.1f}, {:.1f}°]", scale.x, scale.y, RadToDeg(angle));
 			ImGui::Text(name.c_str());
-			ImGui::Text(strPos.c_str());
-			ImGui::Text(strSize.c_str());
-			ImGui::EndChild();
+			ImGui::Text(str1.c_str());
+			ImGui::Text(str2.c_str());
 		}
+		ImGui::EndChild();
 	}
 }
 
@@ -454,7 +466,7 @@ void EditorGui::drawLeftSidebar()
 	if (ImGui::BeginCombo("##SpawnTypeMap", previewText.c_str())) {
 		for (const auto& [typeKey, typeName] : m_objectTypes) {
 			bool isSelected = m_selectedTypeIndex == typeKey;
-			if (ImGui::Selectable(typeName.c_str(), isSelected)) {
+			if (ImGui::Selectable(typeName.c_str(), isSelected) && !isSelected) {
 				if (m_needSave) {
 					m_pendingTypeIndex = typeKey;
 					m_activeModal = ModalType::CHANGE_TYPE;
@@ -533,7 +545,7 @@ void EditorGui::drawLeftSidebar()
 			for (int i = 0; i < (int)m_objects[m_selectedTypeIndex].size(); i++) {
 				bool isSelected = (m_selectedObjectIndex == i);
 				std::string listLabel = PathHelper::getFileName(m_objects[m_selectedTypeIndex][i]);
-				if (ImGui::Selectable(listLabel.c_str(), isSelected)) {
+				if (ImGui::Selectable(listLabel.c_str(), isSelected) && !isSelected) {
 					if (m_needSave) {
 						m_pendingObjectIndex = i;
 						m_activeModal = ModalType::CHANGE_OBJECT;
@@ -556,10 +568,6 @@ void EditorGui::drawRightSidebar()
 	if (m_selectedObjectIndex >= 0 && m_selectedTypeIndex >= 0) {
 		AbstractEditor* currentEditor = getCurrentEditor();
 		if (currentEditor) {
-			ImGui::Text("Properties: %s", currentEditor->getName().c_str());
-			ImGui::Separator();
-			ImGui::Spacing();
-
 			currentEditor->onDraw();
 		}
 	}
@@ -571,23 +579,67 @@ void EditorGui::drawRightSidebar()
 void EditorGui::drawModals()
 {
 	// 1. OPEN TRIGGERS (Executed outside immediate window bounds to prevent stack corruption)
-	if (m_activeModal == ModalType::CREATE) { ImGui::OpenPopup("Create Instance"); m_activeModal = ModalType::NONE; }
+	if (m_activeModal == ModalType::CREATE) { ImGui::OpenPopup("Create Instance"); m_activeModal = ModalType::NONE; m_modalIndex = 0; }
 	if (m_activeModal == ModalType::COPY) { ImGui::OpenPopup("Copy Instance"); m_activeModal = ModalType::NONE; }
 	if (m_activeModal == ModalType::RENAME) { ImGui::OpenPopup("Rename Instance"); m_activeModal = ModalType::NONE; }
 	if (m_activeModal == ModalType::DELETE) { ImGui::OpenPopup("Confirm Deletion"); m_activeModal = ModalType::NONE; }
 	if (m_activeModal == ModalType::ERROR) { ImGui::OpenPopup("Error"); m_activeModal = ModalType::NONE; }
-	if (m_activeModal == ModalType::EXIT) { ImGui::OpenPopup("Confirm Exit"); m_activeModal = ModalType::NONE; }
-	if (m_activeModal == ModalType::CHANGE_MODE || m_activeModal == ModalType::CHANGE_TYPE || 
-		m_activeModal == ModalType::CHANGE_OBJECT) { ImGui::OpenPopup("Unsaved Change"); m_activeModal = ModalType::NONE; }
+	if (m_activeModal == ModalType::EXIT || m_activeModal == ModalType::CHANGE_MODE 
+		|| m_activeModal == ModalType::CHANGE_TYPE || m_activeModal == ModalType::CHANGE_OBJECT) { 
+		ImGui::OpenPopup("Unsaved Changes"); 
+		m_previousModal = m_activeModal;
+		m_activeModal = ModalType::NONE; 
+	}
 
 	// 2. CREATE INSTANCE MODAL DIALOG
 	if (ImGui::BeginPopupModal("Create Instance", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
 	{
-		ImGui::Text("Enter name for the new Instance:");
+		ImGui::TextUnformatted("Enter name for the new Instance:");
+		std::string namePrefix = getNamePrefix(m_selectedTypeIndex, m_modalIndex);
+		if (m_selectedTypeIndex == GameType::TYPE_PART) {
+			ImGui::AlignTextToFramePadding();
+			ImGui::TextUnformatted("Part Type");
+			ImGui::SameLine();
+			if (ImGui::BeginCombo("##Part Type", TypeHelper::partTypes[m_modalIndex].second.c_str())) {
+				for (const auto& [typeKey, typeName] : TypeHelper::partTypes) {
+					bool isSelected = (m_modalIndex == typeKey);
+					if (ImGui::Selectable(typeName.second.c_str(), isSelected) && !isSelected) {
+						m_modalIndex = typeKey;
+					}
+					if (isSelected) {
+						ImGui::SetItemDefaultFocus();
+					}
+				}
+				ImGui::EndCombo();
+			}
+		}
+		else if (m_selectedTypeIndex == GameType::TYPE_BODY) {
+			ImGui::AlignTextToFramePadding();
+			ImGui::TextUnformatted("Body Type");
+			ImGui::SameLine();
+			if (ImGui::BeginCombo("##Body Type", TypeHelper::bodyTypes[m_modalIndex].c_str())) {
+				for (const auto& [typeKey, typeName] : TypeHelper::bodyTypes) {
+					bool isSelected = (m_modalIndex == typeKey);
+					if (ImGui::Selectable(typeName.c_str(), isSelected) && !isSelected) {
+						m_modalIndex = typeKey;
+					}
+					if (isSelected) {
+						ImGui::SetItemDefaultFocus();
+					}
+				}
+				ImGui::EndCombo();
+			}
+		}
+		if (!namePrefix.empty()) {
+			ImGui::AlignTextToFramePadding();
+			ImGui::TextUnformatted(namePrefix.c_str());
+			ImGui::SameLine(0.0f, ImGui::GetStyle().ItemInnerSpacing.x);
+		}
+		ImGui::SetNextItemWidth(-FLT_MIN);
 		ImGui::InputText("##NewName", m_buffer, IM_ARRAYSIZE(m_buffer));
 		ImGui::Separator();
 		if (ImGui::Button("OK", ImVec2(120, 0))) {
-			std::string newPath = PathHelper::getObjectPath(std::string(m_buffer), static_cast<GameType>(m_selectedTypeIndex));
+			std::string newPath = PathHelper::getObjectPath(namePrefix + std::string(m_buffer), static_cast<GameType>(m_selectedTypeIndex));
 			if (NS2::IOManager::exists(newPath.c_str())) {
 				sprintf(m_buffer, "Cannot create new instance '%s'.\nthis file name already exists!", newPath.c_str());
 				m_activeModal = ModalType::ERROR;
@@ -599,7 +651,7 @@ void EditorGui::drawModals()
 				}
 				if (currentEditor) {
 					getLevel().setAmbientColor(glm::vec3(1.0f));
-					currentEditor->create(newPath);
+					currentEditor->create(newPath, m_modalIndex);
 					currentEditor->update();
 					if (currentEditor->save()) {
 						m_objects[m_selectedTypeIndex].push_back(newPath);
@@ -622,11 +674,24 @@ void EditorGui::drawModals()
 	// 3. RENAME INSTANCE MODAL DIALOG
 	if (ImGui::BeginPopupModal("Rename Instance", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
 	{
-		ImGui::Text("Enter new name for the selected instance:");
+		ImGui::TextUnformatted("Enter new name for the selected instance:");
+		std::string namePrefix = getNamePrefix(m_selectedTypeIndex, m_modalIndex);
+		if (!namePrefix.empty()) {
+			std::string name(m_buffer);
+			size_t pos = name.find(namePrefix);
+			if (pos != std::string::npos) {
+				name = name.substr(pos + namePrefix.size());
+				snprintf(m_buffer, sizeof(m_buffer), "%s", name.c_str());
+			}
+			ImGui::AlignTextToFramePadding();
+			ImGui::TextUnformatted(namePrefix.c_str());
+			ImGui::SameLine(0.0f, ImGui::GetStyle().ItemInnerSpacing.x);
+		}
+		ImGui::SetNextItemWidth(-FLT_MIN);
 		ImGui::InputText("##RenameBuf", m_buffer, IM_ARRAYSIZE(m_buffer));
 		ImGui::Separator();
 		if (ImGui::Button("OK", ImVec2(120, 0))) {
-			std::string newPath = PathHelper::getObjectPath(std::string(m_buffer), static_cast<GameType>(m_selectedTypeIndex));
+			std::string newPath = PathHelper::getObjectPath(namePrefix + std::string(m_buffer), static_cast<GameType>(m_selectedTypeIndex));
 			if (NS2::IOManager::exists(newPath.c_str())) {
 				sprintf(m_buffer, "Cannot rename the instance '%s'.\nthis file name already exists!", newPath.c_str());
 				m_activeModal = ModalType::ERROR;
@@ -675,7 +740,7 @@ void EditorGui::drawModals()
 	// 5. COPY INSTANCE MODAL DIALOG
 	if (ImGui::BeginPopupModal("Copy Instance", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
 	{
-		ImGui::Text("Enter name for the copied object configuration file:");
+		ImGui::TextUnformatted("Enter name for the copied object configuration file:");
 		ImGui::InputText("##CopyName", m_buffer, IM_ARRAYSIZE(m_buffer));
 		ImGui::Separator();
 		if (ImGui::Button("OK", ImVec2(120, 0))) {
@@ -704,69 +769,62 @@ void EditorGui::drawModals()
 	// 6. ERROR MODAL DIALOG
 	if (ImGui::BeginPopupModal("Error", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
 	{
-		ImGui::Text("An error occurred:");
+		ImGui::TextUnformatted("An error occurred:");
 		ImGui::Text("%s", m_buffer);
 		ImGui::Separator();
 		if (ImGui::Button("OK", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
 		ImGui::EndPopup();
 	}
 
-	// 7. CONFIRM EXIT MODAL DIALOG
-	if (ImGui::BeginPopupModal("Confirm Exit", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+	// 7. UNSAVED CHANGE MODE MODAL DIALOG
+	if (ImGui::BeginPopupModal("Unsaved Changes", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
 	{
-		ImGui::Text("You have unsaved changes. Are you sure you want to exit?");
-		ImGui::Separator();
-		if (ImGui::Button("YES, EXIT", ImVec2(120, 0))) {
-			m_parent.setScreenState(NS2::ScreenState::CHANGE_PREVIOUS);
-			ImGui::CloseCurrentPopup();
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("NO", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
-		ImGui::EndPopup();
-	}
-
-	// 8. UNSAVED CHANGE MODE MODAL DIALOG
-	if (ImGui::BeginPopupModal("Unsaved Change", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
-	{
-		ImGui::Text("You have unsaved changes.");
+		ImGui::TextUnformatted("You have unsaved changes.");
 		ImGui::Separator();
 		if (ImGui::Button("SAVE", ImVec2(120, 0))) {
 			AbstractEditor* currentEditor = getCurrentEditor();
 			if (currentEditor && currentEditor->save()) {
-				m_needSave = false;
-				if (m_pendingTypeIndex >= 0) {
+				if (m_previousModal == ModalType::CHANGE_TYPE) {
 					changeType(m_pendingTypeIndex);
-					m_pendingTypeIndex = -1;
 				}
-				else if (m_pendingObjectIndex >= 0) {
+				else if (m_previousModal == ModalType::CHANGE_OBJECT) {
 					changeObject(m_pendingObjectIndex);
-					m_pendingObjectIndex = -1;
 				}
-				else {
+				else if (m_previousModal == ModalType::CHANGE_MODE) {
 					changeMode();
 				}
+				else if (m_previousModal == ModalType::EXIT) {
+					m_parent.setScreenState(NS2::ScreenState::CHANGE_PREVIOUS);
+				}
+				m_needSave = false;
+				m_pendingObjectIndex = -1;
+				m_pendingTypeIndex = -1;
+				m_previousModal = ModalType::NONE;
 			}
 			else {
 				sprintf(m_buffer, "Failed to save current instance!");
 				m_activeModal = ModalType::ERROR;
 			}
-			
 			ImGui::CloseCurrentPopup();
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("DISCARD", ImVec2(120, 0))) { 
-			m_needSave = false;
-			if (m_pendingTypeIndex >= 0) {
+			if (m_previousModal == ModalType::CHANGE_TYPE) {
 				changeType(m_pendingTypeIndex);
-				m_pendingTypeIndex = -1;
 			}
-			else if (m_pendingObjectIndex >= 0) {
+			else if (m_previousModal == ModalType::CHANGE_OBJECT) {
 				changeObject(m_pendingObjectIndex);
-				m_pendingObjectIndex = -1;
 			}
-			else {
+			else if (m_previousModal == ModalType::CHANGE_MODE) {
 				changeMode();
 			}
+			else if (m_previousModal == ModalType::EXIT) {
+				m_parent.setScreenState(NS2::ScreenState::CHANGE_PREVIOUS);
+			}
+			m_needSave = false;
+			m_pendingObjectIndex = -1;
+			m_pendingTypeIndex = -1;
+			m_previousModal = ModalType::NONE;
 			ImGui::CloseCurrentPopup(); 
 		}
 		ImGui::EndPopup();
@@ -801,13 +859,7 @@ void EditorGui::changeType(int index)
 	m_selectedObjectIndex = -1; // Reset selection index when type changes
 
 	if (m_editors[index] != nullptr && m_objects[index].empty()) {
-		std::string path = PathHelper::getObjectTypePath(TypeHelper::gameTypes[index]);
-		PathHelper::createDir(path);
-		std::vector<NS2::DirEntry> entries;
-		NS2::IOManager::getRecDirectoryEntries(path.c_str(), entries, false);
-		for (auto& e : entries) {
-			m_objects[index].push_back(e.path);
-		}
+		loadObjectTypes(index);
 	}
 }
 
@@ -827,4 +879,130 @@ void EditorGui::changeObject(int index)
 			currentEditor->update();
 		}
 	}
+}
+
+void EditorGui::loadObjectTypes(int typeIndex)
+{
+	if (typeIndex >= 0 && typeIndex < m_objects.size() && m_objects[typeIndex].empty()) {
+		std::string path = PathHelper::getObjectTypePath(TypeHelper::gameTypes[typeIndex]);
+		PathHelper::createDir(path);
+		std::vector<NS2::DirEntry> entries;
+		NS2::IOManager::getRecDirectoryEntries(path.c_str(), entries, false);
+		for (auto& e : entries) {
+			m_objects[typeIndex].push_back(e.path);
+		}
+	}
+}
+
+void EditorGui::handleInputEvent()
+{
+	AbstractEditor* currentEditor = getCurrentEditor();
+	bool isOverBackground = ImGui::IsWindowHovered(ImGuiHoveredFlags_RootWindow);
+
+	if (!isOverBackground || currentEditor == nullptr) {
+		return;
+	}
+
+	ImGuiIO& io = ImGui::GetIO();
+
+	if (ImGui::IsMouseDown(ImGuiMouseButton_Left)) {
+		if (ImGui::IsMouseDragging(ImGuiMouseButton_Left)) {
+			if (m_activeTool == ToolType::MOVE || m_activeTool == ToolType::RESIZE
+				|| m_activeTool == ToolType::PLACE || m_activeTool == ToolType::COPY
+				|| m_activeTool == ToolType::ROTATE) {
+				ImVec2 dragDelta = ImGui::GetMouseDragDelta(ImGuiMouseButton_Left);
+				currentEditor->drag(glm::vec2(dragDelta.x, -dragDelta.y));
+				ImGui::ResetMouseDragDelta(ImGuiMouseButton_Left);
+			}
+		}
+		else {
+			currentEditor->select(getWorldCoord(ImGui::GetMousePos()));
+		}
+	}
+	else if (ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
+		currentEditor->dragOver(getWorldCoord(ImGui::GetMousePos()));
+	}
+	else if (ImGui::IsMouseDown(ImGuiMouseButton_Right)) {
+		currentEditor->action(getWorldCoord(ImGui::GetMousePos()));
+	}
+	else if (io.MouseDelta.x != 0.0f || io.MouseDelta.y != 0.0f) {
+		if (m_activeTool == ToolType::PLACE || m_activeTool == ToolType::COPY) {
+			currentEditor->move(glm::vec2(io.MouseDelta.x, -io.MouseDelta.y));
+		}
+	}
+	else if (io.MouseWheel != 0.0f) {
+		float wheel = io.MouseWheel;
+		float cameraScale = static_cast<EditorScreen&>(m_parent).getCamera().getScale();
+		if ((wheel > 0.0f && cameraScale + CAMERA_SCALE_STEP < CAMERA_SCALE_MAX) ||
+			(wheel < 0.0f && cameraScale - CAMERA_SCALE_STEP > CAMERA_SCALE_MIN)) {
+			cameraScale += wheel * 0.1f;
+			static_cast<EditorScreen&>(m_parent).getCamera().setScale(cameraScale);
+		}
+	}
+}
+
+std::string EditorGui::getNamePrefix(int typeIndex, int objectIndex) const
+{
+	if (typeIndex == GameType::TYPE_PART) {
+		return TypeHelper::partTypes[objectIndex].second + "_";
+	}
+	else if (typeIndex == GameType::TYPE_BODY) {
+		return TypeHelper::bodyTypes[objectIndex] + "_";
+	}
+	return "";
+}
+
+glm::vec2 EditorGui::getWorldCoord(ImVec2 coords)
+{
+	glm::vec2 screenCoords(coords.x, coords.y);
+	return static_cast<EditorScreen&>(m_parent).getCamera().screenToWorld(screenCoords);
+}
+
+bool EditorGui::drawColor(NS2::ColorRGBA8& color, const char* label)
+{
+	bool result = false;
+	float temp_rgba[4] = {
+		color.r / 255.0f,
+		color.g / 255.0f,
+		color.b / 255.0f,
+		color.a / 255.0f
+	};
+	if (ImGui::ColorEdit4(label, temp_rgba)) {
+		color.r = static_cast<GLubyte>(temp_rgba[0] * 255.0f + 0.5f);
+		color.g = static_cast<GLubyte>(temp_rgba[1] * 255.0f + 0.5f);
+		color.b = static_cast<GLubyte>(temp_rgba[2] * 255.0f + 0.5f);
+		color.a = static_cast<GLubyte>(temp_rgba[3] * 255.0f + 0.5f);
+		m_needSave = true;
+		result = true;
+	}
+	return result;
+}
+
+bool EditorGui::drawTexture(NS2::GLTexture*& texture, const char* label)
+{
+	bool result = false;
+	std::string previewText = "-- Select Texture Image --";
+	if (texture != nullptr && !texture->filePath.empty()) {
+		previewText = texture->filePath;
+	}
+	if (ImGui::BeginCombo(label, previewText.c_str())) {
+		for (const auto& e : m_assets) {
+			bool isSelected = texture != nullptr && texture->filePath == e.path;
+			if (ImGui::Selectable(e.path.c_str(), isSelected) && !isSelected) {
+				if (e.path.empty() || e.path == STR_NONE) {
+					texture = nullptr;
+				}
+				else {
+					texture = getResourceManager().getTexture(e.path);
+				}
+				m_needSave = true;
+				result = true;
+			}
+			if (isSelected) {
+				ImGui::SetItemDefaultFocus();
+			}
+		}
+		ImGui::EndCombo();
+	}
+	return result;
 }
