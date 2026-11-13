@@ -1,0 +1,98 @@
+{
+    "child_joints": [],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            64.0,
+            64.0
+        ],
+        "points": [
+            [
+                608.0,
+                328.0
+            ],
+            [
+                672.0,
+                328.0
+            ],
+            [
+                672.0,
+                392.0
+            ],
+            [
+                608.0,
+                392.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "hidden": false,
+    "index": 5,
+    "material": 1,
+    "opposite_part": 8,
+    "parent_joint": 8,
+    "path": "../Objects/PART/RIGHT_HAND_PART_1.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            637.0,
+            363.0
+        ],
+        "dim": [
+            44.0,
+            40.0
+        ],
+        "points": [
+            [
+                615.0,
+                343.0
+            ],
+            [
+                659.0,
+                343.0
+            ],
+            [
+                659.0,
+                383.0
+            ],
+            [
+                615.0,
+                383.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 78,
+        "dims": [
+            6,
+            1
+        ],
+        "invs": [
+            false,
+            true
+        ],
+        "texture": "../Assets/bh_hands/bh_hand1.png"
+    },
+    "type": 7
+}

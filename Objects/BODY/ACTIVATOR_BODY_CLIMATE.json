@@ -1,0 +1,66 @@
+{
+    "aspeed": 1.0,
+    "joints": [
+        {
+            "child": 1,
+            "index": 0,
+            "lower": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "parent": 0,
+            "point": [
+                617.5,
+                312.0
+            ],
+            "upper": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        }
+    ],
+    "mass": 1.0,
+    "material": 7,
+    "nb_parts": 2,
+    "parts_path": [
+        {
+            "index": 0,
+            "path": "../Objects/PART/ACTIVATOR_BASE_PART_CLIMATE.json"
+        },
+        {
+            "index": 1,
+            "path": "../Objects/PART/ACTIVATOR_TOP_PART_CLIMATE.json"
+        }
+    ],
+    "parts_transform": [
+        {
+            "angle": 0.0,
+            "index": 0,
+            "pos": [
+                554.0,
+                265.0
+            ],
+            "scale": [
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "angle": 0.0,
+            "index": 1,
+            "pos": [
+                553.7437133789063,
+                265.0809326171875
+            ],
+            "scale": [
+                1.0,
+                1.0
+            ]
+        }
+    ],
+    "path": "../Objects/BODY/ACTIVATOR_BODY_CLIMATE.json",
+    "shape": 1,
+    "type": 13
+}

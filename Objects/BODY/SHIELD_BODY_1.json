@@ -1,0 +1,30 @@
+{
+    "aspeed": 1.0,
+    "joints": [],
+    "mass": 5.0,
+    "material": 9,
+    "nb_parts": 1,
+    "parts_path": [
+        {
+            "index": 0,
+            "path": "../Objects/PART/SHIELD_PART_1.json"
+        }
+    ],
+    "parts_transform": [
+        {
+            "angle": 0.0,
+            "index": 0,
+            "pos": [
+                625.0,
+                260.0
+            ],
+            "scale": [
+                1.0,
+                1.0
+            ]
+        }
+    ],
+    "path": "../Objects/BODY/SHIELD_BODY_1.json",
+    "shape": 1,
+    "type": 18
+}

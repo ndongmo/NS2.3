@@ -1,0 +1,98 @@
+{
+    "child_joints": [],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            512.0,
+            307.5
+        ],
+        "dim": [
+            309.0,
+            181.0
+        ],
+        "points": [
+            [
+                357.5,
+                217.0
+            ],
+            [
+                666.5,
+                217.0
+            ],
+            [
+                666.5,
+                398.0
+            ],
+            [
+                357.5,
+                398.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "hidden": false,
+    "index": 5,
+    "material": 1,
+    "opposite_part": 8,
+    "parent_joint": 8,
+    "path": "../Objects/PART/RIGHT_HAND_PART_ROBOT-1.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            512.0,
+            307.5
+        ],
+        "dim": [
+            309.0,
+            181.0
+        ],
+        "points": [
+            [
+                357.5,
+                217.0
+            ],
+            [
+                666.5,
+                217.0
+            ],
+            [
+                666.5,
+                398.0
+            ],
+            [
+                357.5,
+                398.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 98,
+        "dims": [
+            1,
+            1
+        ],
+        "invs": [
+            false,
+            true
+        ],
+        "texture": "../Assets/bh_hands/bh_hand3.png"
+    },
+    "type": 7
+}

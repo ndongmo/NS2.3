@@ -1,0 +1,98 @@
+{
+    "child_joints": [],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            128.0,
+            128.0
+        ],
+        "points": [
+            [
+                576.0,
+                296.0
+            ],
+            [
+                704.0,
+                296.0
+            ],
+            [
+                704.0,
+                424.0
+            ],
+            [
+                576.0,
+                424.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "hidden": false,
+    "index": 0,
+    "material": 1,
+    "opposite_part": -1,
+    "parent_joint": -1,
+    "path": "../Objects/PART/DECOR_PART_4.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            633.0,
+            367.0
+        ],
+        "dim": [
+            114.0,
+            142.0
+        ],
+        "points": [
+            [
+                576.0,
+                310.0
+            ],
+            [
+                690.0,
+                310.0
+            ],
+            [
+                690.0,
+                424.0
+            ],
+            [
+                576.0,
+                424.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 62,
+        "dims": [
+            1,
+            1
+        ],
+        "invs": [
+            false,
+            false
+        ],
+        "texture": "../Assets/decors/de_box1.png"
+    },
+    "type": 22
+}

@@ -12,7 +12,6 @@
 #include "TileRenderer.h"
 #include "LightRenderer.h"
 
-#include <GLSLProgram.h>
 #include <SpriteBatch.h>
 #include <DebugRenderer.h>
 

@@ -1,0 +1,100 @@
+{
+    "child_joints": [
+        0
+    ],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            128.0,
+            192.0
+        ],
+        "points": [
+            [
+                576.0,
+                264.0
+            ],
+            [
+                704.0,
+                264.0
+            ],
+            [
+                704.0,
+                456.0
+            ],
+            [
+                576.0,
+                456.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "hidden": false,
+    "index": 0,
+    "material": 1,
+    "opposite_part": -1,
+    "parent_joint": -1,
+    "path": "../Objects/PART/ACTIVATOR_BASE_PART_2.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            128.0,
+            192.0
+        ],
+        "points": [
+            [
+                576.0,
+                264.0
+            ],
+            [
+                704.0,
+                264.0
+            ],
+            [
+                704.0,
+                456.0
+            ],
+            [
+                576.0,
+                456.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 50,
+        "dims": [
+            1,
+            1
+        ],
+        "invs": [
+            false,
+            false
+        ],
+        "texture": "../Assets/activators/ac_board1.png"
+    },
+    "type": 25
+}

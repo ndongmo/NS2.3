@@ -1,0 +1,98 @@
+{
+    "child_joints": [],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            58.0,
+            64.0
+        ],
+        "points": [
+            [
+                611.0,
+                328.0
+            ],
+            [
+                669.0,
+                328.0
+            ],
+            [
+                669.0,
+                392.0
+            ],
+            [
+                611.0,
+                392.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "hidden": false,
+    "index": 0,
+    "material": 1,
+    "opposite_part": -1,
+    "parent_joint": -1,
+    "path": "../Objects/PART/GUN_PART_CROSSBOW.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            58.0,
+            64.0
+        ],
+        "points": [
+            [
+                611.0,
+                328.0
+            ],
+            [
+                669.0,
+                328.0
+            ],
+            [
+                669.0,
+                392.0
+            ],
+            [
+                611.0,
+                392.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 82,
+        "dims": [
+            1,
+            1
+        ],
+        "invs": [
+            false,
+            false
+        ],
+        "texture": "../Assets/weapons/bw_crossbow1.png"
+    },
+    "type": 13
+}

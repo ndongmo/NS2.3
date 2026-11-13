@@ -1,0 +1,98 @@
+{
+    "child_joints": [],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            96.0,
+            54.0
+        ],
+        "points": [
+            [
+                592.0,
+                333.0
+            ],
+            [
+                688.0,
+                333.0
+            ],
+            [
+                688.0,
+                387.0
+            ],
+            [
+                592.0,
+                387.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "hidden": false,
+    "index": 0,
+    "material": 1,
+    "opposite_part": -1,
+    "parent_joint": -1,
+    "path": "../Objects/PART/DECOR_PART_3.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            96.0,
+            54.0
+        ],
+        "points": [
+            [
+                592.0,
+                333.0
+            ],
+            [
+                688.0,
+                333.0
+            ],
+            [
+                688.0,
+                387.0
+            ],
+            [
+                592.0,
+                387.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 62,
+        "dims": [
+            1,
+            1
+        ],
+        "invs": [
+            false,
+            false
+        ],
+        "texture": "../Assets/pickables/bi_card1.png"
+    },
+    "type": 22
+}

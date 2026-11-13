@@ -1,0 +1,98 @@
+{
+    "child_joints": [],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            17.0,
+            254.0
+        ],
+        "points": [
+            [
+                631.5,
+                233.0
+            ],
+            [
+                648.5,
+                233.0
+            ],
+            [
+                648.5,
+                487.0
+            ],
+            [
+                631.5,
+                487.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "hidden": false,
+    "index": 0,
+    "material": 1,
+    "opposite_part": -1,
+    "parent_joint": -1,
+    "path": "../Objects/PART/DOOR_PART_1.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            17.0,
+            254.0
+        ],
+        "points": [
+            [
+                631.5,
+                233.0
+            ],
+            [
+                648.5,
+                233.0
+            ],
+            [
+                648.5,
+                487.0
+            ],
+            [
+                631.5,
+                487.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 50,
+        "dims": [
+            1,
+            1
+        ],
+        "invs": [
+            false,
+            false
+        ],
+        "texture": "../Assets/doors/do_electro1.png"
+    },
+    "type": 21
+}

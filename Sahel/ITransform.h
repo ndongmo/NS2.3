@@ -82,6 +82,10 @@ public:
 	*/
 	virtual void setPos(glm::vec2 pos) = 0;
 	/*!
+	* \brief Set the scale.
+	*/
+	virtual void setScale(glm::vec2 scale) {}
+	/*!
 	* \brief Move the center position to the given position.
 	*/
 	virtual void setCenter(glm::vec2 center) = 0;

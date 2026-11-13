@@ -1,0 +1,98 @@
+{
+    "child_joints": [],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            512.5,
+            308.0
+        ],
+        "dim": [
+            198.0,
+            141.0
+        ],
+        "points": [
+            [
+                413.5,
+                237.5
+            ],
+            [
+                611.5,
+                237.5
+            ],
+            [
+                611.5,
+                378.5
+            ],
+            [
+                413.5,
+                378.5
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "hidden": false,
+    "index": 10,
+    "material": 1,
+    "opposite_part": 12,
+    "parent_joint": 10,
+    "path": "../Objects/PART/RIGHT_FOOT_PART_ROBOT-1.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            512.5,
+            308.0
+        ],
+        "dim": [
+            198.0,
+            141.0
+        ],
+        "points": [
+            [
+                413.5,
+                237.5
+            ],
+            [
+                611.5,
+                237.5
+            ],
+            [
+                611.5,
+                378.5
+            ],
+            [
+                413.5,
+                378.5
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 32,
+        "dims": [
+            1,
+            1
+        ],
+        "invs": [
+            false,
+            true
+        ],
+        "texture": "../Assets/bh_foots/bh_foot3.png"
+    },
+    "type": 11
+}

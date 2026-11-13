@@ -83,13 +83,18 @@ json ObjectSaver::save(const Body& b)
     j["aspeed"] = b.m_angularSpeed;
     j["shape"] = b.m_shape.getType();
     j["joints"] = b.m_joints;
+    j["nb_parts"] = b.m_parts.size();
 
     for (const auto& p : b.m_parts) {
-        j["parts_path"].push_back(p.getPath());
+        json jj;
+        jj["index"] = p.m_index;
+        jj["path"] = p.getPath();
+        j["parts_path"].push_back(jj);
 
     }
     for (const auto& p : b.m_parts) {
         json jj;
+        jj["index"] = p.m_index;
         jj["angle"] = p.getAngle();
         jj["scale"] = p.getScale();
         jj["pos"] = p.getPos();
@@ -104,10 +109,13 @@ json ObjectSaver::save(const Part& bp)
 {
     json j;
 	j["type"] = bp.m_type; 
+    j["index"] = bp.m_index;
+    j["opposite_part"] = bp.m_oppositePart;
+    j["parent_joint"] = bp.m_parentJoint;
+    j["child_joints"] = bp.m_joints;
     j["collide"] = bp.m_collide;
 	j["scalable"] = bp.m_scalable;
 	j["hidden"] = bp.m_hidden;
-	j["index"] = bp.m_index;
 	j["material"] = bp.m_material; 
 	j["path"] = bp.m_path;
 	j["sprite"] = save(bp.m_sprite);

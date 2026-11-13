@@ -8,10 +8,11 @@ TileEditor::TileEditor(EditorGui& parent) :
 	AbstractEditor(parent, m_tile)
 {}
 
-void TileEditor::create(const std::string& path, unsigned int type)
+bool TileEditor::create(const std::string& path, unsigned int type)
 {
 	m_tile.setTexture(m_parent.getResourceManager().getTexture(TILE_ASSET));
 	m_tile.setPath(path);
+	return true;
 }
 
 void TileEditor::update()

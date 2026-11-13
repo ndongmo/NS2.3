@@ -1,0 +1,98 @@
+{
+    "child_joints": [],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            64.0,
+            64.0
+        ],
+        "points": [
+            [
+                608.0,
+                328.0
+            ],
+            [
+                672.0,
+                328.0
+            ],
+            [
+                672.0,
+                392.0
+            ],
+            [
+                608.0,
+                392.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "hidden": false,
+    "index": 0,
+    "material": 1,
+    "opposite_part": -1,
+    "parent_joint": -1,
+    "path": "../Objects/PART/WALL_PART_1.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            64.0,
+            64.0
+        ],
+        "points": [
+            [
+                608.0,
+                328.0
+            ],
+            [
+                672.0,
+                328.0
+            ],
+            [
+                672.0,
+                392.0
+            ],
+            [
+                608.0,
+                392.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 126,
+        "dims": [
+            1,
+            1
+        ],
+        "invs": [
+            false,
+            false
+        ],
+        "texture": "../Assets/tiles/ti_brick6.png"
+    },
+    "type": 18
+}

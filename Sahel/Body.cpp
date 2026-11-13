@@ -112,7 +112,7 @@ void Body::applyForces(float deltaTime)
 int Body::getParentPart(unsigned int partIndex) const
 {
 	for (auto& j : m_joints) {
-		if (j.son == partIndex)
+		if (j.child == partIndex)
 			return j.parent;
 	}
 	return -1;
@@ -120,7 +120,7 @@ int Body::getParentPart(unsigned int partIndex) const
 int Body::getParentJoint(unsigned int partIndex) const
 {
 	for (auto& j : m_joints) {
-		if (j.son == partIndex)
+		if (j.child == partIndex)
 			return j.index;
 	}
 	return -1;
@@ -161,9 +161,6 @@ void Body::updateShape()
 	if (m_shape.getType() == Shape2DType::CIRCLE) {
 		updateCircle();
 	}
-	else if (m_shape.getType() == Shape2DType::POLYGON) {
-		updatePolygon();
-	}
 	else {
 		updateBox();
 	}
@@ -175,19 +172,7 @@ void Body::updateShape(float angle)
 	if (m_shape.getType() == Shape2DType::BOX)
 		updateBox();
 
-	m_shape.rotate(angle * DEGTORAD);
-}
-void Body::updatePolygon()
-{
-	std::vector<glm::vec2> points;
-	for (auto& p : m_parts){
-		if (p.canCollide()) {
-			for (uint16_t i = 0; i < p.getShape().getPoints().size(); i++)
-				points.push_back(p.getShape().getPoints().at(i));
-		}
-	}
-
-	m_shape.initPolygon(std::move(MathUtils::convexHull(points)), 0.0f);
+	m_shape.rotate(angle);
 }
 void Body::updateCircle()
 {
@@ -216,22 +201,17 @@ void Body::updateCircle()
 
 void Body::updateBox()
 {
-	float minX = m_parts[0].getShape().getMinX();
-	float minY = m_parts[0].getShape().getMinY();
-	float maxX = m_parts[0].getShape().getMaxX();
-	float maxY = m_parts[0].getShape().getMaxY();
-	float x = 0.0f, y = 0.0f;
+	float minX, minY, maxX, maxY;
+	float minXX, minYY, maxXX, maxYY;
+	m_parts[0].getShape().getBorders(minX, minY, maxX, maxY);
 
 	for (uint16_t i = 1; i < m_parts.size(); i++) {
 		if (m_parts[i].canCollide()) {
-			x = m_parts[i].getShape().getMinX();
-			y = m_parts[i].getShape().getMinY();
-			if (x < minX) minX = x;
-			if (y < minY) minY = y;
-			x = m_parts[i].getShape().getMaxX();
-			y = m_parts[i].getShape().getMaxY();
-			if (x > maxX) maxX = x;
-			if (y > maxY) maxY = y;
+			m_parts[i].getShape().getBorders(minXX, minYY, maxXX, maxYY);
+			if (minXX < minX) minX = minXX;
+			if (minYY < minY) minY = minYY;
+			if (maxXX > maxX) maxX = maxXX;
+			if (maxYY > maxY) maxY = maxYY;
 		}
 	}
 	m_shape.setBox(minX, minY, maxX, maxY);
@@ -239,7 +219,7 @@ void Body::updateBox()
 
 void Body::move(unsigned int partIndex, glm::vec2 value)
 {
-	float orientation = getAngleRad() + m_orientation;
+	float orientation = getAngle() + m_orientation;
 	float cosAngle = cos(orientation);
 	float sinAngle = sin(orientation);
 
@@ -253,7 +233,7 @@ void Body::move(unsigned int partIndex, const Move2D& m, glm::vec2 rotPoint)
 	m_parts[partIndex].move(m, rotPoint);
 
 	for (auto& j : m_parts[partIndex].m_joints) {
-		move(m_joints[j].son, m, rotPoint);
+		move(m_joints[j].child, m, rotPoint);
 		m_joints[j].update(m, rotPoint);
 	}
 }
@@ -266,10 +246,10 @@ void Body::move(const Move2D& m)
 }
 void Body::move(unsigned int jointIndex, float x, float y, float angle)
 {
-	Move2D m(x, y, angle * DEGTORAD);
+	Move2D m(x, y, angle);
 	m_joints[jointIndex].correctValue(m);
 
-	float orientation = m_orientation + m_joints[jointIndex].angle + getAngleRad();
+	float orientation = m_orientation + m_joints[jointIndex].angle + getAngle();
 	float cosAngle = cos(orientation);
 	float sinAngle = sin(orientation);
 	float mx = m.pos.x;
@@ -280,19 +260,19 @@ void Body::move(unsigned int jointIndex, float x, float y, float angle)
 
 	m_joints[jointIndex].point += m.pos;
 
-	move(m_joints[jointIndex].son, m, m_joints[jointIndex].point);
+	move(m_joints[jointIndex].child, m, m_joints[jointIndex].point);
 }
 void Body::move(unsigned int jointIndex, const MoveChange& mc)
 {
 	// scaling and rotating do not work yet!!!
 	if ((mc.scale.x != 0 || mc.scale.y != 0) && mc.angle == 0) {
-		incrScale(m_joints[jointIndex].son, mc.scale);
+		incrScale(m_joints[jointIndex].child, mc.scale);
 	}
 	else if (mc.pos.x != 0 || mc.pos.y != 0 || mc.angle != 0) {
 		move(jointIndex, mc.pos.x, mc.pos.y, mc.angle);
 	}
 	if (mc.r != 0 || mc.g != 0 || mc.b != 0 || mc.alpha != 0) {
-		m_parts[m_joints[jointIndex].son].incrColor((int16_t)mc.r, 
+		m_parts[m_joints[jointIndex].child].incrColor((int16_t)mc.r, 
 			(int16_t)mc.g, (int16_t)mc.b, (int16_t)mc.alpha);
 	}
 }
@@ -332,7 +312,7 @@ void Body::rotate(unsigned int partIndex, float angle)
 		m_parts[partIndex].rotate(angle);
 
 		for (auto& j : m_parts[partIndex].m_joints) {
-			rotate(m_joints[j].son, angle, m_parts[partIndex].m_shape.getCenter());
+			rotate(m_joints[j].child, angle, m_parts[partIndex].m_shape.getCenter());
 			MathUtils::rotatePoint(m_joints[j].point, m_parts[partIndex].m_shape.getCenter(), angle);
 		}
 	}
@@ -342,7 +322,7 @@ void Body::rotate(unsigned int partIndex, float angle, glm::vec2 pos)
 	m_parts[partIndex].rotate(angle, pos);
 
 	for (auto& j : m_parts[partIndex].m_joints) {
-		rotate(m_joints[j].son, angle, pos);
+		rotate(m_joints[j].child, angle, pos);
 		MathUtils::rotatePoint(m_joints[j].point, pos, angle);
 	}
 }
@@ -356,7 +336,7 @@ void Body::scale(unsigned int partIndex, glm::vec2 value)
 	}
 
 	for (auto& j : m_parts[partIndex].m_joints) {
-		scale(m_joints[j].son, value, m_parts[partIndex].m_shape.getCenter());
+		scale(m_joints[j].child, value, m_parts[partIndex].m_shape.getCenter());
 		m_joints[j].point = MathUtils::scale(m_joints[j].point, m_parts[partIndex].m_shape.getCenter(), value);
 	}
 }
@@ -365,7 +345,7 @@ void Body::scale(unsigned int partIndex, glm::vec2 value, glm::vec2 pos)
 	m_parts[partIndex].scale(value, pos);
 
 	for (auto& j : m_parts[partIndex].m_joints) {
-		scale(m_joints[j].son, value, pos);
+		scale(m_joints[j].child, value, pos);
 		m_joints[j].point = MathUtils::scale(m_joints[j].point, pos, value);
 	}
 }
@@ -378,19 +358,25 @@ void Body::incrPos(unsigned int partIndex, glm::vec2 offset)
 	}
 
 	for (auto& j : m_parts[partIndex].m_joints) {
-		incrPos(m_joints[j].son, offset);
+		incrPos(m_joints[j].child, offset);
 	}
 }
 void Body::setPos(unsigned int partIndex, glm::vec2 pos)
 {
-	glm::vec2 iPos = m_parts[partIndex].getPos();
-	m_parts[partIndex].setPos(pos);
+	glm::vec2 offset = m_parts[partIndex].getPos() - pos;
+	incrPos(partIndex, offset);
+}
 
-	for (auto& j : m_parts[partIndex].m_joints){
-		glm::vec2 offset = m_parts[m_joints[j].son].getPos() - iPos;
-		setPos(m_joints[j].son, pos + offset);
-		m_joints[j].point += offset;
-	}
+void Body::setScale(unsigned int partIndex, glm::vec2 value)
+{
+	value = value / m_parts[partIndex].getScale();
+	scale(partIndex, value);
+}
+
+void Body::setAngle(unsigned int partIndex, float angle)
+{
+	angle = angle - m_parts[partIndex].getAngle();
+	rotate(partIndex, angle);
 }
 
 void Body::initAngle(unsigned int partIndex, float angle)
@@ -398,7 +384,7 @@ void Body::initAngle(unsigned int partIndex, float angle)
 	m_parts[partIndex].rotate(angle);
 
 	for (auto& j : m_parts[partIndex].m_joints) {
-		initAngle(m_joints[j].son, angle, m_parts[partIndex].m_shape.getCenter());
+		initAngle(m_joints[j].child, angle, m_parts[partIndex].m_shape.getCenter());
 	}
 }
 void Body::initAngle(unsigned int partIndex, float angle, glm::vec2 pos)
@@ -406,7 +392,7 @@ void Body::initAngle(unsigned int partIndex, float angle, glm::vec2 pos)
 	m_parts[partIndex].rotate(angle, pos);
 
 	for (auto& j : m_parts[partIndex].m_joints) {
-		initAngle(m_joints[j].son, angle, pos);
+		initAngle(m_joints[j].child, angle, pos);
 	}
 }
 void Body::initScale(unsigned int partIndex, glm::vec2 scale)
@@ -414,7 +400,7 @@ void Body::initScale(unsigned int partIndex, glm::vec2 scale)
 	m_parts[partIndex].scale(scale);
 
 	for (auto& j : m_parts[partIndex].m_joints) {
-		initScale(m_joints[j].son, scale, m_parts[partIndex].m_shape.getCenter());
+		initScale(m_joints[j].child, scale, m_parts[partIndex].m_shape.getCenter());
 	}
 }
 void Body::initScale(unsigned int partIndex, glm::vec2 scale, glm::vec2 pos)
@@ -422,17 +408,12 @@ void Body::initScale(unsigned int partIndex, glm::vec2 scale, glm::vec2 pos)
 	m_parts[partIndex].scale(scale, pos);
 
 	for (auto& j : m_parts[partIndex].m_joints) {
-		initScale(m_joints[j].son, scale, pos);
+		initScale(m_joints[j].child, scale, pos);
 	}
 }
 void Body::initPos(unsigned int partIndex, glm::vec2 pos)
 {
 	m_parts[partIndex].setPos(pos);
-	glm::vec2 iPos = m_parts[partIndex].getPos();
-
-	for (auto& j : m_parts[partIndex].m_joints) {
-		initPos(m_joints[j].son, pos + m_parts[m_joints[j].son].getPos() - iPos);
-	}
 }
 #pragma endregion 
 
@@ -470,7 +451,7 @@ void Body::setCenter(glm::vec2 center)
 
 void Body::setAngle(float angle)
 {
-	angle = DegToRad(angle) - getAngleRad();
+	angle = angle - getAngle();
 
 	if (!m_parts.empty()) {
 		rotate(0, angle);
@@ -496,7 +477,6 @@ void Body::setScale(glm::vec2 value)
 void Body::rotate(float angle)
 {
 	if (angle == 0.0f) return;
-	angle *= DEGTORAD;
 
 	if (!m_parts.empty()) {
 		rotate(0, angle);
@@ -514,7 +494,6 @@ void Body::rotate(float angle)
 void Body::rotate(float angle, glm::vec2 pos)
 {
 	if (angle == 0.0f) return;
-	angle *= DEGTORAD;
 
 	if (!m_parts.empty()) {
 		rotate(0, angle, pos);

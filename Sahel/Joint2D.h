@@ -15,6 +15,10 @@ class Joint2D
 {
 public:
 	/*!
+	* \brief Initializes the joint.
+	*/
+	void init(unsigned int index, unsigned int parent, unsigned int child);
+	/*!
 	 * \brief Updates the joint rotation point with the given move.
 	 */
 	void update(const Move2D& m, const glm::vec2& pos);
@@ -31,10 +35,9 @@ public:
 
 	unsigned int index = 0;					/* Index in the body joint's vector */
 	unsigned int parent = 0;				/* Parent body part */
-	unsigned int son = 0;					/* Son body part */
+	unsigned int child = 0;					/* Child body part */
 	float angle = 0.0f;						/* Current angle. Stores the previous rotation undergone by the joint */
 	glm::vec2 point{ 0.0f, 0.0f };			/* Rotation point in earth coordinates */
-	std::string name;						/* Joint's name */
 	Move2D lower;							/* Could be lower angle for Angle joint or lower x/y for Axis joint */
 	Move2D upper;							/* Could be upper angle for Angle joint or upper x/y for Axis joint */
 	Move2D value;							/* Current joint value */

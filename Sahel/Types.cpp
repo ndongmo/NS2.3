@@ -16,6 +16,7 @@ std::unordered_map<unsigned char, std::string> TypeHelper::throwingTypes;
 std::unordered_map<unsigned char, std::string> TypeHelper::gameTypes;
 std::unordered_map<unsigned char, std::string> TypeHelper::shapeTypes;
 std::unordered_map<unsigned char, std::string> TypeHelper::depthTypes;
+std::unordered_map<unsigned char, std::string> TypeHelper::depthTypes2;
 std::unordered_map<unsigned char, std::string> TypeHelper::upgradeTypes;
 std::unordered_map<unsigned char, std::string> TypeHelper::materialTypes;
 std::unordered_map<unsigned char, std::string> TypeHelper::weatherTypes;
@@ -26,11 +27,10 @@ std::unordered_map<unsigned char, std::string> TypeHelper::shopSkills;
 std::unordered_map<int, std::string> TypeHelper::entityTypes;
 std::unordered_map<int, std::string> TypeHelper::itemTypes;
 
+std::unordered_map<unsigned char, std::string> TypeHelper::partTypes;
 std::unordered_map<unsigned char, std::string> TypeHelper::bodyTypes;
-std::unordered_map<unsigned char, std::string> TypeHelper::human_partTypes;
-std::unordered_map<unsigned char, std::string> TypeHelper::human_jointTypes;
-std::unordered_map<unsigned char, std::pair<unsigned char, std::string>> TypeHelper::partTypes;
 std::unordered_map<unsigned char, std::vector<BodyPart>> TypeHelper::bodyParts;
+std::unordered_map<unsigned char, std::vector<BodyJoint>> TypeHelper::bodyJoints;
 
 GameData TypeHelper::gameData;
 SaveData TypeHelper::saveData;
@@ -47,33 +47,33 @@ void TypeHelper::init()
 	if (!m_init) {
 		initFolders();
 
-		createShopSkills(shopSkills);
-		createAgentClasses(agentClasses);
-		createFontAlignment(fontAlignments);
-		createGameStates(gameStates);
-		createWeatherTypes(weatherTypes);
-		createQuestStates(questStates);
-		createQuestTypes(questTypes);
-		createKeyTypes(keyTypes);
-		createSensorTypes(sensorTypes);
-		createDecorTypes(decorTypes);
-		createTrapTypes(trapTypes);
-		createBonusTypes(bonusTypes);
-		createAITypes(aiTypes);
-		createMaterialTypes(materialTypes);
-		createEffectTypes(effectTypes);
-		createThrowingTypes(throwingTypes);
-		createUpgradeTypes(upgradeTypes);
-		createItemTypes(itemTypes);
-		createShapeTypes(shapeTypes);
-		createDepthTypes(depthTypes);
-		createBodyTypes(bodyTypes);
-		createPartTypes(partTypes);
-		createGameTypes(gameTypes);
-		createEntityTypes(entityTypes);
-		createHumanPartTypes(human_partTypes);
-		createHumanJointTypes(human_jointTypes);
+		createShopSkills();
+		createAgentClasses();
+		createFontAlignment();
+		createGameStates();
+		createWeatherTypes();
+		createQuestStates();
+		createQuestTypes();
+		createKeyTypes();
+		createSensorTypes();
+		createDecorTypes();
+		createTrapTypes();
+		createBonusTypes();
+		createAITypes();
+		createMaterialTypes();
+		createEffectTypes();
+		createThrowingTypes();
+		createUpgradeTypes();
+		createItemTypes();
+		createShapeTypes();
+		createDepthTypes();
+		createDepthTypes2();
+		createBodyTypes();
+		createGameTypes();
+		createEntityTypes();
+		createPartTypes();
 		createBodyParts();
+		createBodyJoints();
 
 		//ObjectManager<GameData>::load<GameDataHandler>(gameData, PathHelper::getUtilsPath("LEVELS"));
 		//ObjectManager<SaveData>::load<SaveDataHandler>(saveData, SAVES_FILE);
@@ -110,9 +110,9 @@ void TypeHelper::clear()
 	bodyTypes.clear();
 	partTypes.clear();
 	entityTypes.clear();
-	human_jointTypes.clear();
-	human_partTypes.clear();
 	bodyParts.clear();
+	bodyJoints.clear();
+	depthTypes2.clear();
 }
 
 void TypeHelper::initFolders()
@@ -132,82 +132,35 @@ bool TypeHelper::saveSaveData()
 	return true;
 }
 
-PartType TypeHelper::getPartOf(BodyType type, int part)
+const BodyPart& TypeHelper::getBodyPart(int partType)
 {
-	std::string partName = getPartType(type, part);
-
-	for (auto& p : partTypes) {
-		if (p.second.second == partName)
-			return (PartType)p.first;
-	}
-	return PartType::PART_TILE;
-}
-const BodyPart& TypeHelper::getBodyPart(BodyType type, int partType)
-{
-	for (const auto& p : bodyParts[type]) {
-		if (p.partType == partType) {
-			return p;
+	for (const auto& BodyPart : bodyParts) {
+		for (const auto& p : BodyPart.second) {
+			if (p.partType == partType) {
+				return p;
+			}
 		}
 	}
 	throw std::out_of_range("Part not found");
 }
-int TypeHelper::getOppositePart(BodyType type, int partType)
+const BodyJoint* TypeHelper::getParent(BodyType type, int childPart)
 {
-	if (type == BodyType::BODY_HUMAN) {
-		switch (partType)
-		{
-		case HumanPart::HP_RIGHT_ARM:
-			return HumanPart::HP_LEFT_ARM;
-		case HumanPart::HP_RIGHT_FOREARM:
-			return HumanPart::HP_LEFT_FOREARM;
-		case HumanPart::HP_RIGHT_HAND:
-			return HumanPart::HP_LEFT_HAND;
-		case HumanPart::HP_RIGHT_LEG:
-			return HumanPart::HP_LEFT_LEG;
-		case HumanPart::HP_RIGHT_FOOT:
-			return HumanPart::HP_LEFT_FOOT;
-		case HumanPart::HP_LEFT_ARM:
-			return HumanPart::HP_RIGHT_ARM;
-		case HumanPart::HP_LEFT_FOREARM:
-			return HumanPart::HP_RIGHT_FOREARM;
-		case HumanPart::HP_LEFT_HAND:
-			return HumanPart::HP_RIGHT_HAND;
-		case HumanPart::HP_LEFT_LEG:
-			return HumanPart::HP_RIGHT_LEG;
-		case HumanPart::HP_LEFT_FOOT:
-			return HumanPart::HP_RIGHT_FOOT;
+	for (const auto& j : bodyJoints[type]) {
+		if (j.childIndex == childPart) {
+			return &j;
 		}
 	}
-	return -1;
+	return nullptr;
 }
-int TypeHelper::getOppositeJoint(BodyType type, int jointType)
+std::vector<const BodyJoint*> TypeHelper::getChildren(BodyType type, int parentPart)
 {
-	if (type == BodyType::BODY_HUMAN) {
-		switch (jointType)
-		{
-		case HumanJoint::HJ_RIGHT_SOULDER:
-			return HumanJoint::HJ_LEFT_SHOULDER;
-		case HumanJoint::HJ_RIGHT_ELBOW:
-			return HumanJoint::HJ_LEFT_ELBOW;
-		case HumanJoint::HJ_RIGHT_WRIST:
-			return HumanJoint::HJ_LEFT_WRIST;
-		case HumanJoint::HJ_RIGHT_HIP:
-			return HumanJoint::HJ_LEFT_HIP;
-		case HumanJoint::HJ_RIGHT_ANKLE:
-			return HumanJoint::HJ_LEFT_ANKLE;
-		case HumanJoint::HJ_LEFT_SHOULDER:
-			return HumanJoint::HJ_RIGHT_SOULDER;
-		case HumanJoint::HJ_LEFT_ELBOW:
-			return HumanJoint::HJ_RIGHT_ELBOW;
-		case HumanJoint::HJ_LEFT_WRIST:
-			return HumanJoint::HJ_RIGHT_WRIST;
-		case HumanJoint::HJ_LEFT_HIP:
-			return HumanJoint::HJ_RIGHT_HIP;
-		case HumanJoint::HJ_LEFT_ANKLE:
-			return HumanJoint::HJ_RIGHT_ANKLE;
+	std::vector <const BodyJoint*> children;
+	for (const auto& j : bodyJoints[type]) {
+		if (j.parentIndex == parentPart) {
+			children.push_back(&j);
 		}
 	}
-	return -1;
+	return children;
 }
 int TypeHelper::getEntityIndex(GameType type)
 {
@@ -416,41 +369,6 @@ EntityType TypeHelper::getEntityType(EntityID id)
 	}
 	return EntityType::ENTITY_DECOR;
 }
-unsigned int TypeHelper::getPartIndex(int type)
-{
-	return partTypes.at(type).first;
-}
-unsigned int TypeHelper::getPartCount(BodyType type)
-{
-	switch (type)
-	{
-	case BODY_HUMAN:
-		return static_cast<unsigned int>(human_partTypes.size());
-	case BODY_COFFER:
-	case BODY_ACTIVATOR:
-		return 2;
-	default:
-		return 1;
-	}
-}
-unsigned int TypeHelper::getJointCount(BodyType type)
-{
-	switch (type)
-	{
-	case BODY_HUMAN:
-		return static_cast<unsigned int>(human_jointTypes.size());
-	case BODY_COFFER:
-	case BODY_ACTIVATOR:
-		return 1;
-	default:
-		return 0;
-	}
-}
-
-std::string TypeHelper::getPartType(PartType type)
-{
-	return partTypes.at(type).second;
-}
 std::string TypeHelper::getBodyType(BodyType type)
 {
 	return bodyTypes.at(type);
@@ -474,76 +392,20 @@ std::string TypeHelper::getAgentClass(AgentClass aClass)
 {
 	return agentClasses.at(aClass);
 }
-std::string TypeHelper::getJointType(BodyType type, int joint)
+
+DepthType TypeHelper::getDepthType2(int type2)
 {
-	switch (type)
-	{
-	case BODY_HUMAN:
-		return human_jointTypes.at(joint);
-	case BODY_COFFER:
-	case BODY_ACTIVATOR:
-		return "BASE_TOP";
-	default:
-		return "NOTHING";
+	for (const auto& [typeKey, typeName] : depthTypes) {
+		if (typeName == depthTypes2[type2]) {
+			return static_cast<DepthType>(typeKey);
+		}
 	}
+	throw std::out_of_range("depth not found");
 }
 
 std::string TypeHelper::getEntityType(EntityType type)
 {
 	return entityTypes.at(type);
-}
-
-std::string TypeHelper::getPartType(BodyType type, int part)
-{
-	switch (type)
-	{
-	case BODY_HUMAN:
-		return human_partTypes.at(part);
-	case BODY_TILE:
-		return partTypes.at(PartType::PART_TILE).second;
-	case BODY_LIFT:
-		return partTypes.at(PartType::PART_LIFT).second;
-	case BODY_GUN:
-		return partTypes.at(PartType::PART_GUN).second;
-	case BODY_SWORD:
-		return partTypes.at(PartType::PART_SWORD).second;
-	case BODY_FIST:
-		return partTypes.at(PartType::PART_FIST).second;
-	case BODY_WALL:
-		return partTypes.at(PartType::PART_WALL).second;
-	case BODY_AMMO:
-		return partTypes.at(PartType::PART_AMMO).second;
-	case BODY_FLASHLIGHT:
-		return partTypes.at(PartType::PART_FLASHLIGHT).second;
-	case BODY_DECOR:
-		return partTypes.at(PartType::PART_DECOR).second;
-	case BODY_COFFER:
-		if(part == partTypes.at(PartType::PART_COFFER_BASE).first)
-			return  partTypes.at(PartType::PART_COFFER_BASE).second;
-		else
-			return  partTypes.at(PartType::PART_COFFER_TOP).second;
-	case BODY_ACTIVATOR:
-		if (part == partTypes.at(PartType::PART_ACTIVATOR_BASE).first)
-			return  partTypes.at(PartType::PART_ACTIVATOR_BASE).second;
-		else
-			return  partTypes.at(PartType::PART_ACTIVATOR_TOP).second;
-	case BODY_DOOR:
-		return  partTypes.at(PartType::PART_DOOR).second;
-	case BODY_EMPTY:
-		return  partTypes.at(PartType::PART_EMPTY).second;
-	case BODY_TRAP:
-		return  partTypes.at(PartType::PART_TRAP).second;
-	case BODY_SENSOR:
-		return  partTypes.at(PartType::PART_SENSOR).second;
-	case BODY_LAMP:
-		return  partTypes.at(PartType::PART_LAMP).second;
-	case BODY_PROJECTILE:
-		return  partTypes.at(PartType::PART_PROJECTILE).second;
-	case BODY_SHIELD:
-		return  partTypes.at(PartType::PART_SHIELD).second;
-	default:
-		throw std::exception();
-	}
 }
 
 std::string TypeHelper::getEntity(EntityID id)
@@ -596,400 +458,406 @@ std::string TypeHelper::getMaterialType(MaterialType type)
 	return materialTypes.at(type);
 }
 
-void TypeHelper::createKeyTypes(std::unordered_map<unsigned char, std::string> &m)
+void TypeHelper::createKeyTypes()
 {
-	m[KeyType::CRANK] = "CRANK";
-	m[KeyType::CARD] = "CARD";
-	m[KeyType::KEY] = "KEY";
-	m[KeyType::PLATE] = "PLATE";
-	m[KeyType::TOOLS] = "TOOLS";
-	m[KeyType::CODE] = "CODE";
+	keyTypes[KeyType::CRANK] = "CRANK";
+	keyTypes[KeyType::CARD] = "CARD";
+	keyTypes[KeyType::KEY] = "KEY";
+	keyTypes[KeyType::PLATE] = "PLATE";
+	keyTypes[KeyType::TOOLS] = "TOOLS";
+	keyTypes[KeyType::CODE] = "CODE";
 }
 
-void TypeHelper::createSensorTypes(std::unordered_map<unsigned char, std::string> &m)
+void TypeHelper::createSensorTypes()
 {
-	m[SensorType::SENSOR_AREA] = "AREA";
-	m[SensorType::SENSOR_HIDE1] = "HIDE1";
-	m[SensorType::SENSOR_HIDE2] = "HIDE2";
-	m[SensorType::SENSOR_VIEW] = "VIEW";
-	m[SensorType::SENSOR_SOUND] = "SOUND";
-	m[SensorType::SENSOR_LEVEL] = "LEVEL";
+	sensorTypes[SensorType::SENSOR_AREA] = "AREA";
+	sensorTypes[SensorType::SENSOR_HIDE1] = "HIDE1";
+	sensorTypes[SensorType::SENSOR_HIDE2] = "HIDE2";
+	sensorTypes[SensorType::SENSOR_VIEW] = "VIEW";
+	sensorTypes[SensorType::SENSOR_SOUND] = "SOUND";
+	sensorTypes[SensorType::SENSOR_LEVEL] = "LEVEL";
 }
 
-void TypeHelper::createDecorTypes(std::unordered_map<unsigned char, std::string> &m)
+void TypeHelper::createDecorTypes()
 {
-	m[DecorType::DECOR_NORMAL] = "NORMAL";
-	m[DecorType::DECOR_MOVABLE] = "MOVABLE";
-	m[DecorType::DECOR_INVISIBLE] = "INVISIBLE";
-	m[DecorType::DECOR_BREAKABLE] = "BREAKABLE";
-	m[DecorType::DECOR_ROOF] = "ROOF";
-	m[DecorType::DECOR_CHECKPOINT] = "CHECKPOINT";
-	m[DecorType::DECOR_FORGE] = "FORGE";
+	decorTypes[DecorType::DECOR_NORMAL] = "NORMAL";
+	decorTypes[DecorType::DECOR_MOVABLE] = "MOVABLE";
+	decorTypes[DecorType::DECOR_INVISIBLE] = "INVISIBLE";
+	decorTypes[DecorType::DECOR_BREAKABLE] = "BREAKABLE";
+	decorTypes[DecorType::DECOR_ROOF] = "ROOF";
+	decorTypes[DecorType::DECOR_CHECKPOINT] = "CHECKPOINT";
+	decorTypes[DecorType::DECOR_FORGE] = "FORGE";
 }
 
-void TypeHelper::createTrapTypes(std::unordered_map<unsigned char, std::string> &m)
+void TypeHelper::createTrapTypes()
 {
-	m[TrapType::CRUSHING] = "CRUSHING";
-	m[TrapType::PIERCING] = "PIERCING";
-	m[TrapType::SWALLOWING] = "SWALLOWING";
+	trapTypes[TrapType::CRUSHING] = "CRUSHING";
+	trapTypes[TrapType::PIERCING] = "PIERCING";
+	trapTypes[TrapType::SWALLOWING] = "SWALLOWING";
 }
 
-void TypeHelper::createBonusTypes(std::unordered_map<unsigned char, std::string> &m)
+void TypeHelper::createBonusTypes()
 {
-	m[BonusType::A] = "A";
-	m[BonusType::B] = "B";
-	m[BonusType::C] = "C";
-	m[BonusType::D] = "D";
-	m[BonusType::E] = "E";
-	m[BonusType::F] = "F";
-	m[BonusType::S] = "S";
+	bonusTypes[BonusType::A] = "A";
+	bonusTypes[BonusType::B] = "B";
+	bonusTypes[BonusType::C] = "C";
+	bonusTypes[BonusType::D] = "D";
+	bonusTypes[BonusType::E] = "E";
+	bonusTypes[BonusType::F] = "F";
+	bonusTypes[BonusType::S] = "S";
 }
 
-void TypeHelper::createAITypes(std::unordered_map<unsigned char, std::string> &m)
+void TypeHelper::createAITypes()
 {
-	m[AIType::PLAYER] = "PLAYER";
-	m[AIType::NPC] = "NPC";
-	m[AIType::ENEMY] = "ENEMY";
+	aiTypes[AIType::PLAYER] = "PLAYER";
+	aiTypes[AIType::NPC] = "NPC";
+	aiTypes[AIType::ENEMY] = "ENEMY";
 }
 
-void TypeHelper::createHumanPartTypes(std::unordered_map<unsigned char, std::string> &m)
+void TypeHelper::createEntityTypes()
 {
-	m[HumanPart::HP_HIP] = "HIP";
-	m[HumanPart::HP_BODY] = "BODY";
-	m[HumanPart::HP_HEAD] = "HEAD";
-	m[HumanPart::HP_LEFT_ARM] = "LEFT_ARM";
-	m[HumanPart::HP_RIGHT_ARM] = "RIGHT_ARM";
-	m[HumanPart::HP_LEFT_FOREARM] = "LEFT_FOREARM";
-	m[HumanPart::HP_RIGHT_FOREARM] = "RIGHT_FOREARM";
-	m[HumanPart::HP_LEFT_HAND] = "LEFT_HAND";
-	m[HumanPart::HP_RIGHT_HAND] = "RIGHT_HAND";
-	m[HumanPart::HP_LEFT_LEG] = "LEFT_LEG";
-	m[HumanPart::HP_RIGHT_LEG] = "RIGHT_LEG";
-	m[HumanPart::HP_LEFT_FOOT] = "LEFT_FOOT";
-	m[HumanPart::HP_RIGHT_FOOT] = "RIGHT_FOOT";
+	entityTypes[EntityType::ENTITY_WEAPON_SHIELD] = "SHIELD WEAPON";
+	entityTypes[EntityType::ENTITY_WEAPON_STRIKE] = "STRIKE WEAPON";
+	entityTypes[EntityType::ENTITY_WEAPON_THROW] = "THROW WEAPON";
+	entityTypes[EntityType::ENTITY_WEAPON_FIST] = "FIST WEAPON";
+	entityTypes[EntityType::ENTITY_WEAPON_LIGHT] = "LIGHT WEAPON";
+	entityTypes[EntityType::ENTITY_AGENT] = "AGENT";
+	entityTypes[EntityType::ENTITY_PLAYER] = "PLAYER";
+	entityTypes[EntityType::ENTITY_ENEMY] = "ENEMY";
+	entityTypes[EntityType::ENTITY_NPC] = "NPC";
+	entityTypes[EntityType::ENTITY_DECOR] = "DECOR";
+	entityTypes[EntityType::ENTITY_COFFER] = "COFFER";
+	entityTypes[EntityType::ENTITY_PICKABLE] = "PICKABLE";
+	entityTypes[EntityType::ENTITY_TRAP] = "TRAP";
+	entityTypes[EntityType::ENTITY_LIFT] = "LIFT";
+	entityTypes[EntityType::ENTITY_DOOR] = "DOOR";
+	entityTypes[EntityType::ENTITY_ACTIVATOR] = "ACTIVATOR";
+	entityTypes[EntityType::ENTITY_LAMP] = "LAMP";
+	entityTypes[EntityType::ENTITY_SENSOR] = "SENSOR";
 }
 
-void TypeHelper::createHumanJointTypes(std::unordered_map<unsigned char, std::string> &m)
+void TypeHelper::createGameTypes()
 {
-	m[HumanJoint::HJ_NECK] = "NECK";
-	m[HumanJoint::HJ_LEFT_SHOULDER] = "LEFT_SHOULDER";
-	m[HumanJoint::HJ_RIGHT_SOULDER] = "RIGHT_SOULDER";
-	m[HumanJoint::HJ_LEFT_ELBOW] = "LEFT_ELBOW";
-	m[HumanJoint::HJ_RIGHT_ELBOW] = "RIGHT_ELBOW";
-	m[HumanJoint::HJ_LEFT_WRIST] = "LEFT_WRIST";
-	m[HumanJoint::HJ_RIGHT_WRIST] = "RIGHT_WRIST";
-	m[HumanJoint::HJ_LEFT_HIP] = "LEFT_HIP";
-	m[HumanJoint::HJ_RIGHT_HIP] = "RIGHT_HIP";
-	m[HumanJoint::HJ_LEFT_ANKLE] = "LEFT_ANKLE";
-	m[HumanJoint::HJ_RIGHT_ANKLE] = "RIGHT_ANKLE";
-	m[HumanJoint::HJ_BODY] = "BODY";
+	gameTypes[GameType::TYPE_PART] = "PART";
+	gameTypes[GameType::TYPE_BODY] = "BODY";
+	gameTypes[GameType::TYPE_PART_ANIM] = "ANIM_PART";
+	gameTypes[GameType::TYPE_BODY_ANIM] = "ANIM_BODY";
+	gameTypes[GameType::TYPE_TRANSITION] = "TRANSITION";
+	gameTypes[GameType::TYPE_ARMOR] = "ARMOR";
+	gameTypes[GameType::TYPE_CRAFTSTONE] = "CRAFTSTONE";
+	gameTypes[GameType::TYPE_KEY] = "KEY";
+	gameTypes[GameType::TYPE_ACTIVATOR] = "ACTIVATOR";
+	gameTypes[GameType::TYPE_JEWEL] = "JEWEL";
+	gameTypes[GameType::TYPE_AMMO] = "AMMO";
+	gameTypes[GameType::TYPE_RECOVERY_ITEM] = "ITEM_RECOVERY";
+	gameTypes[GameType::TYPE_SOUL_ITEM] = "ITEM_SOUL";
+	gameTypes[GameType::TYPE_WEAPON_ITEM] = "ITEM_WEAPON";
+	gameTypes[GameType::TYPE_THROWING_ITEM] = "ITEM_THROWING";
+	gameTypes[GameType::TYPE_WEAPON_SHIELD] = "WEAPON_SHIELD";
+	gameTypes[GameType::TYPE_WEAPON_STRIKE] = "WEAPON_STRIKE";
+	gameTypes[GameType::TYPE_WEAPON_THROW] = "WEAPON_THROW";
+	gameTypes[GameType::TYPE_WEAPON_FIST] = "WEAPON_FIST";
+	gameTypes[GameType::TYPE_WEAPON_LIGHT] = "WEAPON_LIGHT";
+	gameTypes[GameType::TYPE_AGENT] = "AGENT";
+	gameTypes[GameType::TYPE_PLAYER] = "PLAYER";
+	gameTypes[GameType::TYPE_DECOR] = "DECOR";
+	gameTypes[GameType::TYPE_COFFER] = "COFFER";
+	gameTypes[GameType::TYPE_PICKABLE] = "PICKABLE";
+	gameTypes[GameType::TYPE_ACTIVATOR] = "ACTIVATOR";
+	gameTypes[GameType::TYPE_LIFT] = "LIFT";
+	gameTypes[GameType::TYPE_LAMP] = "LAMP";
+	gameTypes[GameType::TYPE_TRAP] = "TRAP";
+	gameTypes[GameType::TYPE_DOOR] = "DOOR";
+	gameTypes[GameType::TYPE_TILE] = "TILE";
+	gameTypes[GameType::TYPE_QUEST] = "QUEST";
+	gameTypes[GameType::TYPE_DIALOG] = "DIALOG";
+	gameTypes[GameType::TYPE_PLAYER_AI] = "AI_PLAYER";
+	gameTypes[GameType::TYPE_NPC_AI] = "AI_NPC";
+	gameTypes[GameType::TYPE_ENEMY_AI] = "AI_ENEMY";
+	gameTypes[GameType::TYPE_EMITTER] = "EMITTER";
+	gameTypes[GameType::TYPE_LIGHT] = "LIGHT";
+	gameTypes[GameType::TYPE_DOCUMENT] = "DOCUMENT";
+	gameTypes[GameType::TYPE_SENSOR] = "SENSOR";
+	gameTypes[GameType::TYPE_SPRITE] = "SPRITE";
+	gameTypes[GameType::TYPE_GRAPH_EDGE] = "GRAPH_EDGE";
+	gameTypes[GameType::TYPE_GRAPH_NODE] = "GRAPH_NODE";
 }
 
-void TypeHelper::createEntityTypes(std::unordered_map<int, std::string> &m)
+void TypeHelper::createDepthTypes()
 {
-	m[EntityType::ENTITY_WEAPON_SHIELD] = "SHIELD WEAPON";
-	m[EntityType::ENTITY_WEAPON_STRIKE] = "STRIKE WEAPON";
-	m[EntityType::ENTITY_WEAPON_THROW] = "THROW WEAPON";
-	m[EntityType::ENTITY_WEAPON_FIST] = "FIST WEAPON";
-	m[EntityType::ENTITY_WEAPON_LIGHT] = "LIGHT WEAPON";
-	m[EntityType::ENTITY_AGENT] = "AGENT";
-	m[EntityType::ENTITY_PLAYER] = "PLAYER";
-	m[EntityType::ENTITY_ENEMY] = "ENEMY";
-	m[EntityType::ENTITY_NPC] = "NPC";
-	m[EntityType::ENTITY_DECOR] = "DECOR";
-	m[EntityType::ENTITY_COFFER] = "COFFER";
-	m[EntityType::ENTITY_PICKABLE] = "PICKABLE";
-	m[EntityType::ENTITY_TRAP] = "TRAP";
-	m[EntityType::ENTITY_LIFT] = "LIFT";
-	m[EntityType::ENTITY_DOOR] = "DOOR";
-	m[EntityType::ENTITY_ACTIVATOR] = "ACTIVATOR";
-	m[EntityType::ENTITY_LAMP] = "LAMP";
-	m[EntityType::ENTITY_SENSOR] = "SENSOR";
+	depthTypes[DepthType::DEPTH_GROUND] = "DEPTH_GROUND";
+	depthTypes[DepthType::DEPTH_GROUND_UP] = "DEPTH_GROUND_UP";
+	depthTypes[DepthType::DEPTH_FLOOR] = "DEPTH_FLOOR";
+	depthTypes[DepthType::DEPTH_FLOOR_UP] = "DEPTH_FLOOR_UP";
+	depthTypes[DepthType::DEPTH_CARPET] = "DEPTH_CARPET";
+	depthTypes[DepthType::DEPTH_CARPET_UP] = "DEPTH_CARPET_UP";
+	depthTypes[DepthType::DEPTH_LEFT_FOOT] = "DEPTH_LEFT_FOOT";
+	depthTypes[DepthType::DEPTH_LEFT_FOOT_UP] = "DEPTH_LEFT_FOOT_UP";
+	depthTypes[DepthType::DEPTH_RIGHT_FOOT] = "DEPTH_RIGHT_FOOT";
+	depthTypes[DepthType::DEPTH_RIGHT_FOOT_UP] = "DEPTH_RIGHT_FOOT_UP";
+	depthTypes[DepthType::DEPTH_LEFT_LEG] = "DEPTH_LEFT_LEG";
+	depthTypes[DepthType::DEPTH_LEFT_LEG_UP] = "DEPTH_LEFT_LEG_UP";
+	depthTypes[DepthType::DEPTH_RIGHT_LEG] = "DEPTH_RIGHT_LEG";
+	depthTypes[DepthType::DEPTH_RIGHT_LEG_UP] = "DEPTH_RIGHT_LEG_UP";
+	depthTypes[DepthType::DEPTH_HIP] = "DEPTH_HIP";
+	depthTypes[DepthType::DEPTH_TORSO] = "DEPTH_TORSO";
+	depthTypes[DepthType::DEPTH_TORSO_UP] = "DEPTH_TORSO_UP";
+	depthTypes[DepthType::DEPTH_LEFT_HAND] = "DEPTH_LEFT_HAND";
+	depthTypes[DepthType::DEPTH_LEFT_HAND_UP] = "DEPTH_LEFT_HAND_UP";
+	depthTypes[DepthType::DEPTH_RIGHT_HAND] = "DEPTH_RIGHT_HAND";
+	depthTypes[DepthType::DEPTH_RIGHT_HAND_UP] = "DEPTH_RIGHT_HAND_UP";
+	depthTypes[DepthType::DEPTH_LEFT_FOREARM] = "DEPTH_LEFT_FOREARM";
+	depthTypes[DepthType::DEPTH_LEFT_FOREARM_UP] = "DEPTH_LEFT_FOREARM_UP";
+	depthTypes[DepthType::DEPTH_RIGHT_FOREARM] = "DEPTH_RIGHT_FOREARM";
+	depthTypes[DepthType::DEPTH_RIGHT_FOREARM_UP] = "DEPTH_RIGHT_FOREARM_UP";
+	depthTypes[DepthType::DEPTH_LEFT_ARM] = "DEPTH_LEFT_ARM";
+	depthTypes[DepthType::DEPTH_LEFT_ARM_UP] = "DEPTH_LEFT_ARM_UP";
+	depthTypes[DepthType::DEPTH_RIGHT_ARM] = "DEPTH_RIGHT_ARM";
+	depthTypes[DepthType::DEPTH_RIGHT_ARM_UP] = "DEPTH_RIGHT_ARM_UP";
+	depthTypes[DepthType::DEPTH_BODY_NECK] = "DEPTH_BODY_NECK";
+	depthTypes[DepthType::DEPTH_HEAD] = "DEPTH_HEAD";
+	depthTypes[DepthType::DEPTH_HEAD_UP] = "DEPTH_HEAD_UP";
+	depthTypes[DepthType::DEPTH_TREE] = "DEPTH_TREE";
+	depthTypes[DepthType::DEPTH_TREE_UP] = "DEPTH_TREE_UP";
+	depthTypes[DepthType::DEPTH_CLOUD] = "DEPTH_CLOUD";
 }
 
-void TypeHelper::createGameTypes(std::unordered_map<unsigned char, std::string> &m)
+void TypeHelper::createDepthTypes2()
 {
-	m[GameType::TYPE_PART] = "PART";
-	m[GameType::TYPE_BODY] = "BODY";
-	m[GameType::TYPE_PART_ANIM] = "ANIM_PART";
-	m[GameType::TYPE_BODY_ANIM] = "ANIM_BODY";
-	m[GameType::TYPE_TRANSITION] = "TRANSITION";
-	m[GameType::TYPE_ARMOR] = "ARMOR";
-	m[GameType::TYPE_CRAFTSTONE] = "CRAFTSTONE";
-	m[GameType::TYPE_KEY] = "KEY";
-	m[GameType::TYPE_ACTIVATOR] = "ACTIVATOR";
-	m[GameType::TYPE_JEWEL] = "JEWEL";
-	m[GameType::TYPE_AMMO] = "AMMO";
-	m[GameType::TYPE_RECOVERY_ITEM] = "ITEM_RECOVERY";
-	m[GameType::TYPE_SOUL_ITEM] = "ITEM_SOUL";
-	m[GameType::TYPE_WEAPON_ITEM] = "ITEM_WEAPON";
-	m[GameType::TYPE_THROWING_ITEM] = "ITEM_THROWING";
-	m[GameType::TYPE_WEAPON_SHIELD] = "WEAPON_SHIELD";
-	m[GameType::TYPE_WEAPON_STRIKE] = "WEAPON_STRIKE";
-	m[GameType::TYPE_WEAPON_THROW] = "WEAPON_THROW";
-	m[GameType::TYPE_WEAPON_FIST] = "WEAPON_FIST";
-	m[GameType::TYPE_WEAPON_LIGHT] = "WEAPON_LIGHT";
-	m[GameType::TYPE_AGENT] = "AGENT";
-	m[GameType::TYPE_PLAYER] = "PLAYER";
-	m[GameType::TYPE_DECOR] = "DECOR";
-	m[GameType::TYPE_COFFER] = "COFFER";
-	m[GameType::TYPE_PICKABLE] = "PICKABLE";
-	m[GameType::TYPE_ACTIVATOR] = "ACTIVATOR";
-	m[GameType::TYPE_LIFT] = "LIFT";
-	m[GameType::TYPE_LAMP] = "LAMP";
-	m[GameType::TYPE_TRAP] = "TRAP";
-	m[GameType::TYPE_DOOR] = "DOOR";
-	m[GameType::TYPE_TILE] = "TILE";
-	m[GameType::TYPE_QUEST] = "QUEST";
-	m[GameType::TYPE_DIALOG] = "DIALOG";
-	m[GameType::TYPE_PLAYER_AI] = "AI_PLAYER";
-	m[GameType::TYPE_NPC_AI] = "AI_NPC";
-	m[GameType::TYPE_ENEMY_AI] = "AI_ENEMY";
-	m[GameType::TYPE_EMITTER] = "EMITTER";
-	m[GameType::TYPE_LIGHT] = "LIGHT";
-	m[GameType::TYPE_DOCUMENT] = "DOCUMENT";
-	m[GameType::TYPE_SENSOR] = "SENSOR";
-	m[GameType::TYPE_SPRITE] = "SPRITE";
-	m[GameType::TYPE_GRAPH_EDGE] = "GRAPH_EDGE";
-	m[GameType::TYPE_GRAPH_NODE] = "GRAPH_NODE";
+	depthTypes2[DepthType2::DEPTH2_GROUND] = "DEPTH_GROUND";
+	depthTypes2[DepthType2::DEPTH2_GROUND_UP] = "DEPTH_GROUND_UP";
+	depthTypes2[DepthType2::DEPTH2_FLOOR] = "DEPTH_FLOOR";
+	depthTypes2[DepthType2::DEPTH2_FLOOR_UP] = "DEPTH_FLOOR_UP";
+	depthTypes2[DepthType2::DEPTH2_CARPET] = "DEPTH_CARPET";
+	depthTypes2[DepthType2::DEPTH2_CARPET_UP] = "DEPTH_CARPET_UP";
+	depthTypes2[DepthType2::DEPTH2_LEFT_FOOT] = "DEPTH_LEFT_FOOT";
+	depthTypes2[DepthType2::DEPTH2_LEFT_FOOT_UP] = "DEPTH_LEFT_FOOT_UP";
+	depthTypes2[DepthType2::DEPTH2_RIGHT_FOOT] = "DEPTH_RIGHT_FOOT";
+	depthTypes2[DepthType2::DEPTH2_RIGHT_FOOT_UP] = "DEPTH_RIGHT_FOOT_UP";
+	depthTypes2[DepthType2::DEPTH2_LEFT_LEG] = "DEPTH_LEFT_LEG";
+	depthTypes2[DepthType2::DEPTH2_LEFT_LEG_UP] = "DEPTH_LEFT_LEG_UP";
+	depthTypes2[DepthType2::DEPTH2_RIGHT_LEG] = "DEPTH_RIGHT_LEG";
+	depthTypes2[DepthType2::DEPTH2_RIGHT_LEG_UP] = "DEPTH_RIGHT_LEG_UP";
+	depthTypes2[DepthType2::DEPTH2_BODY_HIP] = "DEPTH_HIP";
+	depthTypes2[DepthType2::DEPTH2_BODY] = "DEPTH_TORSO";
+	depthTypes2[DepthType2::DEPTH2_BODY_UP] = "DEPTH_TORSO_UP";
+	depthTypes2[DepthType2::DEPTH2_LEFT_HAND] = "DEPTH_LEFT_HAND";
+	depthTypes2[DepthType2::DEPTH2_LEFT_HAND_UP] = "DEPTH_LEFT_HAND_UP";
+	depthTypes2[DepthType2::DEPTH2_RIGHT_HAND] = "DEPTH_RIGHT_HAND";
+	depthTypes2[DepthType2::DEPTH2_RIGHT_HAND_UP] = "DEPTH_RIGHT_HAND_UP";
+	depthTypes2[DepthType2::DEPTH2_LEFT_FOREARM] = "DEPTH_LEFT_FOREARM";
+	depthTypes2[DepthType2::DEPTH2_LEFT_FOREARM_UP] = "DEPTH_LEFT_FOREARM_UP";
+	depthTypes2[DepthType2::DEPTH2_RIGHT_FOREARM] = "DEPTH_RIGHT_FOREARM";
+	depthTypes2[DepthType2::DEPTH2_RIGHT_FOREARM_UP] = "DEPTH_RIGHT_FOREARM_UP";
+	depthTypes2[DepthType2::DEPTH2_LEFT_ARM] = "DEPTH_LEFT_ARM";
+	depthTypes2[DepthType2::DEPTH2_LEFT_ARM_UP] = "DEPTH_LEFT_ARM_UP";
+	depthTypes2[DepthType2::DEPTH2_RIGHT_ARM] = "DEPTH_RIGHT_ARM";
+	depthTypes2[DepthType2::DEPTH2_RIGHT_ARM_UP] = "DEPTH_RIGHT_ARM_UP";
+	depthTypes2[DepthType2::DEPTH2_BODY_NECK] = "DEPTH_BODY_NECK";
+	depthTypes2[DepthType2::DEPTH2_HEAD] = "DEPTH_HEAD";
+	depthTypes2[DepthType2::DEPTH2_HEAD_UP] = "DEPTH_HEAD_UP";
+	depthTypes2[DepthType2::DEPTH2_TREE] = "DEPTH_TREE";
+	depthTypes2[DepthType2::DEPTH2_TREE_UP] = "DEPTH_TREE_UP";
+	depthTypes2[DepthType2::DEPTH2_CLOUD] = "DEPTH_CLOUD";
 }
 
-void TypeHelper::createDepthTypes(std::unordered_map<unsigned char, std::string> &m)
+void TypeHelper::createShapeTypes()
 {
-	m[DepthType::DEPTH_GROUND] = "DEPTH_GROUND";
-	m[DepthType::DEPTH_GROUND_UP] = "DEPTH_GROUND_UP";
-	m[DepthType::DEPTH_FLOOR] = "DEPTH_FLOOR";
-	m[DepthType::DEPTH_FLOOR_UP] = "DEPTH_FLOOR_UP";
-	m[DepthType::DEPTH_CARPET] = "DEPTH_CARPET";
-	m[DepthType::DEPTH_CARPET_UP] = "DEPTH_CARPET_UP";
-	m[DepthType::DEPTH_LEFT_FOOT] = "DEPTH_LEFT_FOOT";
-	m[DepthType::DEPTH_LEFT_FOOT_UP] = "DEPTH_LEFT_FOOT_UP";
-	m[DepthType::DEPTH_RIGHT_FOOT] = "DEPTH_RIGHT_FOOT";
-	m[DepthType::DEPTH_RIGHT_FOOT_UP] = "DEPTH_RIGHT_FOOT_UP";
-	m[DepthType::DEPTH_LEFT_LEG] = "DEPTH_LEFT_LEG";
-	m[DepthType::DEPTH_LEFT_LEG_UP] = "DEPTH_LEFT_LEG_UP";
-	m[DepthType::DEPTH_RIGHT_LEG] = "DEPTH_RIGHT_LEG";
-	m[DepthType::DEPTH_RIGHT_LEG_UP] = "DEPTH_RIGHT_LEG_UP";
-	m[DepthType::DEPTH_BODY_HIP] = "DEPTH_BODY_HIP";
-	m[DepthType::DEPTH_BODY] = "DEPTH_BODY";
-	m[DepthType::DEPTH_BODY_UP] = "DEPTH_BODY_UP";
-	m[DepthType::DEPTH_LEFT_HAND] = "DEPTH_LEFT_HAND";
-	m[DepthType::DEPTH_LEFT_HAND_UP] = "DEPTH_LEFT_HAND_UP";
-	m[DepthType::DEPTH_RIGHT_HAND] = "DEPTH_RIGHT_HAND";
-	m[DepthType::DEPTH_RIGHT_HAND_UP] = "DEPTH_RIGHT_HAND_UP";
-	m[DepthType::DEPTH_LEFT_FOREARM] = "DEPTH_LEFT_FOREARM";
-	m[DepthType::DEPTH_LEFT_FOREARM_UP] = "DEPTH_LEFT_FOREARM_UP";
-	m[DepthType::DEPTH_RIGHT_FOREARM] = "DEPTH_RIGHT_FOREARM";
-	m[DepthType::DEPTH_RIGHT_FOREARM_UP] = "DEPTH_RIGHT_FOREARM_UP";
-	m[DepthType::DEPTH_LEFT_ARM] = "DEPTH_LEFT_ARM";
-	m[DepthType::DEPTH_LEFT_ARM_UP] = "DEPTH_LEFT_ARM_UP";
-	m[DepthType::DEPTH_RIGHT_ARM] = "DEPTH_RIGHT_ARM";
-	m[DepthType::DEPTH_RIGHT_ARM_UP] = "DEPTH_RIGHT_ARM_UP";
-	m[DepthType::DEPTH_BODY_NECK] = "DEPTH_BODY_NECK";
-	m[DepthType::DEPTH_HEAD] = "DEPTH_HEAD";
-	m[DepthType::DEPTH_HEAD_UP] = "DEPTH_HEAD_UP";
-	m[DepthType::DEPTH_TREE] = "DEPTH_TREE";
-	m[DepthType::DEPTH_TREE_UP] = "DEPTH_TREE_UP";
-	m[DepthType::DEPTH_CLOUD] = "DEPTH_CLOUD";
+	shapeTypes[Shape2DType::CIRCLE] = "CIRCLE";
+	shapeTypes[Shape2DType::BOX] = "BOX";
+	shapeTypes[Shape2DType::ROTATED_BOX] = "ROTATED BOX";
+	shapeTypes[Shape2DType::POLYGON] = "POLYGON";
+	shapeTypes[Shape2DType::TRIANGLE] = "TRIANGLE";
 }
 
-void TypeHelper::createShapeTypes(std::unordered_map<unsigned char, std::string> &m)
+void TypeHelper::createBodyTypes()
 {
-	m[Shape2DType::CIRCLE] = "CIRCLE";
-	m[Shape2DType::BOX] = "BOX";
-	m[Shape2DType::ROTATED_BOX] = "ROTATED BOX";
-	m[Shape2DType::POLYGON] = "POLYGON";
-	m[Shape2DType::TRIANGLE] = "TRIANGLE";
+	bodyTypes[BodyType::BODY_HUMAN] = "HUMAN";
+	bodyTypes[BodyType::BODY_GUN] = "GUN";
+	bodyTypes[BodyType::BODY_AMMO] = "AMMO";
+	bodyTypes[BodyType::BODY_FLASHLIGHT] = "FLASHLIGHT";
+	bodyTypes[BodyType::BODY_SWORD] = "SWORD";
+	bodyTypes[BodyType::BODY_FIST] = "FIST";
+	bodyTypes[BodyType::BODY_DECOR] = "DECOR";
+	bodyTypes[BodyType::BODY_COFFER] = "COFFER";
+	bodyTypes[BodyType::BODY_DOOR] = "DOOR";
+	bodyTypes[BodyType::BODY_TILE] = "TILE";
+	bodyTypes[BodyType::BODY_WALL] = "WALL";
+	bodyTypes[BodyType::BODY_EMPTY] = "EMPTY";
+	bodyTypes[BodyType::BODY_LIFT] = "LIFT";
+	bodyTypes[BodyType::BODY_ACTIVATOR] = "ACTIVATOR";
+	bodyTypes[BodyType::BODY_TRAP] = "TRAP";
+	bodyTypes[BodyType::BODY_SENSOR] = "SENSOR";
+	bodyTypes[BodyType::BODY_LAMP] = "LAMP";
+	bodyTypes[BodyType::BODY_PROJECTILE] = "PROJECTILE";
+	bodyTypes[BodyType::BODY_SHIELD] = "SHIELD";
 }
 
-void TypeHelper::createBodyTypes(std::unordered_map<unsigned char, std::string> &m)
+void TypeHelper::createItemTypes()
 {
-	m[BodyType::BODY_HUMAN] = "HUMAN";
-	m[BodyType::BODY_GUN] = "GUN";
-	m[BodyType::BODY_AMMO] = "AMMO";
-	m[BodyType::BODY_FLASHLIGHT] = "FLASHLIGHT";
-	m[BodyType::BODY_SWORD] = "SWORD";
-	m[BodyType::BODY_FIST] = "FIST";
-	m[BodyType::BODY_DECOR] = "DECOR";
-	m[BodyType::BODY_COFFER] = "COFFER";
-	m[BodyType::BODY_DOOR] = "DOOR";
-	m[BodyType::BODY_TILE] = "TILE";
-	m[BodyType::BODY_WALL] = "WALL";
-	m[BodyType::BODY_EMPTY] = "EMPTY";
-	m[BodyType::BODY_LIFT] = "LIFT";
-	m[BodyType::BODY_ACTIVATOR] = "ACTIVATOR";
-	m[BodyType::BODY_TRAP] = "TRAP";
-	m[BodyType::BODY_SENSOR] = "SENSOR";
-	m[BodyType::BODY_LAMP] = "LAMP";
-	m[BodyType::BODY_PROJECTILE] = "PROJECTILE";
-	m[BodyType::BODY_SHIELD] = "SHIELD";
+	itemTypes[ItemType::ITEM_AMMO] = "AMMO";
+	itemTypes[ItemType::ITEM_ARMOR] = "ARMOR";
+	itemTypes[ItemType::ITEM_RECOVERY] = "RECOVERY_ITEM";
+	itemTypes[ItemType::ITEM_BOOSTWEAPON] = "WEAPON_BOOSTER";
+	itemTypes[ItemType::ITEM_CONSUMABLE] = "CONSUMABLE";
+	itemTypes[ItemType::ITEM_KEY] = "KEY";
+	itemTypes[ItemType::ITEM_JEWEL] = "JEWEL";
+	itemTypes[ItemType::ITEM_SOUL] = "SOUL";
+	itemTypes[ItemType::ITEM_STONE] = "STONE";
+	itemTypes[ItemType::ITEM_THROWING] = "THROWING_ITEM";
+	itemTypes[ItemType::ITEM_WEAPON_SHIELD] = "SHIELD";
+	itemTypes[ItemType::ITEM_WEAPON_STRIKE] = "STRIKE_WEAPON";
+	itemTypes[ItemType::ITEM_WEAPON_THROW] = "THROWING_WEAPON";
+	itemTypes[ItemType::ITEM_WEAPON_FIST] = "FIST_WEAPON";
+	itemTypes[ItemType::ITEM_WEAPON_LIGHT] = "LIGHT_WEAPON";
+	itemTypes[ItemType::ITEM_DOCUMENT] = "DOCUMENT";
 }
 
-void TypeHelper::createPartTypes(std::unordered_map<unsigned char, std::pair<unsigned char, std::string>> &m)
+void TypeHelper::createUpgradeTypes()
 {
-	m[PartType::PART_HIP] = { 0, "HIP" };
-	m[PartType::PART_TORSO] = {1, "TORSO"};
-	m[PartType::PART_HEAD] = { 2, "HEAD" }; 
-	m[PartType::PART_LEFT_ARM] = { 3, "LEFT_ARM" };
-	m[PartType::PART_RIGHT_ARM] = { 4, "RIGHT_ARM" };
-	m[PartType::PART_LEFT_FOREARM] = { 5, "LEFT_FOREARM" }; 
-	m[PartType::PART_RIGHT_FOREARM] = { 6, "RIGHT_FOREARM" }; 
-	m[PartType::PART_LEFT_HAND] = { 7, "LEFT_HAND" }; 
-	m[PartType::PART_RIGHT_HAND] = { 8, "RIGHT_HAND" }; 
-	m[PartType::PART_LEFT_LEG] = { 9, "LEFT_LEG" }; 
-	m[PartType::PART_RIGHT_LEG] = { 10, "RIGHT_LEG" };
-	m[PartType::PART_LEFT_FOOT] = { 11, "LEFT_FOOT" }; 
-	m[PartType::PART_RIGHT_FOOT] = { 12, "RIGHT_FOOT" }; 
-	m[PartType::PART_TILE] = { 0, "TILE" };
-	m[PartType::PART_GUN] = { 0, "GUN" };
-	m[PartType::PART_AMMO] = { 0, "AMMO" }; 
-	m[PartType::PART_FLASHLIGHT] = { 0, "FLASHLIGHT" }; 
-	m[PartType::PART_SWORD] = { 0, "SWORD" };
-	m[PartType::PART_FIST] = { 0, "FIST" };
-	m[PartType::PART_WALL] = { 0, "WALL" };
-	m[PartType::PART_DOOR] = { 0, "DOOR" }; 
-	m[PartType::PART_DECOR] = { 0, "DECOR" };
-	m[PartType::PART_EMPTY] = { 0, "EMPTY" };
-	m[PartType::PART_LIFT] = { 0, "LIFT" };
-	m[PartType::PART_COFFER_BASE] = { 0, "COFFER_BASE" };
-	m[PartType::PART_COFFER_TOP] = { 1, "COFFER_TOP" };
-	m[PartType::PART_ACTIVATOR_BASE] = { 0, "ACTIVATOR_BASE" };
-	m[PartType::PART_ACTIVATOR_TOP] = { 1, "ACTIVATOR_TOP" };
-	m[PartType::PART_TRAP] = { 0, "TRAP" };
-	m[PartType::PART_SENSOR] = { 0, "SENSOR" };
-	m[PartType::PART_LAMP] = { 0, "LAMP" };
-	m[PartType::PART_PROJECTILE] = { 0, "PROJECTILE" };
-	m[PartType::PART_SHIELD] = { 0, "SHIELD" };
+	upgradeTypes[UpgradeType::UPGRADE_NORMAL] = "NORMAL";
+	upgradeTypes[UpgradeType::UPGRADE_UNIQUE] = "UNIQUE";
+	upgradeTypes[UpgradeType::UPGRADE_SPECIAL] = "SPECIAL";
 }
 
-void TypeHelper::createItemTypes(std::unordered_map<int, std::string> &m)
+void TypeHelper::createMaterialTypes()
 {
-	m[ItemType::ITEM_AMMO] = "AMMO";
-	m[ItemType::ITEM_ARMOR] = "ARMOR";
-	m[ItemType::ITEM_RECOVERY] = "RECOVERY_ITEM";
-	m[ItemType::ITEM_BOOSTWEAPON] = "WEAPON_BOOSTER";
-	m[ItemType::ITEM_CONSUMABLE] = "CONSUMABLE";
-	m[ItemType::ITEM_KEY] = "KEY";
-	m[ItemType::ITEM_JEWEL] = "JEWEL";
-	m[ItemType::ITEM_SOUL] = "SOUL";
-	m[ItemType::ITEM_STONE] = "STONE";
-	m[ItemType::ITEM_THROWING] = "THROWING_ITEM";
-	m[ItemType::ITEM_WEAPON_SHIELD] = "SHIELD";
-	m[ItemType::ITEM_WEAPON_STRIKE] = "STRIKE_WEAPON";
-	m[ItemType::ITEM_WEAPON_THROW] = "THROWING_WEAPON";
-	m[ItemType::ITEM_WEAPON_FIST] = "FIST_WEAPON";
-	m[ItemType::ITEM_WEAPON_LIGHT] = "LIGHT_WEAPON";
-	m[ItemType::ITEM_DOCUMENT] = "DOCUMENT";
+	materialTypes[MaterialType::METALS] = "METALS";
+	materialTypes[MaterialType::PLASTIC] = "PLASTIC";
+	materialTypes[MaterialType::WOOD] = "WOOD";
+	materialTypes[MaterialType::GLASS] = "GLASS";
+	materialTypes[MaterialType::PAPER] = "PAPER";
+	materialTypes[MaterialType::TEXTILES] = "TEXTILES";
+	materialTypes[MaterialType::LIQUID] = "LIQUID";
+	materialTypes[MaterialType::STONE] = "STONE";
+	materialTypes[MaterialType::VEGETAL] = "VEGETAL";
+	materialTypes[MaterialType::ORGANIC] = "ORGANIC";
+	materialTypes[MaterialType::GROUND] = "GROUND";
+	materialTypes[MaterialType::SAND] = "SAND";
+	materialTypes[MaterialType::GRAVEL] = "GRAVEL";
 }
 
-void TypeHelper::createUpgradeTypes(std::unordered_map<unsigned char, std::string> &m)
+void TypeHelper::createEffectTypes()
 {
-	m[UpgradeType::UPGRADE_NORMAL] = "NORMAL";
-	m[UpgradeType::UPGRADE_UNIQUE] = "UNIQUE";
-	m[UpgradeType::UPGRADE_SPECIAL] = "SPECIAL";
+	effectTypes[EffectType::HP] = "HP";
+	effectTypes[EffectType::STAMINA] = "STAMINA";
+	effectTypes[EffectType::EFFECT_HP] = "EFFECT HP";
+	effectTypes[EffectType::EFFECT_STAMINA] = "EFFECT STAMINA";
+	effectTypes[EffectType::LUCK] = "LUCK";
+	effectTypes[EffectType::SOULS] = "SOULS";
+	effectTypes[EffectType::POISE] = "POISE";
+	effectTypes[EffectType::FIRE_RES] = "FIRE RES";
+	effectTypes[EffectType::MAGIC_RES] = "MAGIC RES";
+	effectTypes[EffectType::PHYSIC_RES] = "PHYSIC RES";
+	effectTypes[EffectType::POISON_RES] = "POISON RES";
+	effectTypes[EffectType::LIGHTNING_RES] = "LIGHTNING RES";
 }
 
-void TypeHelper::createMaterialTypes(std::unordered_map<unsigned char, std::string> &m)
+void TypeHelper::createThrowingTypes()
 {
-	m[MaterialType::METALS] = "METALS";
-	m[MaterialType::PLASTIC] = "PLASTIC";
-	m[MaterialType::WOOD] = "WOOD";
-	m[MaterialType::GLASS] = "GLASS";
-	m[MaterialType::PAPER] = "PAPER";
-	m[MaterialType::TEXTILES] = "TEXTILES";
-	m[MaterialType::LIQUID] = "LIQUID";
-	m[MaterialType::STONE] = "STONE";
-	m[MaterialType::VEGETAL] = "VEGETAL";
-	m[MaterialType::ORGANIC] = "ORGANIC";
-	m[MaterialType::GROUND] = "GROUND";
-	m[MaterialType::SAND] = "SAND";
-	m[MaterialType::GRAVEL] = "GRAVEL";
+	throwingTypes[ThrowingType::ARROW] = "ARROW";
+	throwingTypes[ThrowingType::BOLT] = "BOLT";
+	throwingTypes[ThrowingType::B_GUN] = "GUN BULLET";
+	throwingTypes[ThrowingType::B_RIFFLE] = "RIFFLE BULLET";
+	throwingTypes[ThrowingType::B_SHOTGUN] = "SHOTGUN BULLET";
+	throwingTypes[ThrowingType::SPELL] = "SPELL";
+	throwingTypes[ThrowingType::BOMB] = "BOMB";
+	throwingTypes[ThrowingType::BATTERY] = "BATTERY";
 }
 
-void TypeHelper::createEffectTypes(std::unordered_map<unsigned char, std::string> &m)
+void TypeHelper::createQuestTypes()
 {
-	m[EffectType::HP] = "HP";
-	m[EffectType::STAMINA] = "STAMINA";
-	m[EffectType::EFFECT_HP] = "EFFECT HP";
-	m[EffectType::EFFECT_STAMINA] = "EFFECT STAMINA";
-	m[EffectType::LUCK] = "LUCK";
-	m[EffectType::SOULS] = "SOULS";
-	m[EffectType::POISE] = "POISE";
-	m[EffectType::FIRE_RES] = "FIRE RES";
-	m[EffectType::MAGIC_RES] = "MAGIC RES";
-	m[EffectType::PHYSIC_RES] = "PHYSIC RES";
-	m[EffectType::POISON_RES] = "POISON RES";
-	m[EffectType::LIGHTNING_RES] = "LIGHTNING RES";
+	questTypes[QuestType::DESTROY] = "DESTROY";
+	questTypes[QuestType::PROTECT] = "PROTECT";
+	questTypes[QuestType::CARRY] = "CARRY";
+	questTypes[QuestType::DISCOVER] = "DISCOVER";
 }
 
-void TypeHelper::createThrowingTypes(std::unordered_map<unsigned char, std::string> &m)
+void TypeHelper::createQuestStates()
 {
-	m[ThrowingType::ARROW] = "ARROW";
-	m[ThrowingType::BOLT] = "BOLT";
-	m[ThrowingType::B_GUN] = "GUN BULLET";
-	m[ThrowingType::B_RIFFLE] = "RIFFLE BULLET";
-	m[ThrowingType::B_SHOTGUN] = "SHOTGUN BULLET";
-	m[ThrowingType::SPELL] = "SPELL";
-	m[ThrowingType::BOMB] = "BOMB";
-	m[ThrowingType::BATTERY] = "BATTERY";
+	questStates[QuestState::IDLE] = "IDLE";
+	questStates[QuestState::ACTIVE] = "ACTIVE";
 }
 
-void TypeHelper::createQuestTypes(std::unordered_map<unsigned char, std::string> &m)
+void TypeHelper::createWeatherTypes()
 {
-	m[QuestType::DESTROY] = "DESTROY";
-	m[QuestType::PROTECT] = "PROTECT";
-	m[QuestType::CARRY] = "CARRY";
-	m[QuestType::DISCOVER] = "DISCOVER";
+	weatherTypes[WeatherType::WEATHER_NONE] = "NONE";
+	weatherTypes[WeatherType::WEATHER_FOG] = "FOG";
+	weatherTypes[WeatherType::WEATHER_SMOKE] = "SMOKE";
 }
 
-void TypeHelper::createQuestStates(std::unordered_map<unsigned char, std::string> &m)
+void TypeHelper::createGameStates()
 {
-	m[QuestState::IDLE] = "IDLE";
-	m[QuestState::ACTIVE] = "ACTIVE";
+	gameStates[GameState::GAME_BOOTING] = "GAME_BOOTING";
+	gameStates[GameState::GAME_STARTING] = "GAME_STARTING";
+	gameStates[GameState::GAME_RUNNING] = "GAME_RUNNING";
+	gameStates[GameState::GAME_PAUSING] = "GAME_PAUSING";
+	gameStates[GameState::GAME_CHECKPOINT] = "GAME_CHECKPOINT";
+	gameStates[GameState::GAME_LOADING] = "GAME_LOADING";
+	gameStates[GameState::GAME_TRANSITION] = "GAME_TRANSITION";
+	gameStates[GameState::GAME_CLOSING] = "GAME_CLOSING";
 }
 
-void TypeHelper::createWeatherTypes(std::unordered_map<unsigned char, std::string> &m)
+void TypeHelper::createFontAlignment()
 {
-	m[WeatherType::WEATHER_NONE] = "NONE";
-	m[WeatherType::WEATHER_FOG] = "FOG";
-	m[WeatherType::WEATHER_SMOKE] = "SMOKE";
+	fontAlignments[NS2::Justification::LEFT] = "LEFT";
+	fontAlignments[NS2::Justification::MIDDLE] = "MIDDLE";
+	fontAlignments[NS2::Justification::MIDDLEX] = "MIDDLEX";
+	fontAlignments[NS2::Justification::MIDDLEY] = "MIDDLEY";
+	fontAlignments[NS2::Justification::RIGHT] = "RIGHT";
+	fontAlignments[NS2::Justification::RIGHTX] = "RIGHTX";
+	fontAlignments[NS2::Justification::RIGHTY] = "RIGHTY";
 }
 
-void TypeHelper::createGameStates(std::unordered_map<unsigned char, std::string> &m)
+void TypeHelper::createAgentClasses()
 {
-	m[GameState::GAME_BOOTING] = "GAME_BOOTING";
-	m[GameState::GAME_STARTING] = "GAME_STARTING";
-	m[GameState::GAME_RUNNING] = "GAME_RUNNING";
-	m[GameState::GAME_PAUSING] = "GAME_PAUSING";
-	m[GameState::GAME_CHECKPOINT] = "GAME_CHECKPOINT";
-	m[GameState::GAME_LOADING] = "GAME_LOADING";
-	m[GameState::GAME_TRANSITION] = "GAME_TRANSITION";
-	m[GameState::GAME_CLOSING] = "GAME_CLOSING";
+	agentClasses[AgentClass::CLASS_SOLDIER] = "SOLDIER";
+	agentClasses[AgentClass::CLASS_WARRIOR] = "WARRIOR";
+	agentClasses[AgentClass::CLASS_GANGSTER] = "GANGSTER";
 }
 
-void TypeHelper::createFontAlignment(std::unordered_map<unsigned char, std::string> &m)
+void TypeHelper::createShopSkills()
 {
-	m[NS2::Justification::LEFT] = "LEFT";
-	m[NS2::Justification::MIDDLE] = "MIDDLE";
-	m[NS2::Justification::MIDDLEX] = "MIDDLEX";
-	m[NS2::Justification::MIDDLEY] = "MIDDLEY";
-	m[NS2::Justification::RIGHT] = "RIGHT";
-	m[NS2::Justification::RIGHTX] = "RIGHTX";
-	m[NS2::Justification::RIGHTY] = "RIGHTY";
+	shopSkills[ShopType::SHOP_BUY] = "BUY";
+	shopSkills[ShopType::SHOP_SELL] = "SELL";
+	shopSkills[ShopType::SHOP_FORGE] = "FORGE";
 }
 
-void TypeHelper::createAgentClasses(std::unordered_map<unsigned char, std::string>& m)
+void TypeHelper::createPartTypes()
 {
-	m[AgentClass::CLASS_SOLDIER] = "SOLDIER";
-	m[AgentClass::CLASS_WARRIOR] = "WARRIOR";
-	m[AgentClass::CLASS_GANGSTER] = "GANGSTER";
-}
-
-void TypeHelper::createShopSkills(std::unordered_map<unsigned char, std::string>& m)
-{
-	m[ShopType::SHOP_BUY] = "BUY";
-	m[ShopType::SHOP_SELL] = "SELL";
-	m[ShopType::SHOP_FORGE] = "FORGE";
+	partTypes[PartType::PART_HIP] = "HIP";
+	partTypes[PartType::PART_TORSO] = "TORSO";
+	partTypes[PartType::PART_HEAD] = "HEAD";
+	partTypes[PartType::PART_LEFT_ARM] = "LEFT_ARM";
+	partTypes[PartType::PART_RIGHT_ARM] = "RIGHT_ARM";
+	partTypes[PartType::PART_LEFT_FOREARM] = "LEFT_FOREARM";
+	partTypes[PartType::PART_RIGHT_FOREARM] = "RIGHT_FOREARM";
+	partTypes[PartType::PART_LEFT_HAND] = "LEFT_HAND";
+	partTypes[PartType::PART_RIGHT_HAND] = "RIGHT_HAND";
+	partTypes[PartType::PART_LEFT_LEG] = "LEFT_LEG";
+	partTypes[PartType::PART_RIGHT_LEG] = "RIGHT_LEG";
+	partTypes[PartType::PART_LEFT_FOOT] = "LEFT_FOOT";
+	partTypes[PartType::PART_RIGHT_FOOT] = "RIGHT_FOOT";
+	partTypes[PartType::PART_TILE] = "TILE";
+	partTypes[PartType::PART_GUN] = "GUN";
+	partTypes[PartType::PART_AMMO] = "AMMO";
+	partTypes[PartType::PART_FLASHLIGHT] = "FLASHLIGHT";
+	partTypes[PartType::PART_SWORD] = "SWORD";
+	partTypes[PartType::PART_FIST] = "FIST";
+	partTypes[PartType::PART_WALL] = "WALL";
+	partTypes[PartType::PART_DOOR] = "DOOR";
+	partTypes[PartType::PART_DECOR] = "DECOR";
+	partTypes[PartType::PART_EMPTY] = "EMPTY";
+	partTypes[PartType::PART_LIFT] = "LIFT";
+	partTypes[PartType::PART_COFFER_BASE] = "COFFER_BASE";
+	partTypes[PartType::PART_COFFER_TOP] = "COFFER_TOP";
+	partTypes[PartType::PART_ACTIVATOR_BASE] = "ACTIVATOR_BASE";
+	partTypes[PartType::PART_ACTIVATOR_TOP] = "ACTIVATOR_TOP";
+	partTypes[PartType::PART_TRAP] = "TRAP";
+	partTypes[PartType::PART_SENSOR] = "SENSOR";
+	partTypes[PartType::PART_LAMP] = "LAMP";
+	partTypes[PartType::PART_PROJECTILE] = "PROJECTILE";
+	partTypes[PartType::PART_SHIELD] = "SHIELD";
 }
 
 void TypeHelper::createBodyParts()
@@ -1064,5 +932,29 @@ void TypeHelper::createBodyParts()
 	};
 	bodyParts[BodyType::BODY_SHIELD] = std::vector<BodyPart>{
 		{ BodyType::BODY_SHIELD, PartType::PART_SHIELD, "SHIELD", 0, -1 }
+	};
+}
+
+void TypeHelper::createBodyJoints()
+{
+	bodyJoints[BodyType::BODY_HUMAN] = std::vector<BodyJoint>{
+		{ BodyType::BODY_HUMAN, "NECK", 0, 2, 1 }, // child: torso -> head
+		{ BodyType::BODY_HUMAN, "HIP_TO_TORSO", 1, 0, 2 }, // child: hip -> torso
+		{ BodyType::BODY_HUMAN, "HIP_TO_RIGHT_LEG", 2, 0, 9 }, // child: hip -> right leg
+		{ BodyType::BODY_HUMAN, "HIP_TO_LEFT_LEG", 3, 0, 11 }, // child: hip -> left leg
+		{ BodyType::BODY_HUMAN, "TORSO_TO_RIGHT_ARM", 4, 2, 3 }, // child: torso -> right arm
+		{ BodyType::BODY_HUMAN, "TORSO_TO_LEFT_ARM", 5, 2, 6 }, // child: torso -> left arm
+		{ BodyType::BODY_HUMAN, "RIGHT_ARM_TO_FOREARM", 6, 3, 4 }, // child: right arm -> right forearm
+		{ BodyType::BODY_HUMAN, "LEFT_ARM_TO_FOREARM", 7, 6, 7 }, // child: left arm -> left forearm
+		{ BodyType::BODY_HUMAN, "RIGHT_FOREARM_TO_HAND", 8, 4, 5 }, // child: right forearm -> right hand
+		{ BodyType::BODY_HUMAN, "LEFT_FOREARM_TO_HAND", 9, 7, 8 }, // child: left forearm -> left hand
+		{ BodyType::BODY_HUMAN, "RIGHT_LEG_TO_FOOT", 10, 9, 10 }, // child: right leg -> right foot
+		{ BodyType::BODY_HUMAN, "LEFT_LEG_TO_FOOT", 11, 11, 12 } // child: left leg -> left foot
+	};
+	bodyJoints[BodyType::BODY_COFFER] = std::vector<BodyJoint>{
+		{ BodyType::BODY_COFFER, "COFFER", 0, 0, 1 } // child: coffer base -> coffer top
+	};
+	bodyJoints[BodyType::BODY_ACTIVATOR] = std::vector<BodyJoint>{
+		{ BodyType::BODY_ACTIVATOR, "ACTIVATOR", 0, 0, 1 } // child: activator base -> activator top
 	};
 }

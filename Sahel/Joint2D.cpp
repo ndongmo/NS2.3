@@ -1,5 +1,16 @@
 #include "Joint2D.h"
 
+void Joint2D::init(unsigned int index, unsigned int parent, unsigned int child)
+{
+	this->index = index;
+	this->parent = parent;
+	this->child = child;
+	this->angle = 0.0f;
+	this->upper = Move2D();
+	this->lower = Move2D();
+	this->point = glm::vec2(0.0f);
+}
+
 void Joint2D::update(const Move2D& m, const glm::vec2& pos)
 {
 	point += m.pos;

@@ -404,41 +404,81 @@ enum Shape2DType
 enum DepthType
 {
 	DEPTH_GROUND = 0,
-	DEPTH_GROUND_UP = 2,
-	DEPTH_FLOOR = 4,
-	DEPTH_FLOOR_UP = 6,
-	DEPTH_CARPET = 8,
-	DEPTH_CARPET_UP = 10,
-	DEPTH_LEFT_FOOT = 12,
-	DEPTH_LEFT_FOOT_UP = 14,
-	DEPTH_RIGHT_FOOT = 16,
-	DEPTH_RIGHT_FOOT_UP = 18,
-	DEPTH_LEFT_LEG = 20,
-	DEPTH_LEFT_LEG_UP = 22,
-	DEPTH_RIGHT_LEG = 24,
-	DEPTH_RIGHT_LEG_UP = 26,
-	DEPTH_BODY_HIP = 27,
-	DEPTH_BODY = 28,
-	DEPTH_BODY_UP = 30,
-	DEPTH_LEFT_HAND = 32,
-	DEPTH_LEFT_HAND_UP = 34,
-	DEPTH_RIGHT_HAND = 36,
-	DEPTH_RIGHT_HAND_UP = 38,
-	DEPTH_LEFT_FOREARM = 40,
-	DEPTH_LEFT_FOREARM_UP = 42,
-	DEPTH_RIGHT_FOREARM = 44,
-	DEPTH_RIGHT_FOREARM_UP = 46,
-	DEPTH_LEFT_ARM = 48,
-	DEPTH_LEFT_ARM_UP = 50,
-	DEPTH_RIGHT_ARM = 52,
-	DEPTH_RIGHT_ARM_UP = 54,
-	DEPTH_BODY_NECK = 55,
-	DEPTH_HEAD = 56,
-	DEPTH_HEAD_UP = 58,
-	DEPTH_TREE = 60,
-	DEPTH_TREE_UP = 62,
-	DEPTH_CLOUD = 64,
-	DEPTH_COUNT = 33
+	DEPTH_GROUND_UP = 4,
+	DEPTH_FLOOR = 8,
+	DEPTH_FLOOR_UP = 12,
+	DEPTH_CARPET = 16,
+	DEPTH_CARPET_UP = 20,
+	DEPTH_LEFT_FOOT = 24,
+	DEPTH_LEFT_FOOT_UP = 28,
+	DEPTH_RIGHT_FOOT = 32,
+	DEPTH_RIGHT_FOOT_UP = 34,
+	DEPTH_LEFT_LEG = 38,
+	DEPTH_LEFT_LEG_UP = 42,
+	DEPTH_RIGHT_LEG = 46,
+	DEPTH_RIGHT_LEG_UP = 50,
+	DEPTH_HIP = 54,
+	DEPTH_HIP_UP = 58,
+	DEPTH_TORSO = 62,
+	DEPTH_TORSO_UP = 66,
+	DEPTH_LEFT_HAND = 70,
+	DEPTH_LEFT_HAND_UP = 74,
+	DEPTH_RIGHT_HAND = 78,
+	DEPTH_RIGHT_HAND_UP = 82,
+	DEPTH_LEFT_FOREARM = 86,
+	DEPTH_LEFT_FOREARM_UP = 90,
+	DEPTH_RIGHT_FOREARM = 94,
+	DEPTH_RIGHT_FOREARM_UP = 98,
+	DEPTH_LEFT_ARM = 102,
+	DEPTH_LEFT_ARM_UP = 106,
+	DEPTH_RIGHT_ARM = 110,
+	DEPTH_RIGHT_ARM_UP = 114,
+	DEPTH_BODY_NECK = 118,
+	DEPTH_HEAD = 122,
+	DEPTH_HEAD_UP = 126,
+	DEPTH_TREE = 130,
+	DEPTH_TREE_UP = 134,
+	DEPTH_CLOUD = 138
+};
+
+enum DepthType2
+{
+	DEPTH2_GROUND = 0,
+	DEPTH2_GROUND_UP = 2,
+	DEPTH2_FLOOR = 4,
+	DEPTH2_FLOOR_UP = 6,
+	DEPTH2_CARPET = 8,
+	DEPTH2_CARPET_UP = 10,
+	DEPTH2_LEFT_FOOT = 12,
+	DEPTH2_LEFT_FOOT_UP = 14,
+	DEPTH2_RIGHT_FOOT = 16,
+	DEPTH2_RIGHT_FOOT_UP = 18,
+	DEPTH2_LEFT_LEG = 20,
+	DEPTH2_LEFT_LEG_UP = 22,
+	DEPTH2_RIGHT_LEG = 24,
+	DEPTH2_RIGHT_LEG_UP = 26,
+	DEPTH2_BODY_HIP = 27,
+	DEPTH2_BODY = 28,
+	DEPTH2_BODY_UP = 30,
+	DEPTH2_LEFT_HAND = 32,
+	DEPTH2_LEFT_HAND_UP = 34,
+	DEPTH2_RIGHT_HAND = 36,
+	DEPTH2_RIGHT_HAND_UP = 38,
+	DEPTH2_LEFT_FOREARM = 40,
+	DEPTH2_LEFT_FOREARM_UP = 42,
+	DEPTH2_RIGHT_FOREARM = 44,
+	DEPTH2_RIGHT_FOREARM_UP = 46,
+	DEPTH2_LEFT_ARM = 48,
+	DEPTH2_LEFT_ARM_UP = 50,
+	DEPTH2_RIGHT_ARM = 52,
+	DEPTH2_RIGHT_ARM_UP = 54,
+	DEPTH2_BODY_NECK = 55,
+	DEPTH2_HEAD = 56,
+	DEPTH2_HEAD_UP = 58,
+	DEPTH2_TREE = 60,
+	DEPTH2_TREE_UP = 62,
+	DEPTH2_CLOUD = 64,
+	DEPTH2_COUNT = 33
 };
 
 /*!
@@ -460,23 +500,6 @@ enum HumanPart
 	HP_LEFT_FOOT = 11,
 	HP_RIGHT_FOOT = 12,
 	HP_COUNT = 13
-};
-
-enum HumanJoint
-{
-	HJ_NECK = 0,
-	HJ_LEFT_SHOULDER = 1,
-	HJ_RIGHT_SOULDER = 2,
-	HJ_LEFT_ELBOW = 3,
-	HJ_RIGHT_ELBOW = 4,
-	HJ_LEFT_WRIST = 5,
-	HJ_RIGHT_WRIST = 6,
-	HJ_LEFT_HIP = 7,
-	HJ_RIGHT_HIP = 8,
-	HJ_LEFT_ANKLE = 9,
-	HJ_RIGHT_ANKLE = 10,
-	HJ_BODY = 11,
-	HJ_COUNT = 12
 };
 
 enum PartType 
@@ -887,14 +910,14 @@ struct BodyPart
 
 struct BodyJoint
 {
-	std::string name;
 	BodyType bodyType = BodyType::BODY_HUMAN;
+	std::string name;
 	int jointIndex = -1;
 	int parentIndex = -1;
 	int childIndex = -1;
 	BodyJoint() {}
-	BodyJoint(BodyType bType, int jIndex) :
-		bodyType(bType), jointIndex(jIndex) {}
+	BodyJoint(BodyType bType, const std::string& jName, int jIndex, int pIndex, int cIndex) :
+		bodyType(bType), name(jName), jointIndex(jIndex), parentIndex(pIndex), childIndex(cIndex) {}
 };
 
 class TypeHelper
@@ -906,20 +929,16 @@ public:
 	static bool saveGameData();
 	static bool saveSaveData();
 
-	static int getOppositePart(BodyType type, int partType);
-	static int getOppositeJoint(BodyType type, int jointType);
 	static int getEntityIndex(GameType type);
 	static GameType getGameType(ItemType type);
 	static GameType getGameType(EntityType type);
 	static GameType getGameType(EntityID id);
 	static EntityID getEntityID(EntityType type);
 	static EntityType getEntityType(EntityID id);
-	static unsigned int getPartIndex(int partType);
-	static unsigned int getPartCount(BodyType type);
-	static unsigned int getJointCount(BodyType type);
 
-	static PartType getPartOf(BodyType type, int part);
-	static const BodyPart& getBodyPart(BodyType type, int partType);
+	static const BodyPart& getBodyPart(int partType);
+	static const BodyJoint* getParent(BodyType type, int childPart);
+	static std::vector<const BodyJoint*> getChildren(BodyType type, int parentPart);
 
 	static std::string getEntity(EntityID id);
 	static std::string getKey(KeyType type);
@@ -934,40 +953,39 @@ public:
 	static std::string getDepthType(DepthType type);
 	static std::string getShapeType(Shape2DType type);
 	static std::string getBodyType(BodyType type);
-	static std::string getPartType(PartType type);
-	static std::string getPartType(BodyType type, int part);
-	static std::string getJointType(BodyType type, int joint);
 	static std::string getEntityType(EntityType type);
 	static std::string getGameType(GameType type);
 	static std::string getAgentClass(AgentClass aClass);
 
-	static void createKeyTypes(std::unordered_map<unsigned char, std::string> &m);
-	static void createSensorTypes(std::unordered_map<unsigned char, std::string> &m);
-	static void createDecorTypes(std::unordered_map<unsigned char, std::string> &m);
-	static void createTrapTypes(std::unordered_map<unsigned char, std::string> &m);
-	static void createBonusTypes(std::unordered_map<unsigned char, std::string> &m);
-	static void createAITypes(std::unordered_map<unsigned char, std::string> &m);
-	static void createHumanPartTypes(std::unordered_map<unsigned char, std::string> &m);
-	static void createHumanJointTypes(std::unordered_map<unsigned char, std::string> &m);
-	static void createBodyTypes(std::unordered_map<unsigned char, std::string> &m);
-	static void createPartTypes(std::unordered_map<unsigned char, std::pair<unsigned char, std::string>> &m);
-	static void createEntityTypes(std::unordered_map<int, std::string> &m);
-	static void createGameTypes(std::unordered_map<unsigned char, std::string> &m);
-	static void createDepthTypes(std::unordered_map<unsigned char, std::string> &m);
-	static void createShapeTypes(std::unordered_map<unsigned char, std::string> &m);
-	static void createItemTypes(std::unordered_map<int, std::string> &m);
-	static void createUpgradeTypes(std::unordered_map<unsigned char, std::string> &m);
-	static void createMaterialTypes(std::unordered_map<unsigned char, std::string> &m);
-	static void createEffectTypes(std::unordered_map<unsigned char, std::string> &m);
-	static void createThrowingTypes(std::unordered_map<unsigned char, std::string> &m);
-	static void createQuestTypes(std::unordered_map<unsigned char, std::string> &m);
-	static void createQuestStates(std::unordered_map<unsigned char, std::string> &m);
-	static void createWeatherTypes(std::unordered_map<unsigned char, std::string> &m);
-	static void createGameStates(std::unordered_map<unsigned char, std::string> &m);
-	static void createFontAlignment(std::unordered_map<unsigned char, std::string> &m);
-	static void createAgentClasses(std::unordered_map<unsigned char, std::string>& m);
-	static void createShopSkills(std::unordered_map<unsigned char, std::string>& m);
+	static DepthType getDepthType2(int type2);
+
+	static void createKeyTypes();
+	static void createSensorTypes();
+	static void createDecorTypes();
+	static void createTrapTypes();
+	static void createBonusTypes();
+	static void createAITypes();
+	static void createBodyTypes();
+	static void createEntityTypes();
+	static void createGameTypes();
+	static void createDepthTypes();
+	static void createDepthTypes2();
+	static void createShapeTypes();
+	static void createItemTypes();
+	static void createUpgradeTypes();
+	static void createMaterialTypes();
+	static void createEffectTypes();
+	static void createThrowingTypes();
+	static void createQuestTypes();
+	static void createQuestStates();
+	static void createWeatherTypes();
+	static void createGameStates();
+	static void createFontAlignment();
+	static void createAgentClasses();
+	static void createShopSkills();
+	static void createPartTypes();
 	static void createBodyParts();
+	static void createBodyJoints();
 
 	static std::unordered_map<unsigned char, std::string> shopSkills;
 	static std::unordered_map<unsigned char, std::string> agentClasses;
@@ -981,6 +999,7 @@ public:
 	static std::unordered_map<unsigned char, std::string> materialTypes;
 	static std::unordered_map<unsigned char, std::string> shapeTypes;
 	static std::unordered_map<unsigned char, std::string> depthTypes;
+	static std::unordered_map<unsigned char, std::string> depthTypes2;
 	static std::unordered_map<unsigned char, std::string> upgradeTypes;
 	static std::unordered_map<unsigned char, std::string> effectTypes;
 	static std::unordered_map<unsigned char, std::string> throwingTypes;
@@ -992,11 +1011,10 @@ public:
 	static std::unordered_map<int, std::string> entityTypes;
 	static std::unordered_map<int, std::string> itemTypes;
 
+	static std::unordered_map<unsigned char, std::string> partTypes;
 	static std::unordered_map<unsigned char, std::string> bodyTypes;
-	static std::unordered_map<unsigned char, std::string> human_partTypes;
-	static std::unordered_map<unsigned char, std::string> human_jointTypes;
-	static std::unordered_map<unsigned char, std::pair<unsigned char, std::string>> partTypes;
 	static std::unordered_map<unsigned char, std::vector<BodyPart>> bodyParts;
+	static std::unordered_map<unsigned char, std::vector<BodyJoint>> bodyJoints;
 
 	static GameData gameData;
 	static SaveData saveData;

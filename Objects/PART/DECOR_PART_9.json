@@ -1,0 +1,98 @@
+{
+    "child_joints": [],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            500.0,
+            508.0
+        ],
+        "points": [
+            [
+                390.0,
+                106.0
+            ],
+            [
+                890.0,
+                106.0
+            ],
+            [
+                890.0,
+                614.0
+            ],
+            [
+                390.0,
+                614.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 1
+    },
+    "hidden": false,
+    "index": 0,
+    "material": 1,
+    "opposite_part": -1,
+    "parent_joint": -1,
+    "path": "../Objects/PART/DECOR_PART_9.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            652.25,
+            345.5
+        ],
+        "dim": [
+            92.0,
+            75.0
+        ],
+        "points": [
+            [
+                606.25,
+                308.0
+            ],
+            [
+                698.25,
+                308.0
+            ],
+            [
+                698.25,
+                383.0
+            ],
+            [
+                606.25,
+                383.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 1
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 130,
+        "dims": [
+            1,
+            1
+        ],
+        "invs": [
+            false,
+            false
+        ],
+        "texture": "../Assets/trees/tr_tree1.png"
+    },
+    "type": 22
+}

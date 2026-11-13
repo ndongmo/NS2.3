@@ -1,0 +1,100 @@
+{
+    "child_joints": [
+        0
+    ],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            126.0,
+            278.0
+        ],
+        "points": [
+            [
+                577.0,
+                221.0
+            ],
+            [
+                703.0,
+                221.0
+            ],
+            [
+                703.0,
+                499.0
+            ],
+            [
+                577.0,
+                499.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "hidden": false,
+    "index": 0,
+    "material": 1,
+    "opposite_part": -1,
+    "parent_joint": -1,
+    "path": "../Objects/PART/COFFER_BASE_PART_2.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            126.0,
+            278.0
+        ],
+        "points": [
+            [
+                577.0,
+                221.0
+            ],
+            [
+                703.0,
+                221.0
+            ],
+            [
+                703.0,
+                499.0
+            ],
+            [
+                577.0,
+                499.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 46,
+        "dims": [
+            1,
+            1
+        ],
+        "invs": [
+            false,
+            false
+        ],
+        "texture": "../Assets/coffers/bc_coffer5.png"
+    },
+    "type": 19
+}

@@ -1,0 +1,98 @@
+{
+    "child_joints": [],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            96.0,
+            64.0
+        ],
+        "points": [
+            [
+                592.0,
+                328.0
+            ],
+            [
+                688.0,
+                328.0
+            ],
+            [
+                688.0,
+                392.0
+            ],
+            [
+                592.0,
+                392.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "hidden": false,
+    "index": 10,
+    "material": 1,
+    "opposite_part": 12,
+    "parent_joint": 10,
+    "path": "../Objects/PART/RIGHT_FOOT_PART_1.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            640.5,
+            362.0
+        ],
+        "dim": [
+            73.0,
+            40.0
+        ],
+        "points": [
+            [
+                604.0,
+                342.0
+            ],
+            [
+                677.0,
+                342.0
+            ],
+            [
+                677.0,
+                382.0
+            ],
+            [
+                604.0,
+                382.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 32,
+        "dims": [
+            1,
+            1
+        ],
+        "invs": [
+            false,
+            true
+        ],
+        "texture": "../Assets/bh_foots/bh_foot1.png"
+    },
+    "type": 11
+}

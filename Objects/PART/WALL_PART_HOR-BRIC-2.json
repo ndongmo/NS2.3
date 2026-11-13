@@ -1,0 +1,98 @@
+{
+    "child_joints": [],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            32.0,
+            80.0
+        ],
+        "points": [
+            [
+                624.0,
+                320.0
+            ],
+            [
+                656.0,
+                320.0
+            ],
+            [
+                656.0,
+                400.0
+            ],
+            [
+                624.0,
+                400.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "hidden": false,
+    "index": 0,
+    "material": 1,
+    "opposite_part": -1,
+    "parent_joint": -1,
+    "path": "../Objects/PART/WALL_PART_HOR-BRIC-2.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            32.0,
+            80.0
+        ],
+        "points": [
+            [
+                624.0,
+                320.0
+            ],
+            [
+                656.0,
+                320.0
+            ],
+            [
+                656.0,
+                400.0
+            ],
+            [
+                624.0,
+                400.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 62,
+        "dims": [
+            1,
+            1
+        ],
+        "invs": [
+            false,
+            false
+        ],
+        "texture": "../Assets/walls/wall_brick_hor2.png"
+    },
+    "type": 18
+}

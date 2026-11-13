@@ -139,34 +139,24 @@ bool ObjectLoader::load(const json& j, Body& b)
 		b.m_shape.init(j.at("shape").get<Shape2DType>());
 
 		// load all body parts
+		int nbParts = j.at("nb_parts").get<int>();
 		b.m_parts.clear();
-		for (const std::string& partPath : 
-			j.at("parts_path").get<std::vector<std::string>>()) {
-			b.m_parts.emplace_back();
-			if (!partPath.empty()) {
-				m_objManager.loadUnique(partPath, b.m_parts.back());
-			}
-		}
-
-		// update the part joints
-		size_t nbParts = b.m_parts.size();
-		for (const auto& j : b.m_joints) {
-			if (j.parent != j.son && j.parent >= 0 && j.parent < nbParts) {
-				b.m_parts[j.parent].addJoint(j.index);
-			}
-			if (j.son >= 0 && j.son < nbParts) {
-				b.m_parts[j.son].setParentJoint(j.index);
+		b.m_parts.resize(nbParts);
+		for (const auto& part : j.at("parts_path")) {
+			unsigned int index = part.at("index").get<unsigned int>();
+			std::string path = part.at("path").get<std::string>();
+			if (!path.empty()) {
+				m_objManager.loadUnique(path, b.m_parts[index]);
 			}
 		}
 
 		// finally, update the part transformation
-		unsigned int index = 0;
 		for (const auto& part : j.at("parts_transform")) {
 			// order is important!!!
+			unsigned int index = part.at("index").get<unsigned int>();
 			b.initScale(index, part.at("scale").get<glm::vec2>());
 			b.initAngle(index, part.at("angle").get<float>());
 			b.initPos(index, part.at("pos").get<glm::vec2>());
-			index++;
 		}
 
 		b.updateShape(); // update the body shape after all parts are loaded and transformed
@@ -183,10 +173,13 @@ bool ObjectLoader::load(const json& j, Part& bp)
 {
 	try {
 		bp.m_type = j.at("type").get<PartType>();
+		bp.m_index = j.at("index").get<int>();
+		bp.m_oppositePart = j.at("opposite_part").get<int>();
+		bp.m_parentJoint = j.at("parent_joint").get<int>();
+		bp.m_joints = j.at("child_joints").get<std::vector<unsigned int>>();
 		bp.m_collide = j.at("collide").get<bool>();
 		bp.m_scalable = j.at("scalable").get<bool>();
 		bp.m_hidden = j.at("hidden").get<bool>();
-		bp.m_index = j.at("index").get<int>();
 		bp.m_material = j.at("material").get<MaterialType>();
 		bp.m_path = j.at("path").get<std::string>();
 
@@ -207,7 +200,7 @@ bool ObjectLoader::load(const json& j, Joint2D& j2d)
 	try {
 		j2d.index = j.at("index").get<unsigned int>();
 		j2d.parent = j.at("parent").get<unsigned int>();
-		j2d.son = j.at("son").get<unsigned int>();
+		j2d.child = j.at("son").get<unsigned int>();
 		j2d.point = j.at("point").get<glm::vec2>();
 		j2d.lower = j.at("lower").get<Move2D>();
 		j2d.upper = j.at("upper").get<Move2D>();

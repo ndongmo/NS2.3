@@ -1,0 +1,100 @@
+{
+    "child_joints": [
+        7
+    ],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            512.0,
+            308.0
+        ],
+        "dim": [
+            96.0,
+            64.0
+        ],
+        "points": [
+            [
+                464.0,
+                276.0
+            ],
+            [
+                560.0,
+                276.0
+            ],
+            [
+                560.0,
+                340.0
+            ],
+            [
+                464.0,
+                340.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "hidden": false,
+    "index": 6,
+    "material": 1,
+    "opposite_part": 3,
+    "parent_joint": 5,
+    "path": "../Objects/PART/LEFT_ARM_PART_1.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            512.0,
+            308.0
+        ],
+        "dim": [
+            104.0,
+            100.0
+        ],
+        "points": [
+            [
+                477.0,
+                286.0
+            ],
+            [
+                547.0,
+                286.0
+            ],
+            [
+                547.0,
+                330.0
+            ],
+            [
+                477.0,
+                330.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 102,
+        "dims": [
+            1,
+            1
+        ],
+        "invs": [
+            false,
+            false
+        ],
+        "texture": "../Assets/bh_arms/bh_arm1.png"
+    },
+    "type": 2
+}

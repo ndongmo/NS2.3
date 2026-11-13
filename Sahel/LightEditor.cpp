@@ -11,12 +11,13 @@ LightEditor::LightEditor(EditorGui& parent) :
 	AbstractEditor(parent, m_light)
 {}
 
-void LightEditor::create(const std::string& path, unsigned int type)
+bool LightEditor::create(const std::string& path, unsigned int type)
 {
 	m_light.m_shape.initBox(0.0f, 0.0f, 400.0f, 400.0f);
 	m_light.m_color = NS2::ColorRGBA8(255, 255, 255, 255);
 	m_light.m_texture = m_parent.getResourceManager().getTexture(LIGHT_ASSET);
 	m_light.setPath(path);
+	return true;
 }
 
 void LightEditor::update()

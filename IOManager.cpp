@@ -149,13 +149,14 @@ namespace NS2
 		return fs::remove_all(fs::path(path)) > 0;
 	}
 
-	int IOManager::countFiles(const std::string& pathStr, const std::string& extension) {
+	int IOManager::countFiles(const std::string& pathStr, const std::string& extension, const std::string& contain) {
 		fs::path targetPath(pathStr);
 		if (!fs::exists(targetPath) || !fs::is_directory(targetPath)) return 0;
 
 		int fileCount = 0;
 		for (const auto& entry : fs::directory_iterator(targetPath)) {
-			if (entry.is_regular_file() && entry.path().extension() == extension) {
+			if (entry.is_regular_file() && entry.path().extension() == extension && 
+				(contain.empty() || entry.path().filename().string().find(contain) != std::string::npos)) {
 				fileCount++;
 			}
 		}

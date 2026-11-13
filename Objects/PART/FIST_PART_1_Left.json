@@ -1,0 +1,98 @@
+{
+    "child_joints": [],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            562.0,
+            358.0
+        ],
+        "dim": [
+            64.0,
+            64.0
+        ],
+        "points": [
+            [
+                530.0,
+                326.0
+            ],
+            [
+                594.0,
+                326.0
+            ],
+            [
+                594.0,
+                390.0
+            ],
+            [
+                530.0,
+                390.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 0
+    },
+    "hidden": false,
+    "index": 0,
+    "material": 1,
+    "opposite_part": -1,
+    "parent_joint": -1,
+    "path": "../Objects/PART/FIST_PART_1_Left.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            562.0,
+            358.0
+        ],
+        "dim": [
+            100.0,
+            100.0
+        ],
+        "points": [
+            [
+                512.0,
+                308.0
+            ],
+            [
+                612.0,
+                308.0
+            ],
+            [
+                612.0,
+                408.0
+            ],
+            [
+                512.0,
+                408.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 0
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 46,
+        "dims": [
+            6,
+            1
+        ],
+        "invs": [
+            false,
+            false
+        ],
+        "texture": "../Assets/bh_hands/bh_hand1.png"
+    },
+    "type": 15
+}

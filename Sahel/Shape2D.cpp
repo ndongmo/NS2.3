@@ -553,7 +553,7 @@ float Shape2D::getFartherDis(const glm::vec2& center) const
 	}
 	float maxDisSq = 0.0f;
 	for (const auto& p : m_points) {
-		float disSq = glm::distance2(center, p); // Using squared distance to bypass expensive sqrt inside loops
+		float disSq = glm::distance2(center, p);
 		if (disSq > maxDisSq) maxDisSq = disSq;
 	}
 	return std::sqrt(maxDisSq);

@@ -1,0 +1,98 @@
+{
+    "child_joints": [],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            512.0,
+            200.0
+        ],
+        "points": [
+            [
+                384.0,
+                260.0
+            ],
+            [
+                896.0,
+                260.0
+            ],
+            [
+                896.0,
+                460.0
+            ],
+            [
+                384.0,
+                460.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "hidden": false,
+    "index": 0,
+    "material": 1,
+    "opposite_part": -1,
+    "parent_joint": -1,
+    "path": "../Objects/PART/DECOR_PART_TANK-TURRENT-1.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            512.0,
+            200.0
+        ],
+        "points": [
+            [
+                384.0,
+                260.0
+            ],
+            [
+                896.0,
+                260.0
+            ],
+            [
+                896.0,
+                460.0
+            ],
+            [
+                384.0,
+                460.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 126,
+        "dims": [
+            1,
+            1
+        ],
+        "invs": [
+            false,
+            false
+        ],
+        "texture": "../Assets/decors/de_tank1_turrent.png"
+    },
+    "type": 22
+}

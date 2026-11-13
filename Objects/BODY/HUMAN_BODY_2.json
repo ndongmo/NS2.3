@@ -1,0 +1,451 @@
+{
+    "aspeed": 0.10000000149011612,
+    "joints": [
+        {
+            "child": 2,
+            "index": 0,
+            "lower": [
+                0.0,
+                0.0,
+                -1.0471980571746826
+            ],
+            "parent": 1,
+            "point": [
+                504.0,
+                310.0
+            ],
+            "upper": [
+                0.0,
+                0.0,
+                1.0471980571746826
+            ]
+        },
+        {
+            "child": 3,
+            "index": 0,
+            "lower": [
+                0.0,
+                -0.0,
+                -0.785398006439209
+            ],
+            "parent": 1,
+            "point": [
+                512.0,
+                371.0
+            ],
+            "upper": [
+                0.0,
+                -0.0,
+                0.785398006439209
+            ]
+        },
+        {
+            "child": 4,
+            "index": 0,
+            "lower": [
+                0.0,
+                0.0,
+                -0.785398006439209
+            ],
+            "parent": 1,
+            "point": [
+                512.0,
+                245.0
+            ],
+            "upper": [
+                0.0,
+                0.0,
+                0.785398006439209
+            ]
+        },
+        {
+            "child": 5,
+            "index": 0,
+            "lower": [
+                0.0,
+                -0.0,
+                -1.570796012878418
+            ],
+            "parent": 3,
+            "point": [
+                566.6666870117188,
+                378.5
+            ],
+            "upper": [
+                0.0,
+                -0.0,
+                -0.0
+            ]
+        },
+        {
+            "child": 6,
+            "index": 0,
+            "lower": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "parent": 4,
+            "point": [
+                566.6666870117188,
+                237.5
+            ],
+            "upper": [
+                0.0,
+                0.0,
+                1.570796012878418
+            ]
+        },
+        {
+            "child": 7,
+            "index": 0,
+            "lower": [
+                0.0,
+                -0.0,
+                -0.785398006439209
+            ],
+            "parent": 5,
+            "point": [
+                610.0,
+                370.0
+            ],
+            "upper": [
+                0.0,
+                -0.0,
+                0.43633198738098145
+            ]
+        },
+        {
+            "child": 8,
+            "index": 0,
+            "lower": [
+                0.0,
+                0.0,
+                -0.43633198738098145
+            ],
+            "parent": 6,
+            "point": [
+                610.0,
+                246.0
+            ],
+            "upper": [
+                0.0,
+                0.0,
+                0.785398006439209
+            ]
+        },
+        {
+            "child": 9,
+            "index": 0,
+            "lower": [
+                -50.0,
+                0.0,
+                -0.8726649880409241
+            ],
+            "parent": 0,
+            "point": [
+                534.0,
+                327.0
+            ],
+            "upper": [
+                50.0,
+                0.0,
+                0.8726649880409241
+            ]
+        },
+        {
+            "child": 10,
+            "index": 0,
+            "lower": [
+                -50.0,
+                0.0,
+                -0.8726649880409241
+            ],
+            "parent": 0,
+            "point": [
+                534.0,
+                289.0
+            ],
+            "upper": [
+                50.0,
+                0.0,
+                0.8726649880409241
+            ]
+        },
+        {
+            "child": 11,
+            "index": 0,
+            "lower": [
+                -40.0,
+                -0.0,
+                -0.17453299462795258
+            ],
+            "parent": 9,
+            "point": [
+                551.9999389648438,
+                334.0
+            ],
+            "upper": [
+                38.0,
+                -0.0,
+                0.785398006439209
+            ]
+        },
+        {
+            "child": 12,
+            "index": 0,
+            "lower": [
+                -40.0,
+                0.0,
+                -0.785398006439209
+            ],
+            "parent": 10,
+            "point": [
+                551.9999389648438,
+                282.0
+            ],
+            "upper": [
+                38.0,
+                0.0,
+                0.17453299462795258
+            ]
+        },
+        {
+            "child": 1,
+            "index": 0,
+            "lower": [
+                -60.0,
+                -60.0,
+                -1.0471980571746826
+            ],
+            "parent": 0,
+            "point": [
+                512.0,
+                308.0
+            ],
+            "upper": [
+                60.0,
+                60.0,
+                1.0471980571746826
+            ]
+        }
+    ],
+    "mass": 80.0,
+    "material": 1,
+    "nb_parts": 13,
+    "parts_path": [
+        {
+            "index": 0,
+            "path": "../Objects/PART/HIP_PART_1.json"
+        },
+        {
+            "index": 2,
+            "path": "../Objects/PART/TORSO_PART_1.json"
+        },
+        {
+            "index": 1,
+            "path": "../Objects/PART/HEAD_PART_1.json"
+        },
+        {
+            "index": 6,
+            "path": "../Objects/PART/LEFT_ARM_PART_1.json"
+        },
+        {
+            "index": 3,
+            "path": "../Objects/PART/RIGHT_ARM_PART_1.json"
+        },
+        {
+            "index": 7,
+            "path": "../Objects/PART/LEFT_FOREARM_PART_1.json"
+        },
+        {
+            "index": 4,
+            "path": "../Objects/PART/RIGHT_FOREARM_PART_1.json"
+        },
+        {
+            "index": 8,
+            "path": "../Objects/PART/LEFT_HAND_PART_1.json"
+        },
+        {
+            "index": 5,
+            "path": "../Objects/PART/RIGHT_HAND_PART_1.json"
+        },
+        {
+            "index": 11,
+            "path": "../Objects/PART/LEFT_LEG_PART_1.json"
+        },
+        {
+            "index": 9,
+            "path": "../Objects/PART/RIGHT_LEG_PART_1.json"
+        },
+        {
+            "index": 12,
+            "path": "../Objects/PART/LEFT_FOOT_PART_1.json"
+        },
+        {
+            "index": 10,
+            "path": "../Objects/PART/RIGHT_FOOT_PART_1.json"
+        }
+    ],
+    "parts_transform": [
+        {
+            "angle": 0.0,
+            "index": 0,
+            "pos": [
+                508.0,
+                312.0
+            ],
+            "scale": [
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "angle": 0.0,
+            "index": 2,
+            "pos": [
+                464.0,
+                212.0
+            ],
+            "scale": [
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "angle": 0.0,
+            "index": 1,
+            "pos": [
+                466.0,
+                260.0
+            ],
+            "scale": [
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "angle": 0.0,
+            "index": 6,
+            "pos": [
+                494.0,
+                340.0
+            ],
+            "scale": [
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "angle": 0.0,
+            "index": 3,
+            "pos": [
+                494.0,
+                212.0
+            ],
+            "scale": [
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "angle": 0.0,
+            "index": 7,
+            "pos": [
+                556.0,
+                344.0
+            ],
+            "scale": [
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "angle": 0.0,
+            "index": 4,
+            "pos": [
+                556.0,
+                208.0
+            ],
+            "scale": [
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "angle": 0.0,
+            "index": 8,
+            "pos": [
+                594.0,
+                340.50006103515625
+            ],
+            "scale": [
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "angle": 0.0,
+            "index": 5,
+            "pos": [
+                594.0,
+                211.9999542236328
+            ],
+            "scale": [
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "angle": 0.0,
+            "index": 11,
+            "pos": [
+                486.0,
+                302.0
+            ],
+            "scale": [
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "angle": 0.0,
+            "index": 9,
+            "pos": [
+                486.0,
+                250.0
+            ],
+            "scale": [
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "angle": 0.0,
+            "index": 12,
+            "pos": [
+                514.0,
+                304.0001220703125
+            ],
+            "scale": [
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "angle": 0.0,
+            "index": 10,
+            "pos": [
+                514.0,
+                247.9998779296875
+            ],
+            "scale": [
+                1.0,
+                1.0
+            ]
+        }
+    ],
+    "path": "../Objects/BODY/HUMAN_BODY_2.json",
+    "shape": 1,
+    "type": 0
+}

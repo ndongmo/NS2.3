@@ -15,6 +15,7 @@
 class ObjectLoader;
 class ObjectSaver;
 class BodyEditor;
+class ObjectManager;
 
 #define SPEED_FACTOR 0.006f
 
@@ -23,6 +24,7 @@ class Body : public ITransform, public IDraw, public IFileManager
 	friend ObjectLoader;
 	friend ObjectSaver;
 	friend BodyEditor;
+	friend ObjectManager;
 
 public:
 	
@@ -152,36 +154,25 @@ public:
 	}
 	virtual float getAngle() const override {
 		if (!m_parts.empty()) {
-			if (m_parts[0].m_parentJoint >= 0)	return m_joints[m_parts[0].m_parentJoint].angle * RADTODEG;
-			else								return m_parts[0].getShape().getAngle() * RADTODEG;
+			if (m_parts[0].m_parentJoint >= 0)	return m_joints[m_parts[0].m_parentJoint].angle;
+			else								return m_parts[0].getShape().getAngle();
 		}
-		else									return m_shape.getAngle() * RADTODEG;
+		else									return m_shape.getAngle();
 	}
 	virtual void rotate(float angle) override;
 	virtual void rotate(float angle, glm::vec2 pos) override;
 	virtual void scale(glm::vec2 scale) override;
 	virtual void incrPos(glm::vec2 offset) override;
 	virtual void setPos(glm::vec2 pos) override;
+	virtual void setScale(glm::vec2 scale) override;
 	virtual void setCenter(glm::vec2 center) override;
 	virtual void setAngle(float angle) override;
-	void setScale(glm::vec2 value);
 #pragma endregion VIRTUAL PUBLIC METHODS -------------------------------------------------------------------------------
 
 #pragma region
 	bool isForcesNotNull() const { return m_forces.x != 0.0f && m_forces.y != 0.0f; }
 	float getMass() const { return m_mass; }
 	float getASpeed() const { return m_angularSpeed; }
-	float getAngleRad() const {
-		if (!m_parts.empty()) {
-			if (m_parts[0].m_parentJoint >= 0)
-				return m_joints[m_parts[0].m_parentJoint].angle;
-			else
-				return m_parts[0].getShape().getAngle();
-		}
-		else {
-			return m_shape.getAngle();
-		}
-	}
 	float getOrientation() const{ return m_orientation; }
 	float getAngularVelocity() const { return m_angularVelocity; }
 	int getParentPart(unsigned int partIndex) const;
@@ -245,10 +236,6 @@ protected:
 	*/
 	void updateBox();
 	/*!
-	* \brief Update the surronding shape polygon of the body.
-	*/
-	void updatePolygon();
-	/*!
 	* \brief Apply a move of the given part.
 	*/
 	void move(unsigned int partIndex, glm::vec2 offset);
@@ -261,6 +248,8 @@ protected:
 	void scale(unsigned int partIndex, glm::vec2 scale);
 	void scale(unsigned int partIndex, glm::vec2 scale, glm::vec2 pos);
 	void setPos(unsigned int partIndex, glm::vec2 pos);
+	void setScale(unsigned int partIndex, glm::vec2 scale);
+	void setAngle(unsigned int partIndex, float angle);
 	void initAngle(unsigned int partIndex, float angle);
 	void initAngle(unsigned int partIndex, float angle, glm::vec2 pos);
 	void initScale(unsigned int partIndex, glm::vec2 scale);

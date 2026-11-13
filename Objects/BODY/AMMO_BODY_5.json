@@ -1,0 +1,30 @@
+{
+    "aspeed": 1.0,
+    "joints": [],
+    "mass": 1.0,
+    "material": 10,
+    "nb_parts": 1,
+    "parts_path": [
+        {
+            "index": 0,
+            "path": "../Objects/PART/AMMO_PART_5.json"
+        }
+    ],
+    "parts_transform": [
+        {
+            "angle": 0.0,
+            "index": 0,
+            "pos": [
+                512.0,
+                232.0
+            ],
+            "scale": [
+                1.0,
+                1.0
+            ]
+        }
+    ],
+    "path": "../Objects/BODY/AMMO_BODY_5.json",
+    "shape": 1,
+    "type": 6
+}

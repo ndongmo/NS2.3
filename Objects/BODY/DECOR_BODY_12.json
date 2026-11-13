@@ -1,0 +1,30 @@
+{
+    "aspeed": 1.0,
+    "joints": [],
+    "mass": 1.0,
+    "material": 9,
+    "nb_parts": 1,
+    "parts_path": [
+        {
+            "index": 0,
+            "path": "../Objects/PART/DECOR_PART_12.json"
+        }
+    ],
+    "parts_transform": [
+        {
+            "angle": 0.0,
+            "index": 0,
+            "pos": [
+                512.0,
+                272.0
+            ],
+            "scale": [
+                1.0,
+                1.0
+            ]
+        }
+    ],
+    "path": "../Objects/BODY/DECOR_BODY_12.json",
+    "shape": 1,
+    "type": 8
+}

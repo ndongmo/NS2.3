@@ -59,7 +59,8 @@ void EditorGui::initGui()
 	});
 	m_assets.emplace_back(STR_NONE, false); // add empty path
 	NS2::IOManager::getRecDirectoryEntries(TEXTUREPATH, m_assets, false);
-	m_debugging[DebugType::DEBUG] = true;
+	m_activeTool = ToolType::SELECT;
+	m_debugMask = DebugType::DEBUG;
 }
 
 void EditorGui::clear()
@@ -72,16 +73,13 @@ void EditorGui::clear()
 	m_activeModal = ModalType::NONE;
 	m_previousModal = ModalType::NONE;
 	m_activeTool = ToolType::SELECT;
+	m_debugMask = DebugType::DEBUG;
 	m_levelEditor = nullptr;
 
 	m_assets.clear();
 	m_editors.clear();
 	m_objects.clear();
 	m_objectTypes.clear();
-
-	for (int i = 0; i < DebugType::COUNT; i++) {
-		m_debugging[i] = false;
-	}
 }
 
 void EditorGui::onExit()
@@ -263,11 +261,6 @@ AbstractEditor* EditorGui::getCurrentEditor()
 	}
 }
 
-bool EditorGui::debug(DebugType type) const
-{
-	return m_debugging[type];
-}
-
 const std::vector<std::string>& EditorGui::getObjects(int typeIndex)
 {
 	loadObjectTypes(typeIndex);
@@ -306,78 +299,53 @@ void EditorGui::drawToolBar()
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetStyle().FramePadding.x);
 		ImGui::Text("Toolbox");
 		ImGui::Separator();
-		ImGui::RadioButton("Select", reinterpret_cast<int*>(&m_activeTool), static_cast<int>(ToolType::SELECT));
+		ImGui::RadioButton("Select", &m_activeTool, ToolType::SELECT);
 		ImGui::SameLine();
-		ImGui::RadioButton("Move", reinterpret_cast<int*>(&m_activeTool), static_cast<int>(ToolType::MOVE));
+		ImGui::RadioButton("Move", &m_activeTool, ToolType::MOVE);
 		ImGui::SameLine();
-		ImGui::RadioButton("Resize", reinterpret_cast<int*>(&m_activeTool), static_cast<int>(ToolType::RESIZE));
+		ImGui::RadioButton("Resize", &m_activeTool, ToolType::RESIZE);
 		ImGui::SameLine();
-		ImGui::RadioButton("Rotate", reinterpret_cast<int*>(&m_activeTool), static_cast<int>(ToolType::ROTATE));
+		ImGui::RadioButton("Rotate", &m_activeTool, ToolType::ROTATE);
 
 		if (m_onLevel && m_levelEditor != nullptr) {
-			ImGui::RadioButton("Attach", reinterpret_cast<int*>(&m_activeTool), static_cast<int>(ToolType::ATTACH));
+			ImGui::RadioButton("Attach", &m_activeTool, ToolType::ATTACH);
 			ImGui::SameLine();
-			ImGui::RadioButton("Copy", reinterpret_cast<int*>(&m_activeTool), static_cast<int>(ToolType::COPY));
+			ImGui::RadioButton("Copy", &m_activeTool, ToolType::COPY);
 			ImGui::SameLine();
-			ImGui::RadioButton("Place", reinterpret_cast<int*>(&m_activeTool), static_cast<int>(ToolType::PLACE));
+			ImGui::RadioButton("Place", &m_activeTool, ToolType::PLACE);
 		}
 	}
 	ImGui::EndChild();
 	ImGui::SameLine();
 	/* Debugging Group */
 	if (ImGui::BeginChild("Debugging", ImVec2(220.0f, groupHeight), ImGuiChildFlags_Borders)) {
-		const ImVec2 dims = ImVec2(70.0f, 0.0f);
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetStyle().FramePadding.x);
 		ImGui::Text("Debugging");
 		ImGui::Separator();
-		if (ImGui::Selectable("Debug", m_debugging[DebugType::DEBUG], 0, dims)) {
-			m_debugging[DebugType::DEBUG] = !m_debugging[DebugType::DEBUG];
-		}
+		drawCheckbox("Debug", m_debugMask, DebugType::DEBUG);
 		ImGui::SameLine();
-		if (ImGui::Selectable("Selected", m_debugging[DebugType::SELECTED], 0, dims)) {
-			m_debugging[DebugType::SELECTED] = !m_debugging[DebugType::SELECTED];
-		}
+		drawCheckbox("Selected", m_debugMask, DebugType::SELECTED);
 
 		if (m_onLevel && m_levelEditor != nullptr) {
 			ImGui::SameLine();
-			if (ImGui::Selectable("Entities", m_debugging[DebugType::ENTITIES], 0, dims)) {
-				m_debugging[DebugType::ENTITIES] = !m_debugging[DebugType::ENTITIES];
-			}
-			if (ImGui::Selectable("Tree", m_debugging[DebugType::TREE], 0, dims)) {
-				m_debugging[DebugType::TREE] = !m_debugging[DebugType::TREE];
-			}
+			drawCheckbox("Entity", m_debugMask, DebugType::ENTITIES);
+			drawCheckbox("Tree", m_debugMask, DebugType::TREE);
 			ImGui::SameLine();
-			if (ImGui::Selectable("Node", m_debugging[DebugType::NODE], 0, dims)) {
-				m_debugging[DebugType::NODE] = !m_debugging[DebugType::NODE];
-			}
+			drawCheckbox("Node", m_debugMask, DebugType::NODE);
 			ImGui::SameLine();
-			if (ImGui::Selectable("Edge", m_debugging[DebugType::EDGE], 0, dims)) {
-				m_debugging[DebugType::EDGE] = !m_debugging[DebugType::EDGE];
-			}
-			if (ImGui::Selectable("Tiles", m_debugging[DebugType::TILES], 0, dims)) {
-				m_debugging[DebugType::TILES] = !m_debugging[DebugType::TILES];
-			}
+			drawCheckbox("Edge", m_debugMask, DebugType::EDGE);
+			drawCheckbox("Tiles", m_debugMask, DebugType::TILES);
 			ImGui::SameLine();
-			if (ImGui::Selectable("Lights", m_debugging[DebugType::LIGHTS], 0, dims)) {
-				m_debugging[DebugType::LIGHTS] = !m_debugging[DebugType::LIGHTS];
-			}
+			drawCheckbox("Lights", m_debugMask, DebugType::LIGHTS);
 			ImGui::SameLine();
-			if (ImGui::Selectable("Sensors", m_debugging[DebugType::SENSORS], 0, dims)) {
-				m_debugging[DebugType::SENSORS] = !m_debugging[DebugType::SENSORS];
-			}
+			drawCheckbox("Sensors", m_debugMask, DebugType::SENSORS);
 		}
 		else {
-			if (ImGui::Selectable("Bodies", m_debugging[DebugType::BODY], 0, dims)) {
-				m_debugging[DebugType::BODY] = !m_debugging[DebugType::BODY];
-			}
+			drawCheckbox("Body", m_debugMask, DebugType::BODY);
 			ImGui::SameLine();
-			if (ImGui::Selectable("D. Parts", m_debugging[DebugType::DRAW_PART], 0, dims)) {
-				m_debugging[DebugType::DRAW_PART] = !m_debugging[DebugType::DRAW_PART];
-			}
+			drawCheckbox("D. Part", m_debugMask, DebugType::DRAW_PART);
 			ImGui::SameLine();
-			if (ImGui::Selectable("C. Parts", m_debugging[DebugType::COLL_PART], 0, dims)) {
-				m_debugging[DebugType::COLL_PART] = !m_debugging[DebugType::COLL_PART];
-			}
+			drawCheckbox("C. Part", m_debugMask, DebugType::COLL_PART);
 		}
 	}
 	ImGui::EndChild();
@@ -580,8 +548,8 @@ void EditorGui::drawModals()
 {
 	// 1. OPEN TRIGGERS (Executed outside immediate window bounds to prevent stack corruption)
 	if (m_activeModal == ModalType::CREATE) { ImGui::OpenPopup("Create Instance"); m_activeModal = ModalType::NONE; m_modalIndex = 0; }
-	if (m_activeModal == ModalType::COPY) { ImGui::OpenPopup("Copy Instance"); m_activeModal = ModalType::NONE; }
-	if (m_activeModal == ModalType::RENAME) { ImGui::OpenPopup("Rename Instance"); m_activeModal = ModalType::NONE; }
+	if (m_activeModal == ModalType::COPY) { ImGui::OpenPopup("Copy Instance"); m_activeModal = ModalType::NONE; m_modalIndex = getModalIndex(m_selectedTypeIndex, std::string(m_buffer)); }
+	if (m_activeModal == ModalType::RENAME) { ImGui::OpenPopup("Rename Instance"); m_activeModal = ModalType::NONE; m_modalIndex = getModalIndex(m_selectedTypeIndex, std::string(m_buffer)); }
 	if (m_activeModal == ModalType::DELETE) { ImGui::OpenPopup("Confirm Deletion"); m_activeModal = ModalType::NONE; }
 	if (m_activeModal == ModalType::ERROR) { ImGui::OpenPopup("Error"); m_activeModal = ModalType::NONE; }
 	if (m_activeModal == ModalType::EXIT || m_activeModal == ModalType::CHANGE_MODE 
@@ -597,37 +565,15 @@ void EditorGui::drawModals()
 		ImGui::TextUnformatted("Enter name for the new Instance:");
 		std::string namePrefix = getNamePrefix(m_selectedTypeIndex, m_modalIndex);
 		if (m_selectedTypeIndex == GameType::TYPE_PART) {
-			ImGui::AlignTextToFramePadding();
-			ImGui::TextUnformatted("Part Type");
-			ImGui::SameLine();
-			if (ImGui::BeginCombo("##Part Type", TypeHelper::partTypes[m_modalIndex].second.c_str())) {
-				for (const auto& [typeKey, typeName] : TypeHelper::partTypes) {
-					bool isSelected = (m_modalIndex == typeKey);
-					if (ImGui::Selectable(typeName.second.c_str(), isSelected) && !isSelected) {
-						m_modalIndex = typeKey;
-					}
-					if (isSelected) {
-						ImGui::SetItemDefaultFocus();
-					}
-				}
-				ImGui::EndCombo();
+			if (drawCombo(m_modalIndex, TypeHelper::partTypes, "Part Type")) {
+				std::string newName = PathHelper::newObjectName(static_cast<GameType>(m_selectedTypeIndex), namePrefix);
+				snprintf(m_buffer, sizeof(m_buffer), newName.c_str());
 			}
 		}
 		else if (m_selectedTypeIndex == GameType::TYPE_BODY) {
-			ImGui::AlignTextToFramePadding();
-			ImGui::TextUnformatted("Body Type");
-			ImGui::SameLine();
-			if (ImGui::BeginCombo("##Body Type", TypeHelper::bodyTypes[m_modalIndex].c_str())) {
-				for (const auto& [typeKey, typeName] : TypeHelper::bodyTypes) {
-					bool isSelected = (m_modalIndex == typeKey);
-					if (ImGui::Selectable(typeName.c_str(), isSelected) && !isSelected) {
-						m_modalIndex = typeKey;
-					}
-					if (isSelected) {
-						ImGui::SetItemDefaultFocus();
-					}
-				}
-				ImGui::EndCombo();
+			if (drawCombo(m_modalIndex, TypeHelper::bodyTypes, "Body Type")) {
+				std::string newName = PathHelper::newObjectName(static_cast<GameType>(m_selectedTypeIndex), namePrefix);
+				snprintf(m_buffer, sizeof(m_buffer), newName.c_str());
 			}
 		}
 		if (!namePrefix.empty()) {
@@ -650,15 +596,18 @@ void EditorGui::drawModals()
 					currentEditor = m_editors[m_selectedTypeIndex].get();
 				}
 				if (currentEditor) {
+					bool success = false;
 					getLevel().setAmbientColor(glm::vec3(1.0f));
-					currentEditor->create(newPath, m_modalIndex);
-					currentEditor->update();
-					if (currentEditor->save()) {
-						m_objects[m_selectedTypeIndex].push_back(newPath);
-						m_selectedObjectIndex = (int)m_objects[m_selectedTypeIndex].size() - 1;
-						m_needSave = false; // create will also save
+					if (currentEditor->create(newPath, m_modalIndex)) {
+						currentEditor->update();
+						if (currentEditor->save()) {
+							m_objects[m_selectedTypeIndex].push_back(newPath);
+							m_selectedObjectIndex = (int)m_objects[m_selectedTypeIndex].size() - 1;
+							m_needSave = false; // create will also save
+							success = true;
+						}
 					}
-					else {
+					if (!success) {
 						sprintf(m_buffer, "Failed to create new instance: %s", newPath.c_str());
 						m_activeModal = ModalType::ERROR;
 					}
@@ -740,11 +689,24 @@ void EditorGui::drawModals()
 	// 5. COPY INSTANCE MODAL DIALOG
 	if (ImGui::BeginPopupModal("Copy Instance", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
 	{
-		ImGui::TextUnformatted("Enter name for the copied object configuration file:");
+		ImGui::TextUnformatted("Enter name for the copied instance:");
+		std::string namePrefix = getNamePrefix(m_selectedTypeIndex, m_modalIndex);
+		if (!namePrefix.empty()) {
+			std::string name(m_buffer);
+			size_t pos = name.find(namePrefix);
+			if (pos != std::string::npos) {
+				name = name.substr(pos + namePrefix.size());
+				snprintf(m_buffer, sizeof(m_buffer), "%s", name.c_str());
+			}
+			ImGui::AlignTextToFramePadding();
+			ImGui::TextUnformatted(namePrefix.c_str());
+			ImGui::SameLine(0.0f, ImGui::GetStyle().ItemInnerSpacing.x);
+		}
+		ImGui::SetNextItemWidth(-FLT_MIN);
 		ImGui::InputText("##CopyName", m_buffer, IM_ARRAYSIZE(m_buffer));
 		ImGui::Separator();
 		if (ImGui::Button("OK", ImVec2(120, 0))) {
-			std::string newPath = PathHelper::getObjectPath(std::string(m_buffer), static_cast<GameType>(m_selectedTypeIndex));
+			std::string newPath = PathHelper::getObjectPath(namePrefix + std::string(m_buffer), static_cast<GameType>(m_selectedTypeIndex));
 			if (NS2::IOManager::exists(newPath.c_str())) {
 				sprintf(m_buffer, "Cannot copy the instance '%s'.\nthis file name already exists!", newPath.c_str());
 				m_activeModal = ModalType::ERROR;
@@ -845,18 +807,20 @@ void EditorGui::changeMode()
 	}
 	m_needSave = false;
 	m_activeTool = ToolType::SELECT;
-	for (int i = 0; i < DebugType::COUNT; i++) {
-		m_debugging[i] = false;
-	}
+	m_debugMask = DebugType::DEBUG;
 }
+
 
 void EditorGui::changeType(int index)
 {
 	if (index < 0 && index >= m_editors.size()) {
 		return;
 	}
+	m_needSave = false;
 	m_selectedTypeIndex = index;
 	m_selectedObjectIndex = -1; // Reset selection index when type changes
+	m_activeTool = ToolType::SELECT;
+	m_debugMask = DebugType::DEBUG;
 
 	if (m_editors[index] != nullptr && m_objects[index].empty()) {
 		loadObjectTypes(index);
@@ -944,12 +908,22 @@ void EditorGui::handleInputEvent()
 std::string EditorGui::getNamePrefix(int typeIndex, int objectIndex) const
 {
 	if (typeIndex == GameType::TYPE_PART) {
-		return TypeHelper::partTypes[objectIndex].second + "_";
+		return TypeHelper::partTypes[objectIndex] + "_";
 	}
 	else if (typeIndex == GameType::TYPE_BODY) {
 		return TypeHelper::bodyTypes[objectIndex] + "_";
 	}
 	return "";
+}
+
+unsigned int EditorGui::getModalIndex(int typeIndex, const std::string& name) const
+{
+	for (const auto& [typeKey, typeName] : TypeHelper::partTypes) {
+		if (name.find(typeName + "_") == 0) {
+			return typeKey;
+		}
+	}
+	return 0;
 }
 
 glm::vec2 EditorGui::getWorldCoord(ImVec2 coords)
@@ -1005,4 +979,35 @@ bool EditorGui::drawTexture(NS2::GLTexture*& texture, const char* label)
 		ImGui::EndCombo();
 	}
 	return result;
+}
+
+bool EditorGui::drawCombo(unsigned char& currentValue, const std::unordered_map<unsigned char, std::string>& enumMap, const char* label)
+{
+	bool result = false;
+	ImGui::AlignTextToFramePadding();
+	ImGui::TextUnformatted(label);
+	ImGui::SameLine();
+	if (ImGui::BeginCombo("##Combobox", enumMap.at(currentValue).c_str())) {
+		for (const auto& [typeKey, typeName] : enumMap) {
+			bool isSelected = (currentValue == typeKey);
+			if (ImGui::Selectable(typeName.c_str(), isSelected) && !isSelected) {
+				currentValue = typeKey;
+				result = true;
+			}
+			if (isSelected) {
+				ImGui::SetItemDefaultFocus();
+			}
+		}
+		ImGui::EndCombo();
+	}
+	return result;
+}
+
+void EditorGui::drawCheckbox(const char* name, int& mask, int flag)
+{
+	bool is_active = (mask & flag) != 0;
+	if (ImGui::Checkbox(name, &is_active)) {
+		if (is_active) mask |= flag;  // Turn bit ON (set to true)
+		else mask &= ~flag; // Turn bit OFF (set to false)
+	}
 }

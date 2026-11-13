@@ -87,6 +87,6 @@ namespace NS2
 		 * \param pathStr: path of the directory
 		 * \param extension: file extension to count
 		 */
-		static int countFiles(const std::string& pathStr, const std::string& extension);
+		static int countFiles(const std::string& pathStr, const std::string& extension, const std::string& contain = "");
 	};
 }

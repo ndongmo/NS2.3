@@ -1,0 +1,100 @@
+{
+    "child_joints": [
+        8
+    ],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            512.0,
+            308.0
+        ],
+        "dim": [
+            96.0,
+            54.0
+        ],
+        "points": [
+            [
+                464.0,
+                281.0
+            ],
+            [
+                560.0,
+                281.0
+            ],
+            [
+                560.0,
+                335.0
+            ],
+            [
+                464.0,
+                335.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "hidden": false,
+    "index": 4,
+    "material": 1,
+    "opposite_part": 7,
+    "parent_joint": 6,
+    "path": "../Objects/PART/RIGHT_FOREARM_PART_SOLDIER-1.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            512.0,
+            308.0
+        ],
+        "dim": [
+            96.0,
+            54.0
+        ],
+        "points": [
+            [
+                464.0,
+                281.0
+            ],
+            [
+                560.0,
+                281.0
+            ],
+            [
+                560.0,
+                335.0
+            ],
+            [
+                464.0,
+                335.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 110,
+        "dims": [
+            1,
+            1
+        ],
+        "invs": [
+            false,
+            true
+        ],
+        "texture": "../Assets/bh_forearms/bh_forearm2.png"
+    },
+    "type": 5
+}

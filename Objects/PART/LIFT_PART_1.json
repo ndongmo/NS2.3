@@ -1,0 +1,98 @@
+{
+    "child_joints": [],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            800.0,
+            800.0
+        ],
+        "points": [
+            [
+                240.0,
+                -40.0
+            ],
+            [
+                1040.0,
+                -40.0
+            ],
+            [
+                1040.0,
+                760.0
+            ],
+            [
+                240.0,
+                760.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 1
+    },
+    "hidden": false,
+    "index": 0,
+    "material": 1,
+    "opposite_part": -1,
+    "parent_joint": -1,
+    "path": "../Objects/PART/LIFT_PART_1.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            800.0,
+            800.0
+        ],
+        "points": [
+            [
+                240.0,
+                -40.0
+            ],
+            [
+                1040.0,
+                -40.0
+            ],
+            [
+                1040.0,
+                760.0
+            ],
+            [
+                240.0,
+                760.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 1
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 4,
+        "dims": [
+            1,
+            1
+        ],
+        "invs": [
+            false,
+            false
+        ],
+        "texture": "../Assets/tiles/ti_metal1.png"
+    },
+    "type": 24
+}

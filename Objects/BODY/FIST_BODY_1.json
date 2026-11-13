@@ -1,0 +1,30 @@
+{
+    "aspeed": 0.0,
+    "joints": [],
+    "mass": 1.0,
+    "material": 1,
+    "nb_parts": 1,
+    "parts_path": [
+        {
+            "index": 0,
+            "path": "../Objects/PART/FIST_PART_1_Left.json"
+        }
+    ],
+    "parts_transform": [
+        {
+            "angle": 0.0,
+            "index": 0,
+            "pos": [
+                530.0,
+                326.0
+            ],
+            "scale": [
+                1.0,
+                1.0
+            ]
+        }
+    ],
+    "path": "../Objects/BODY/FIST_BODY_1.json",
+    "shape": 0,
+    "type": 4
+}

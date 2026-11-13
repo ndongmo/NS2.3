@@ -11,17 +11,27 @@ PartEditor::PartEditor(EditorGui& parent) :
 	AbstractEditor(parent, m_part)
 {}
 
-void PartEditor::create(const std::string& path, unsigned int type)
+bool PartEditor::create(const std::string& path, unsigned int type)
 {
-	m_part.init(static_cast<PartType>(type), m_parent.getResourceManager().getTexture(TILE_ASSET));
+	const BodyPart& bodypart = TypeHelper::getBodyPart(type);
+	m_part.init(bodypart.partType, bodypart.partIndex, bodypart.oppositeIndex, nullptr);
 	m_part.setPath(path);
+
+	auto joints = TypeHelper::getChildren(bodypart.bodyType, bodypart.partIndex);
+	for (const auto* joint : joints) {
+		m_part.addJoint(joint->jointIndex);
+	}
+	const BodyJoint* parentJoint = TypeHelper::getParent(bodypart.bodyType, bodypart.partIndex);
+	if (parentJoint != nullptr) {
+		m_part.setParentJoint(parentJoint->jointIndex);
+	}
+	return true;
 }
 
 void PartEditor::update()
 {
 	m_part.setCenter(m_parent.getScreenCenter());
-	m_parent.setDebug(DebugType::DRAW_PART, true);
-	m_parent.setDebug(DebugType::COLL_PART, true);
+	m_parent.setDebug(DebugType::DRAW_PART | DebugType::COLL_PART);
 }
 
 void PartEditor::onDraw()
@@ -252,6 +262,7 @@ void PartEditor::drag(glm::vec2 delta)
 {
 	if (m_selected >= 0 && m_selected < m_part.m_shape.m_points.size()) {
 		m_part.m_shape.setPoint(m_selected, m_part.m_shape.m_points[m_selected] + delta);
+		m_parent.setNeedToSave(true);
 	}
 }
 

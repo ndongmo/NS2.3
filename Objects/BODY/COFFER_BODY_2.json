@@ -1,0 +1,66 @@
+{
+    "aspeed": 0.0,
+    "joints": [
+        {
+            "child": 1,
+            "index": 0,
+            "lower": [
+                0.0,
+                -100.0,
+                0.0
+            ],
+            "parent": 0,
+            "point": [
+                564.0,
+                420.0
+            ],
+            "upper": [
+                0.0,
+                100.0,
+                0.0
+            ]
+        }
+    ],
+    "mass": 1.0,
+    "material": 9,
+    "nb_parts": 2,
+    "parts_path": [
+        {
+            "index": 0,
+            "path": "../Objects/PART/COFFER_BASE_PART_2.json"
+        },
+        {
+            "index": 1,
+            "path": "../Objects/PART/COFFER_TOP_PART_2.json"
+        }
+    ],
+    "parts_transform": [
+        {
+            "angle": 0.0,
+            "index": 0,
+            "pos": [
+                498.0,
+                284.0
+            ],
+            "scale": [
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "angle": 0.0,
+            "index": 1,
+            "pos": [
+                504.4649658203125,
+                285.197265625
+            ],
+            "scale": [
+                1.0,
+                1.0
+            ]
+        }
+    ],
+    "path": "../Objects/BODY/COFFER_BODY_2.json",
+    "shape": 1,
+    "type": 9
+}

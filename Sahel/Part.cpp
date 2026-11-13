@@ -22,7 +22,7 @@ void Part::drawDebug(NS2::DebugRenderer& debugRenderer, const NS2::ColorRGBA8& c
 	}
 }
 
-void Part::init(PartType type, NS2::GLTexture* texture)
+void Part::init(PartType type, int index, int oppositePart, NS2::GLTexture* texture)
 {
 	float width = 100.0f;
 	float height = 100.0f;
@@ -31,11 +31,15 @@ void Part::init(PartType type, NS2::GLTexture* texture)
 		height = static_cast<float>(texture->height);
 	}
 	m_type = type;
+	m_index = index;
+	m_oppositePart = oppositePart;
 	m_scalable = false;
+	m_hidden = false;
 	m_collide = true;
+	m_joints.clear();
 	m_shape.initRotatedBox(0.0f, 0.0f, width, height, 0.0f);
 	m_drawShape.initRotatedBox(0.0f, 0.0f, width, height, 0.0f);
-	m_sprite.init(texture, NS2::ColorRGBA8(255, 255, 255, 255), glm::ivec2(1, 1), false, false, DepthType::DEPTH_BODY);
+	m_sprite.init(texture, NS2::ColorRGBA8(255, 255, 255, 255), glm::ivec2(1, 1), false, false, DepthType::DEPTH_HEAD);
 }
 
 void Part::incrColor(int16_t r, int16_t g, int16_t b, int16_t a)
@@ -79,9 +83,21 @@ void Part::incrPos(glm::vec2 offset)
 	lincrPos(offset);
 }
 
+void Part::incrScale(glm::vec2 value)
+{
+	value = (value / m_drawShape.getScale()) + glm::vec2(1.0f);
+	scale(value);
+}
+
 void Part::setPos(glm::vec2 pos)
 {
 	incrPos(pos - m_drawShape.getPos());
+}
+
+void Part::setScale(glm::vec2 value)
+{
+	value = value / m_drawShape.getScale();
+	scale(value);
 }
 
 void Part::setCenter(glm::vec2 center)

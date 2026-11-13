@@ -31,6 +31,7 @@ namespace NS2
 			this->dims = dims;
 			this->depth = depth;
 			this->index = 0;
+			this->uvRect = { 0.0f, 0.0f, 1.0f, 1.0f };
 
 			if (invX) {
 				this->invX = 1.0f;
@@ -149,7 +150,7 @@ namespace NS2
 		ColorRGBA8 color;				/* Part color */
 		GLubyte depth = 0;				/* Texture depth */
 
-	private:
+	
 		glm::vec4 uvRect = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);	/* UV data */
 		glm::ivec2 dims = glm::ivec2(1, 1);						/* Tile dimensions */
 		unsigned int index = 0;									/* Current tile index */

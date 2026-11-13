@@ -1,0 +1,98 @@
+{
+    "child_joints": [],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            96.0,
+            96.0
+        ],
+        "points": [
+            [
+                592.0,
+                312.0
+            ],
+            [
+                688.0,
+                312.0
+            ],
+            [
+                688.0,
+                408.0
+            ],
+            [
+                592.0,
+                408.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "hidden": false,
+    "index": 1,
+    "material": 1,
+    "opposite_part": -1,
+    "parent_joint": 0,
+    "path": "../Objects/PART/HEAD_PART_DREADLOKS-1.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            96.0,
+            96.0
+        ],
+        "points": [
+            [
+                592.0,
+                312.0
+            ],
+            [
+                688.0,
+                312.0
+            ],
+            [
+                688.0,
+                408.0
+            ],
+            [
+                592.0,
+                408.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 122,
+        "dims": [
+            1,
+            1
+        ],
+        "invs": [
+            false,
+            false
+        ],
+        "texture": "../Assets/bh_heads/bh_head5.png"
+    },
+    "type": 0
+}

@@ -10,6 +10,7 @@
 
 #include <string>
 #include <glm/glm.hpp>
+#include <CoreTypes.h>
 
 class IFileManager;
 class EditorGui;
@@ -23,7 +24,7 @@ public:
 	AbstractEditor(EditorGui& parent, IFileManager& fileManager);
 	virtual ~AbstractEditor();
 
-	virtual void create(const std::string& path, unsigned int type) = 0;
+	virtual bool create(const std::string& path, unsigned int type) = 0;
 	virtual void update() = 0;
 	virtual void onDraw() = 0;
 	virtual std::string getName() const = 0;
@@ -55,6 +56,7 @@ public:
 	virtual void dragOver(glm::vec2 point) {}
 
 protected:
+	NS2::ColorRGBA8 m_selectedColor = NS2::ColorRGBA8(0, 255, 0, 255);
 	IFileManager& m_fileManager;
 	EditorGui& m_parent;
 };

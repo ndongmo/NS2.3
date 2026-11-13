@@ -1,0 +1,30 @@
+{
+    "aspeed": 0.0,
+    "joints": [],
+    "mass": 4.0,
+    "material": 10,
+    "nb_parts": 1,
+    "parts_path": [
+        {
+            "index": 0,
+            "path": "../Objects/PART/GUN_PART_2.json"
+        }
+    ],
+    "parts_transform": [
+        {
+            "angle": 0.0,
+            "index": 0,
+            "pos": [
+                412.0,
+                208.0
+            ],
+            "scale": [
+                1.0,
+                1.0
+            ]
+        }
+    ],
+    "path": "../Objects/BODY/GUN_BODY_2.json",
+    "shape": 1,
+    "type": 2
+}

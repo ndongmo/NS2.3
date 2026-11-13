@@ -1,0 +1,30 @@
+{
+    "aspeed": 1.0,
+    "joints": [],
+    "mass": 1.0,
+    "material": 10,
+    "nb_parts": 1,
+    "parts_path": [
+        {
+            "index": 0,
+            "path": "../Objects/PART/LAMP_PART_WALL-1.json"
+        }
+    ],
+    "parts_transform": [
+        {
+            "angle": 0.0,
+            "index": 0,
+            "pos": [
+                621.0,
+                260.0
+            ],
+            "scale": [
+                1.0,
+                1.0
+            ]
+        }
+    ],
+    "path": "../Objects/BODY/LAMP_BODY_2.json",
+    "shape": 1,
+    "type": 16
+}

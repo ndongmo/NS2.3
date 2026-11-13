@@ -1,0 +1,100 @@
+{
+    "child_joints": [
+        11
+    ],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            512.0,
+            308.0
+        ],
+        "dim": [
+            101.0,
+            78.0
+        ],
+        "points": [
+            [
+                461.5,
+                269.0
+            ],
+            [
+                562.5,
+                269.0
+            ],
+            [
+                562.5,
+                347.0
+            ],
+            [
+                461.5,
+                347.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "hidden": false,
+    "index": 11,
+    "material": 1,
+    "opposite_part": 9,
+    "parent_joint": 3,
+    "path": "../Objects/PART/LEFT_LEG_PART_SOLDIER-1.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            512.0,
+            308.0
+        ],
+        "dim": [
+            101.0,
+            78.0
+        ],
+        "points": [
+            [
+                461.5,
+                269.0
+            ],
+            [
+                562.5,
+                269.0
+            ],
+            [
+                562.5,
+                347.0
+            ],
+            [
+                461.5,
+                347.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 38,
+        "dims": [
+            1,
+            1
+        ],
+        "invs": [
+            false,
+            false
+        ],
+        "texture": "../Assets/bh_legs/bh_leg2.png"
+    },
+    "type": 8
+}

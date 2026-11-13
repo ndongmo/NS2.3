@@ -1,0 +1,98 @@
+{
+    "child_joints": [],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            213.0,
+            64.0
+        ],
+        "points": [
+            [
+                533.5,
+                328.0
+            ],
+            [
+                746.5,
+                328.0
+            ],
+            [
+                746.5,
+                392.0
+            ],
+            [
+                533.5,
+                392.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "hidden": false,
+    "index": 0,
+    "material": 1,
+    "opposite_part": -1,
+    "parent_joint": -1,
+    "path": "../Objects/PART/DECOR_PART_BODY-WRAPPED.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            213.0,
+            64.0
+        ],
+        "points": [
+            [
+                533.5,
+                328.0
+            ],
+            [
+                746.5,
+                328.0
+            ],
+            [
+                746.5,
+                392.0
+            ],
+            [
+                533.5,
+                392.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 34,
+        "dims": [
+            1,
+            1
+        ],
+        "invs": [
+            false,
+            false
+        ],
+        "texture": "../Assets/decors/de_body1.png"
+    },
+    "type": 22
+}

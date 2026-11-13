@@ -9,9 +9,9 @@ LevelEditor::LevelEditor(EditorGui& parent) :
 	AbstractEditor(parent, parent.getLevel()), m_level(parent.getLevel())
 {}
 
-void LevelEditor::create(const std::string& path, unsigned int type)
+bool LevelEditor::create(const std::string& path, unsigned int type)
 {
-	
+	return false;
 }
 
 void LevelEditor::update()

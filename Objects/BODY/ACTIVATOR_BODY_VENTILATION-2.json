@@ -1,0 +1,66 @@
+{
+    "aspeed": 1.0,
+    "joints": [
+        {
+            "child": 1,
+            "index": 0,
+            "lower": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "parent": 0,
+            "point": [
+                617.6428833007813,
+                330.5
+            ],
+            "upper": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        }
+    ],
+    "mass": 1.0,
+    "material": 9,
+    "nb_parts": 2,
+    "parts_path": [
+        {
+            "index": 0,
+            "path": "../Objects/PART/ACTIVATOR_BASE_PART_VENTILATION-2.json"
+        },
+        {
+            "index": 1,
+            "path": "../Objects/PART/ACTIVATOR_TOP_PART_VENTILATION-2.json"
+        }
+    ],
+    "parts_transform": [
+        {
+            "angle": 0.0,
+            "index": 0,
+            "pos": [
+                554.0,
+                265.0
+            ],
+            "scale": [
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "angle": 0.0,
+            "index": 1,
+            "pos": [
+                553.9580078125,
+                265.58087158203125
+            ],
+            "scale": [
+                1.0,
+                1.0
+            ]
+        }
+    ],
+    "path": "../Objects/BODY/ACTIVATOR_BODY_VENTILATION-2.json",
+    "shape": 1,
+    "type": 13
+}

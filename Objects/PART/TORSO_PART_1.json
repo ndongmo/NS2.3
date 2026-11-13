@@ -1,0 +1,102 @@
+{
+    "child_joints": [
+        0,
+        4,
+        5
+    ],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            512.0,
+            308.0
+        ],
+        "dim": [
+            96.0,
+            192.0
+        ],
+        "points": [
+            [
+                464.0,
+                212.0
+            ],
+            [
+                560.0,
+                212.0
+            ],
+            [
+                560.0,
+                404.0
+            ],
+            [
+                464.0,
+                404.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "hidden": false,
+    "index": 2,
+    "material": 1,
+    "opposite_part": -1,
+    "parent_joint": 1,
+    "path": "../Objects/PART/TORSO_PART_1.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            512.0,
+            308.0
+        ],
+        "dim": [
+            102.0,
+            102.0
+        ],
+        "points": [
+            [
+                472.0,
+                230.0
+            ],
+            [
+                552.0,
+                230.0
+            ],
+            [
+                552.0,
+                386.0
+            ],
+            [
+                472.0,
+                386.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 62,
+        "dims": [
+            1,
+            1
+        ],
+        "invs": [
+            false,
+            false
+        ],
+        "texture": "../Assets/bh_torsos/bh_torso1.png"
+    },
+    "type": 1
+}

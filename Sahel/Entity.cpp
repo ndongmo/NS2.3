@@ -115,7 +115,7 @@ void Entity::updateAABB(AABB& aabb)
 {
 	m_body.updateAABB(aabb, m_state);
 	if (m_interact) {
-		float angle = m_body.getAngleRad();
+		float angle = m_body.getAngle();
 		float x = roundf(MARGIN_OFFSET * cosf(angle));
 		float y = roundf(MARGIN_OFFSET * sinf(angle));
 		if (x == MARGIN_OFFSET)  aabb.x2 += x; else if (x == -MARGIN_OFFSET) aabb.x1 += x;

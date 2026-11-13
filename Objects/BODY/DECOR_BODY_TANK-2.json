@@ -1,0 +1,30 @@
+{
+    "aspeed": 0.10000000149011612,
+    "joints": [],
+    "mass": 80.0,
+    "material": 9,
+    "nb_parts": 1,
+    "parts_path": [
+        {
+            "index": 0,
+            "path": "../Objects/PART/DECOR_PART_TANK-2.json"
+        }
+    ],
+    "parts_transform": [
+        {
+            "angle": 0.0,
+            "index": 0,
+            "pos": [
+                576.0,
+                348.0
+            ],
+            "scale": [
+                1.0,
+                1.0
+            ]
+        }
+    ],
+    "path": "../Objects/BODY/DECOR_BODY_TANK-2.json",
+    "shape": 1,
+    "type": 8
+}

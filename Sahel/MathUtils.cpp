@@ -394,33 +394,41 @@ float MathUtils::minDistance(const glm::vec2& start, const std::vector<glm::vec2
 std::vector<glm::vec2> MathUtils::convexHull(std::vector<glm::vec2>& points)
 {
 	size_t n = points.size();
-	int k = 0;
-	if (n == 1) {
-		return points;
+	if (n <= 3) {
+		return points; // A hull of 3 or fewer points is just the points themselves
 	}
-	std::vector<glm::vec2> hull(n * 2);
 
-	// Sort points lexicographically
-	std::sort(
-		points.begin(),
-		points.end(),
-		[](const glm::vec2& p1, const glm::vec2& p2)
-	{ return (p1.x < p2.x) || (p1.x == p2.x && p1.y < p2.y); }
-	);
+	std::vector<glm::vec2> hull;
+	hull.reserve(2 * n);
 
-	// Build lower hull
+	// 1. Sort points lexicographically by x-coordinate (and y-coordinate in case of a tie)
+	std::sort(points.begin(), points.end(), [](const glm::vec2& a, const glm::vec2& b) {
+		if (a.x != b.x) return a.x < b.x;
+		return a.y < b.y;
+		});
+
+	// 2. Build the lower hull
 	for (size_t i = 0; i < n; ++i) {
-		while (k >= 2 && cross(hull[k - 2], hull[k - 1], points[i]) <= 0) k--;
-		hull[k++] = points[i];
+		while (hull.size() >= 2 && cross(hull[hull.size() - 2], hull[hull.size() - 1], points[i]) <= 0) {
+			hull.pop_back();
+		}
+		hull.push_back(points[i]);
 	}
 
-	// Build upper hull
-	for (size_t i = n - 2, t = k + 1; i >= 0; i--) {
-		while (k >= t && cross(hull[k - 2], hull[k - 1], points[i]) <= 0) k--;
-		hull[k++] = points[i];
+	// 3. Build the upper hull
+	size_t lower_hull_size = hull.size();
+	// Loop backwards from the second-to-last point down to the first point
+	for (size_t i = n - 1; i > 0; --i) {
+		glm::vec2 next_point = points[i - 1];
+		while (hull.size() > lower_hull_size && cross(hull[hull.size() - 2], hull[hull.size() - 1], next_point) <= 0) {
+			hull.pop_back();
+		}
+		hull.push_back(next_point);
 	}
 
-	hull.resize(k - 1);
+	// 4. The last point of the upper hull is a duplicate of the first point of the lower hull
+	hull.pop_back();
+
 	return hull;
 }
 

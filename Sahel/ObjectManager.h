@@ -35,6 +35,11 @@ public:
     ObjectManager(NS2::ResourceManager& rsrcManager);
     ~ObjectManager() = default;
 
+    void convertParts(const std::string& folderPath = "D:/CODE/C++/NS2.2/Objects/BODY PART/");
+    void convertBodies(const std::string& folderPath = "D:/CODE/C++/NS2.2/Objects/BODY/");
+    int getType(const std::string& path, int gameType);
+    std::string getPath(const std::string& path, int gameType, int type);
+
     // Delete copy mechanics to prevent cache duplication
     ObjectManager(const ObjectManager&) = delete;
     ObjectManager& operator=(const ObjectManager&) = delete;
@@ -313,5 +318,6 @@ private:
     }
 
     ObjectLoader m_loader;
+    NS2::ResourceManager& m_rsrcManager;
     std::unordered_map<std::string, std::any> m_cache; /* Storage bucket caching unique file names to distinct shared pointers */
 };

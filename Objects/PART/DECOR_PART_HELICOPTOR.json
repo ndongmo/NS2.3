@@ -1,0 +1,98 @@
+{
+    "child_joints": [],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            840.0,
+            400.0
+        ],
+        "points": [
+            [
+                220.0,
+                160.0
+            ],
+            [
+                1060.0,
+                160.0
+            ],
+            [
+                1060.0,
+                560.0
+            ],
+            [
+                220.0,
+                560.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "hidden": false,
+    "index": 0,
+    "material": 1,
+    "opposite_part": -1,
+    "parent_joint": -1,
+    "path": "../Objects/PART/DECOR_PART_HELICOPTOR.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            840.0,
+            400.0
+        ],
+        "points": [
+            [
+                220.0,
+                160.0
+            ],
+            [
+                1060.0,
+                160.0
+            ],
+            [
+                1060.0,
+                560.0
+            ],
+            [
+                220.0,
+                560.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 126,
+        "dims": [
+            1,
+            1
+        ],
+        "invs": [
+            false,
+            false
+        ],
+        "texture": "../Assets/decors/de_helicoptor.png"
+    },
+    "type": 22
+}

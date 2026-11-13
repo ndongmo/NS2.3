@@ -1,0 +1,30 @@
+{
+    "aspeed": 1.0,
+    "joints": [],
+    "mass": 1.0,
+    "material": 10,
+    "nb_parts": 1,
+    "parts_path": [
+        {
+            "index": 0,
+            "path": "../Objects/PART/SENSOR_PART_3.json"
+        }
+    ],
+    "parts_transform": [
+        {
+            "angle": 0.0,
+            "index": 0,
+            "pos": [
+                540.0,
+                260.0
+            ],
+            "scale": [
+                1.0,
+                1.0
+            ]
+        }
+    ],
+    "path": "../Objects/BODY/SENSOR_BODY_3.json",
+    "shape": 1,
+    "type": 15
+}

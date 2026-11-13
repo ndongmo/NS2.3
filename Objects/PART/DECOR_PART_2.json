@@ -1,0 +1,98 @@
+{
+    "child_joints": [],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            62.0,
+            24.0
+        ],
+        "points": [
+            [
+                609.0,
+                348.0
+            ],
+            [
+                671.0,
+                348.0
+            ],
+            [
+                671.0,
+                372.0
+            ],
+            [
+                609.0,
+                372.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "hidden": false,
+    "index": 0,
+    "material": 1,
+    "opposite_part": -1,
+    "parent_joint": -1,
+    "path": "../Objects/PART/DECOR_PART_2.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            62.0,
+            24.0
+        ],
+        "points": [
+            [
+                609.0,
+                348.0
+            ],
+            [
+                671.0,
+                348.0
+            ],
+            [
+                671.0,
+                372.0
+            ],
+            [
+                609.0,
+                372.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 62,
+        "dims": [
+            1,
+            1
+        ],
+        "invs": [
+            false,
+            false
+        ],
+        "texture": "../Assets/pickables/bi_key1.png"
+    },
+    "type": 22
+}

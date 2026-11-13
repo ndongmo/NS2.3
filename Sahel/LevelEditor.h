@@ -20,7 +20,7 @@ class LevelEditor : public AbstractEditor
 public:
 	LevelEditor(EditorGui& parent);
 
-	virtual void create(const std::string& path, unsigned int type) override;
+	virtual bool create(const std::string& path, unsigned int type) override;
 	virtual void update() override;
 	virtual void onDraw() override;
 	virtual std::string getName() const override;

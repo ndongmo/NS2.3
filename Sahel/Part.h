@@ -20,6 +20,7 @@ class PartEditor;
 class BodyEditor;
 class ObjectLoader;
 class ObjectSaver;
+class ObjectManager;
 
 /*!
 * \brief BodyPart class.
@@ -31,7 +32,7 @@ class Part : public ITransform, public IDraw, public ILinkedBody, public IFileMa
 	friend BodyEditor;
 	friend ObjectLoader;
 	friend ObjectSaver;
-
+	friend ObjectManager;
 public:
 	/*!
 	* \brief Overload of << operator.
@@ -56,7 +57,7 @@ public:
 	 * \param type : type of the part
 	 * \param texturePath : path to the texture
 	 */
-	void init(PartType type, NS2::GLTexture* texture);
+	void init(PartType type, int index, int oppositePart, NS2::GLTexture* texture);
 	/*!
 	 * \brief Increase color values.
 	 */
@@ -93,7 +94,9 @@ private:
 	virtual void rotate(float angle, glm::vec2 pos) override;
 	virtual void scale(glm::vec2 scale) override;
 	virtual void incrPos(glm::vec2 pos) override;
+	virtual void incrScale(glm::vec2 scale) override;
 	virtual void setPos(glm::vec2 pos) override;
+	virtual void setScale(glm::vec2 scale) override;
 	virtual void setCenter(glm::vec2 center) override;
 	virtual void setAngle(float angle) override;
 	virtual void setAngle(float angle, glm::vec2 pos) override;

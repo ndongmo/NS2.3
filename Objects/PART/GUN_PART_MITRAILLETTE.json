@@ -1,0 +1,98 @@
+{
+    "child_joints": [],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            186.0,
+            42.0
+        ],
+        "points": [
+            [
+                547.0,
+                339.0
+            ],
+            [
+                733.0,
+                339.0
+            ],
+            [
+                733.0,
+                381.0
+            ],
+            [
+                547.0,
+                381.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "hidden": false,
+    "index": 0,
+    "material": 1,
+    "opposite_part": -1,
+    "parent_joint": -1,
+    "path": "../Objects/PART/GUN_PART_MITRAILLETTE.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            186.0,
+            42.0
+        ],
+        "points": [
+            [
+                547.0,
+                339.0
+            ],
+            [
+                733.0,
+                339.0
+            ],
+            [
+                733.0,
+                381.0
+            ],
+            [
+                547.0,
+                381.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 82,
+        "dims": [
+            1,
+            1
+        ],
+        "invs": [
+            false,
+            false
+        ],
+        "texture": "../Assets/weapons/bw_mitraillette.png"
+    },
+    "type": 13
+}

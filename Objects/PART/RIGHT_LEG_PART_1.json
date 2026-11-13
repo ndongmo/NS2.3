@@ -1,0 +1,100 @@
+{
+    "child_joints": [
+        10
+    ],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            512.5,
+            308.0
+        ],
+        "dim": [
+            94.0,
+            64.0
+        ],
+        "points": [
+            [
+                465.5,
+                276.0
+            ],
+            [
+                559.5,
+                276.0
+            ],
+            [
+                559.5,
+                340.0
+            ],
+            [
+                465.5,
+                340.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "hidden": false,
+    "index": 9,
+    "material": 1,
+    "opposite_part": 11,
+    "parent_joint": 2,
+    "path": "../Objects/PART/RIGHT_LEG_PART_1.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            512.5,
+            308.0
+        ],
+        "dim": [
+            102.0,
+            100.0
+        ],
+        "points": [
+            [
+                478.5,
+                287.0
+            ],
+            [
+                546.5,
+                287.0
+            ],
+            [
+                546.5,
+                329.0
+            ],
+            [
+                478.5,
+                329.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 46,
+        "dims": [
+            1,
+            1
+        ],
+        "invs": [
+            false,
+            true
+        ],
+        "texture": "../Assets/bh_legs/bh_leg1.png"
+    },
+    "type": 9
+}

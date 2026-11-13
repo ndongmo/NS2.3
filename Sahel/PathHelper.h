@@ -67,10 +67,10 @@ public:
 		}
 		return file;
 	}
-	static std::string newObjectName(GameType type) {
+	static std::string newObjectName(GameType type, const std::string contain = "") {
 		std::string typeName = TypeHelper::getGameType(type);
 		std::string typePath = PathHelper::getObjectTypePath(typeName);
-		int fileCount = NS2::IOManager::countFiles(typePath, FILE_EXT) + 1;
+		int fileCount = NS2::IOManager::countFiles(typePath, FILE_EXT, contain) + 1;
 		return typeName + SPLITTER_STR + std::to_string(fileCount);
 	}
 	static std::string getAssetFilePath(const std::string& guiAssetName) {

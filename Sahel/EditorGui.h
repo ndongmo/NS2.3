@@ -12,6 +12,7 @@
 #include <memory>
 #include <vector>
 #include <string>
+#include <unordered_map>
 
 class EditorScreen;
 class AbstractEditor;
@@ -29,12 +30,28 @@ namespace NS2 {
 enum class ModalType {
 	CREATE, COPY, DELETE, RENAME, CHANGE_MODE, CHANGE_TYPE, CHANGE_OBJECT, ERROR, EXIT, NONE
 };
-enum ToolType {
-	SELECT = 0, MOVE = 1, RESIZE = 2, ROTATE = 3, PLACE = 4, ATTACH = 5, COPY = 6
+enum ToolType : int {
+	SELECT	= 0,
+	MOVE	= 1,
+	RESIZE	= 2,
+	ROTATE	= 3,
+	PLACE	= 4,
+	ATTACH	= 5,
+	COPY	= 6   
 };
-enum DebugType {
-	DEBUG = 0, SELECTED = 1, BODY = 2, DRAW_PART = 3, COLL_PART = 4, 
-	TREE = 5, NODE = 6, EDGE = 7, TILES = 8, LIGHTS = 9, SENSORS = 10, ENTITIES = 11, COUNT = 12
+enum DebugType : int {
+	DEBUG		= 1 << 0,  // 0x001
+	SELECTED	= 1 << 1,  // 0x002
+	BODY		= 1 << 2,  // 0x004
+	DRAW_PART	= 1 << 3,  // 0x008
+	COLL_PART	= 1 << 4,  // 0x010
+	TREE		= 1 << 5,  // 0x020
+	NODE		= 1 << 6,  // 0x040
+	EDGE		= 1 << 7,  // 0x080
+	TILES		= 1 << 8,  // 0x100
+	LIGHTS		= 1 << 9,  // 0x200
+	SENSORS		= 1 << 10, // 0x400
+	ENTITIES	= 1 << 11, // 0x800
 };
 
 constexpr const char* STR_NONE = "NONE";
@@ -59,7 +76,7 @@ public:
 	void onDraw() override;
 
 	void setNeedToSave(bool needSave) { m_needSave = needSave; }
-	void setDebug(DebugType type, bool value) { m_debugging[type] = value; }
+	void setDebug(int typeMask) { m_debugMask |= typeMask; }
 
 	NS2::ResourceManager& getResourceManager() const;
 	ObjectManager& getObjectManager() const;
@@ -67,8 +84,10 @@ public:
 	glm::vec2 getScreenSize() const;
 	glm::vec2 getScreenCenter() const;
 	AbstractEditor* getCurrentEditor();
-	bool debug(DebugType type) const;
+	bool debug(int typeMask) const { return m_debugMask & typeMask; }
+	bool isActiveTool(int tool) const { return m_activeTool == tool; }
 	std::string getNamePrefix(int typeIndex, int objectIndex) const;
+	unsigned int getModalIndex(int typeIndex, const std::string& name) const;
 	const std::vector<std::string>& getObjects(int typeIndex);
 	const std::vector<NS2::DirEntry>& getAssets() const { return m_assets; }
 
@@ -91,7 +110,7 @@ private:
 	int m_selectedObjectIndex = -1;
 	int m_pendingTypeIndex = -1;
 	int m_pendingObjectIndex = -1;
-	unsigned int m_modalIndex = 0;
+	unsigned char m_modalIndex = 0;
 	float m_animFactor = 1.0f;
 
 	std::vector<NS2::DirEntry> m_assets;
@@ -103,13 +122,15 @@ private:
 	char m_buffer[256] = "";  // Text storage for input prompts
 	ModalType m_activeModal = ModalType::NONE;
 	ModalType m_previousModal = ModalType::NONE;
-	ToolType m_activeTool = ToolType::SELECT;
-	bool m_debugging[DebugType::COUNT] = {};
+	int m_activeTool = ToolType::SELECT;
+	int m_debugMask = 0;
 	std::unique_ptr<LevelEditor> m_levelEditor = nullptr;
 
 public:
 	bool drawColor(NS2::ColorRGBA8& color, const char* label = "Color");
 	bool drawTexture(NS2::GLTexture*& texture, const char* label = "Texture");
+	bool drawCombo(unsigned char& currentValue, const std::unordered_map<unsigned char, std::string>& enumMap, const char* label);
+	void drawCheckbox(const char* name, int& mask, int flag);
 
 	template <typename T, typename Container>
 	bool drawEnum(T& currentValue, const Container& enumMap, const char* label) {

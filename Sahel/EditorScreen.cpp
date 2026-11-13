@@ -34,11 +34,14 @@ void EditorScreen::onEntry()
 	TypeHelper::init();
 
 	m_editorGui.initGui();
-
+	 
 	m_renderer.init(screenWidth, screenHeight, true);
 	m_physicEng.init(0);
 
 	m_state = NS2::ScreenState::RUNNING;
+
+	//m_objManager.convertParts();
+	//m_objManager.convertBodies();
 }
 
 void EditorScreen::onExit()

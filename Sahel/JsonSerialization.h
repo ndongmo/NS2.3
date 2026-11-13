@@ -90,20 +90,18 @@ inline void to_json(json& j, const Move2D& m) {
 }
 
 inline void from_json(const json& j, Joint2D& j2d) {
-    j2d.name = j.at("name").get<std::string>();
     j2d.index = j.at("index").get<unsigned int>();
     j2d.parent = j.at("parent").get<unsigned int>();
-    j2d.son = j.at("son").get<unsigned int>();
+    j2d.child = j.at("child").get<unsigned int>();
     j2d.point = j.at("point").get<glm::vec2>();
     j2d.lower = j.at("lower").get<Move2D>();
     j2d.upper = j.at("upper").get<Move2D>();
 }
 
 inline void to_json(json& j, const Joint2D& j2d) {
-    j["name"] = j2d.name;
     j["index"] = j2d.index;
     j["parent"] = j2d.parent;
-    j["son"] = j2d.son;
+    j["child"] = j2d.child;
     j["point"] = j2d.point;
     j["lower"] = j2d.lower;
     j["upper"] = j2d.upper;

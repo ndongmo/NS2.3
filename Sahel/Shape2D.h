@@ -74,6 +74,8 @@ struct AABB
 class ObjectLoader;
 class ObjectSaver;
 class PartEditor;
+class BodyEditor;
+class ObjectManager;
 class Body;
 
 class Shape2D : public ITransform, public IDraw
@@ -81,6 +83,8 @@ class Shape2D : public ITransform, public IDraw
 	friend ObjectLoader;
 	friend ObjectSaver;
 	friend PartEditor;
+	friend BodyEditor;
+	friend ObjectManager;
 	friend Body;
 
 public:

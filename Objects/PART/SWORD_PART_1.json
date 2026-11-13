@@ -1,0 +1,98 @@
+{
+    "child_joints": [],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            562.0,
+            358.0
+        ],
+        "dim": [
+            176.0,
+            56.0
+        ],
+        "points": [
+            [
+                474.0,
+                330.0
+            ],
+            [
+                650.0,
+                330.0
+            ],
+            [
+                650.0,
+                386.0
+            ],
+            [
+                474.0,
+                386.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "hidden": false,
+    "index": 0,
+    "material": 1,
+    "opposite_part": -1,
+    "parent_joint": -1,
+    "path": "../Objects/PART/SWORD_PART_1.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            562.0,
+            358.0
+        ],
+        "dim": [
+            94.0,
+            34.0
+        ],
+        "points": [
+            [
+                494.0,
+                340.0
+            ],
+            [
+                630.0,
+                340.0
+            ],
+            [
+                630.0,
+                376.0
+            ],
+            [
+                494.0,
+                376.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 50,
+        "dims": [
+            1,
+            1
+        ],
+        "invs": [
+            false,
+            true
+        ],
+        "texture": "../Assets/weapons/bw_knife1.png"
+    },
+    "type": 14
+}

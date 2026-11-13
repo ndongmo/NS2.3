@@ -1,0 +1,98 @@
+{
+    "child_joints": [],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            32.0,
+            150.0
+        ],
+        "points": [
+            [
+                624.0,
+                285.0
+            ],
+            [
+                656.0,
+                285.0
+            ],
+            [
+                656.0,
+                435.0
+            ],
+            [
+                624.0,
+                435.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "hidden": false,
+    "index": 0,
+    "material": 1,
+    "opposite_part": -1,
+    "parent_joint": -1,
+    "path": "../Objects/PART/DECOR_PART_SHELF.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            32.0,
+            150.0
+        ],
+        "points": [
+            [
+                624.0,
+                285.0
+            ],
+            [
+                656.0,
+                285.0
+            ],
+            [
+                656.0,
+                435.0
+            ],
+            [
+                624.0,
+                435.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 50,
+        "dims": [
+            1,
+            1
+        ],
+        "invs": [
+            false,
+            false
+        ],
+        "texture": "../Assets/decors/de_shelf1.png"
+    },
+    "type": 22
+}

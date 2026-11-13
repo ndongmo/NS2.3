@@ -1,0 +1,98 @@
+{
+    "child_joints": [],
+    "collide": true,
+    "drawshape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            284.0,
+            32.0
+        ],
+        "points": [
+            [
+                498.0,
+                344.0
+            ],
+            [
+                782.0,
+                344.0
+            ],
+            [
+                782.0,
+                376.0
+            ],
+            [
+                498.0,
+                376.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "hidden": false,
+    "index": 0,
+    "material": 1,
+    "opposite_part": -1,
+    "parent_joint": -1,
+    "path": "../Objects/PART/GUN_PART_SPEAR.json",
+    "scalable": false,
+    "shape": {
+        "angle": 0.0,
+        "center": [
+            640.0,
+            360.0
+        ],
+        "dim": [
+            284.0,
+            32.0
+        ],
+        "points": [
+            [
+                498.0,
+                344.0
+            ],
+            [
+                782.0,
+                344.0
+            ],
+            [
+                782.0,
+                376.0
+            ],
+            [
+                498.0,
+                376.0
+            ]
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ],
+        "type": 2
+    },
+    "sprite": {
+        "color": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "depth": 82,
+        "dims": [
+            1,
+            1
+        ],
+        "invs": [
+            false,
+            false
+        ],
+        "texture": "../Assets/weapons/bw_spear1.png"
+    },
+    "type": 13
+}
